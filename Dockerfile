@@ -5,8 +5,8 @@ FROM node:16-alpine AS build
 WORKDIR /app
 
 # Copia solo i file di dipendenza per sfruttare la cache
-COPY package*.json .
-COPY .env .
+#COPY package*.json .
+COPY . .
 
 # Installa tutte le dipendenze, inclusi i dev dependencies
 RUN npm install
