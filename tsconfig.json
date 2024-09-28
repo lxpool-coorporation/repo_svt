@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",           // Versione ECMAScript per il codice di output
-    "module": "commonjs",         // Sistema di moduli usato da Node.js
+    "module": "ES2020",         // Sistema di moduli usato da Node.js
     "strict": true,               // Abilita controlli di tipo più severi
     "esModuleInterop": true,      // Interoperabilità con moduli ES
     "forceConsistentCasingInFileNames": true,
@@ -17,5 +17,5 @@
     }
   },
   "include": ["src/**/*"],        // Includi tutti i file .ts nella cartella src
-  "exclude": ["node_modules"]     // Escludi i moduli npm
+  "exclude": ["node_modules", "dist"]     // Escludi i moduli npm
 }

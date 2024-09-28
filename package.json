@@ -1,6 +1,7 @@
 {
   "name": "repo_svt",
   "version": "1.0.0",
+  "type": "module",
   "description": "## Realizzazione di un progetto per il monitoraggio e la gestione di infrazioni di velocità dei veicoli su tratte autostradali. ",
   "main": "index.js",
   "scripts": {
