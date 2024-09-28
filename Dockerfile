@@ -1,23 +1,48 @@
-# Usa l'immagine ufficiale di Node.js
-FROM node:18-alpine
+# Stage 1: Build
+FROM node:16-alpine AS build
 
-# Imposta la directory di lavoro nell'interno del container
-WORKDIR /usr/
+# Imposta la directory di lavoro
+WORKDIR /app
 
-# Copia il file package.json e package-lock.json nella directory di lavoro
+# Copia solo i file di dipendenza per sfruttare la cache
 COPY package*.json .
 COPY .env .
 
-# Installa le dipendenze
+# Installa tutte le dipendenze, inclusi i dev dependencies
 RUN npm install
 
-# Installo nodemon per agevolare lo sviluppo dell'applicazione
-RUN npm install -g nodemon
+# Copia il resto dei file sorgente
+COPY . .
 
-# Copia il resto dell'applicazione nella directory di lavoro
-#COPY ./dist . --> utilizzo condivisione cartella con file per nodemon
+# Compila il progetto TypeScript
+RUN npm run build
 
-WORKDIR /usr/src/app
+# Esegui i test (opzionale, rimuovi se preferisci eseguire i test separatamente)
+RUN npm test
 
-# Definisci il comando di avvio dell'applicazione
-CMD ["nodemon", "dist/index.js"]
+# Stage 2: Production
+FROM node:16-alpine
+
+# Imposta la directory di lavoro
+WORKDIR /app
+
+# Copia i file di dipendenza
+COPY package.json package-lock.json ./
+
+# Installa solo le dipendenze di produzione
+RUN npm install --only=production
+
+# Copia i file compilati dalla fase di build
+COPY --from=build /app/dist ./dist
+
+# Espone la porta (modifica se necessario)
+#EXPOSE 3000
+
+# Crea la directory logs e imposta i permessi
+RUN mkdir -p logs && chown -R node:node logs
+
+# Definisce l'utente non root per migliorare la sicurezza
+USER node
+
+# Comando per avviare l'applicazione
+CMD ["node", "dist/index.js"]

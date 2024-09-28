@@ -1,3 +1,3 @@
 import logger from './utils/logger-winston'
 
-logger.info("log di info")
+logger.info("app started")

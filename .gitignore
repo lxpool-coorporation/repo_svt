@@ -131,3 +131,6 @@ dist
 
 # nodemon config
 *nodemon.*
+
+# dockerfile local
+Dockerfile_local*
