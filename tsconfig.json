@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",           // Versione ECMAScript per il codice di output
-    "module": "ES2020",         // Sistema di moduli usato da Node.js
+    "module": "CommonJS",         // Sistema di moduli usato da Node.js
     "strict": true,               // Abilita controlli di tipo più severi
     "esModuleInterop": true,      // Interoperabilità con moduli ES
     "forceConsistentCasingInFileNames": true,

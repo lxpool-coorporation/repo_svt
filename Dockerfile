@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copia solo i file di dipendenza per sfruttare la cache
 #COPY package*.json .
-COPY package.json package-lock.json ./
+COPY . ./
 
 # Installa tutte le dipendenze, inclusi i dev dependencies
 RUN npm install

@@ -1,3 +1,3 @@
-import logger from './utils/logger-winston.js';
+import logger from './utils/logger-winston';
 
 logger.info('app started');
