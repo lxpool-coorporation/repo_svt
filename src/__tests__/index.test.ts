@@ -1,5 +1,5 @@
 // src/__tests__/index.test.ts
-import logger from '../utils/logger-winston';
+import logger from '../utils/logger-winston.js';
 
 // Mock del logger-winston
 jest.mock('../utils/logger-winston', () => ({
