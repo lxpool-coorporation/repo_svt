@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Copia solo i file di dipendenza per sfruttare la cache
 #COPY package*.json .
-COPY . .
+COPY package.json package-lock.json ./
 
 # Installa tutte le dipendenze, inclusi i dev dependencies
 RUN npm install
@@ -15,7 +15,7 @@ RUN npm install
 RUN npm run build
 
 # Esegui i test (opzionale, rimuovi se preferisci eseguire i test separatamente)
-RUN npm test
+#RUN npm test <-- eseguiti dalla pipeline ci.yml
 
 # Stage 2: Production
 FROM node:16-alpine

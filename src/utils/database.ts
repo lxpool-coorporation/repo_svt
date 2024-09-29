@@ -1,7 +1,7 @@
 // src/utils/database.ts
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
-import logger from './logger-winston';
+import logger from './logger-winston.js';
 
 dotenv.config();
 

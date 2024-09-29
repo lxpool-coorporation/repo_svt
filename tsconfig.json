@@ -17,5 +17,5 @@
     }
   },
   "include": ["src/**/*"],        // Includi tutti i file .ts nella cartella src
-  "exclude": ["node_modules", "dist"]     // Escludi i moduli npm
+  "exclude": ["node_modules"]     // Escludi i moduli npm
 }
