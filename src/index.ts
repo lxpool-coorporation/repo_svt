@@ -1,3 +1,3 @@
-import logger from './utils/logger-winston'
+import logger from './utils/logger-winston';
 
-logger.info("app started")
+logger.info('app started');

@@ -33,11 +33,12 @@ class Database {
             acquire: 30000,
             idle: 10000,
           },
-        }
+        },
       );
 
       // Test della connessione
-      Database.instance.authenticate()
+      Database.instance
+        .authenticate()
         .then(() => {
           logger.info('Connessione al database riuscita.');
         })

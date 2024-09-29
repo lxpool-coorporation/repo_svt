@@ -3,14 +3,14 @@ import logger from '../utils/logger-winston';
 
 // Mock del logger-winston
 jest.mock('../utils/logger-winston', () => ({
-    __esModule: true,
-    default: {
-      info: jest.fn(),
-      error: jest.fn(),
-      warn: jest.fn(),
-      // Aggiungi altri metodi se necessario
-    },
-  }));
+  __esModule: true,
+  default: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    // Aggiungi altri metodi se necessario
+  },
+}));
 
 describe('Index', () => {
   beforeAll(() => {

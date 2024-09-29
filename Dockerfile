@@ -11,9 +11,6 @@ COPY . .
 # Installa tutte le dipendenze, inclusi i dev dependencies
 RUN npm install
 
-# Copia il resto dei file sorgente
-COPY . .
-
 # Compila il progetto TypeScript
 RUN npm run build
 
