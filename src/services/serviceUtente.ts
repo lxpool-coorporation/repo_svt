@@ -1,3 +1,4 @@
+import { enumStato } from '../entity/enum/enumStato';
 import { daoUtente } from '../dao/utente/daoUtente';
 import { eUtente } from '../entity/utente/eUtente';
 
@@ -13,20 +14,20 @@ class UtenteService {
     }
 
     // Crea un nuovo utente
-    async createUtente(id_profilo: number, codice_fiscale: string, id_stato: number): Promise<eUtente|null> {
-        const nuovoUtente = new eUtente(0, id_profilo, codice_fiscale, id_stato);
+    async createUtente(codice_fiscale: string, stato: enumStato): Promise<eUtente|null> {
+        const nuovoUtente = new eUtente(0, codice_fiscale, stato);
         return await daoUtente.save(nuovoUtente);
     }
 
     // Aggiorna un utente esistente
-    async updateUtente(id: number, id_profilo: number, codice_fiscale: string, id_stato: number): Promise<void> {
-        const utente = new eUtente(id, id_profilo, codice_fiscale, id_stato);
+    async updateUtente(id: number, codice_fiscale: string, stato: enumStato): Promise<void> {
+        const utente = new eUtente(id,  codice_fiscale,stato);
         await daoUtente.update(utente);
     }
 
     // Elimina un utente
     async deleteUtente(id: number): Promise<void> {
-        const utenteDaEliminare = new eUtente(id, 0, '', 0);
+        const utenteDaEliminare = new eUtente(id, '', enumStato.attivo);
         await daoUtente.delete(utenteDaEliminare);
     }
 }

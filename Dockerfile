@@ -35,6 +35,11 @@ COPY --from=build /app/dist ./dist
 # Espone la porta (modifica se necessario)
 #EXPOSE 3000
 
+# Installa curl e mysql-client se necessario
+RUN apk add --no-cache bash curl mysql-client
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh && chown -R node:node /wait-for-it.sh
+
 # Crea la directory logs e imposta i permessi
 RUN mkdir -p logs && chown -R node:node logs
 
@@ -42,4 +47,5 @@ RUN mkdir -p logs && chown -R node:node logs
 USER node
 
 # Comando per avviare l'applicazione
-CMD ["node", "dist/index.js"]
+#CMD ["node", "dist/index.js"]
+CMD ["/wait-for-it.sh", "svt-db:3306", "--", "node", "dist/index.js"]

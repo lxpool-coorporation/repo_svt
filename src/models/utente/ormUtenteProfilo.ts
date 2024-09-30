@@ -1,40 +1,35 @@
 import Database from "../../utils/database";
 import { DataTypes, Sequelize, Model } from 'sequelize';
-import { enumStato } from "../../entity/enum/enumStato";
+import { ormUtente } from "./ormUtente";
+import { ormProfilo } from "./ormProfilo";
 
 /**
  * Instanziazione della connessione verso il RDBMS
  */
 const sequelize: Sequelize = Database.getInstance();
 
-export class ormUtenteProfilo extends Model {
-  public id!:number
-  public id_utente!:number
-  public id_profilo!:number
-  public id_stato!: enumStato
-}
+export class ormUtenteProfilo extends Model {}
 
 // Definizione del modello
-ormUtenteProfilo.init({
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
+ormUtenteProfilo.init({    
+    id_utente: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: ormUtente,
+            key: 'id'
+        }
     },
     id_profilo: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    id_utente: {
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },
-    id_stato: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+      references: {
+          model: ormProfilo,
+          key: 'id'
+      }
     }
-  }, {
+}, {
     sequelize,
     modelName: 'utente_profilo',
     tableName: 'utn_utente_profilo'
-  });
+});
+
+

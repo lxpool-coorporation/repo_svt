@@ -1,5 +1,6 @@
 import { eUtente } from "../../entity/utente/eUtente";
 import { ormUtente } from "../../models/utente/ormUtente"
+import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Utente`
 class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
@@ -9,28 +10,27 @@ class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
         if (!ormObj) {
             throw new Error(`utente non trovato per l'id ${id}`);
         }
-        return new eUtente(ormObj.id, ormObj.id_profilo, ormObj.codice_fiscale, ormObj.id_stato);
+        return new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato);
     }
 
     // Trova tutti gli utenti usando Sequelize
     async getAll(): Promise<eUtente[]> {
         const objs = await ormUtente.findAll();
-        return objs.map(ormObj => new eUtente(ormObj.id, ormObj.id_profilo, ormObj.codice_fiscale, ormObj.id_stato));
+        return objs.map(ormObj => new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato));
     }
 
     // Salva un nuovo utente nel database usando Sequelize
-    async save(t: eUtente): Promise<eUtente|null> {
+    async save(t: eUtente, options?: { transaction?: Transaction }): Promise<eUtente|null> {
         const existingUtente = await ormUtente.findByPk(t.get_id());
         if (existingUtente) {
             throw new Error("A User with the specified id already exists");
         }
         const ormObj = await ormUtente.create({
             id: t.get_id(),
-            id_profilo: t.get_idProfilo(),
             codice_fiscale: t.get_codiceFiscale(),
-            id_stato: t.get_idStato()
+            stato: t.get_stato()
         });
-        return new eUtente(ormObj.id, ormObj.id_profilo, ormObj.codice_fiscale, ormObj.id_stato);
+        return new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato);
     }
 
     // Aggiorna un utente esistente nel database
@@ -41,9 +41,8 @@ class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
         }
         await ormObj.update(
             {
-                id_profilo: t.get_idProfilo(),
                 codice_fiscale: t.get_codiceFiscale(),
-                id_stato: t.get_idStato()
+                id_stato: t.get_stato()
                 // Aggiungi altri campi che devono essere aggiornati
             },
             {
@@ -53,7 +52,7 @@ class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     }
 
     // Elimina un utente dal database usando Sequelize
-    async delete(t: eUtente): Promise<void> {
+    async delete(t: eUtente, options?: { transaction?: Transaction }): Promise<void> {
         const ormObj = await ormUtente.findByPk(t.get_id());
         if (!ormObj) {
             throw new Error("Utente not found");
