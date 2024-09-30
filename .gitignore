@@ -134,3 +134,6 @@ dist
 
 # dockerfile local
 Dockerfile_local*
+
+# server key
+.key/

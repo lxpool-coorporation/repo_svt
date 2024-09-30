@@ -14,8 +14,9 @@
     "baseUrl": "./",              // Base directory per la risoluzione dei moduli
     "paths": {
       "@/*": ["src/*"]            // Alias per importare i moduli dalla cartella 'src'
-    }
+    },
+    "typeRoots": ["./types", "./node_modules/@types"] // Assicurati che il percorso dei tipi sia corretto
   },
-  "include": ["src/**/*"],        // Includi tutti i file .ts nella cartella src
+  "include": ["src/**/*.ts", "types/**/*.d.ts"], // Includi la cartella types
   "exclude": ["node_modules"]     // Escludi i moduli npm
 }
