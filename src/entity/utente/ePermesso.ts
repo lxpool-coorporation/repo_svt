@@ -1,6 +1,6 @@
 import { enumStato } from '../enum/enumStato';
 
-class eProfilo {
+class ePermesso {
   //id numerico, profilo, descrizione, id_stato
   private id: number;
   private cod: string;
@@ -43,4 +43,4 @@ class eProfilo {
   }
 }
 
-export { eProfilo };
+export { ePermesso };

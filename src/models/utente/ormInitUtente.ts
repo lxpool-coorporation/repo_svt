@@ -8,13 +8,21 @@ const sequelize: Sequelize = Database.getInstance();
 
 // Inizializza tutti i modelli qui
 const models = {
-    ormUtente,
-    ormProfilo,
-    ormUtenteProfilo
-  };
-  
+  ormUtente,
+  ormProfilo,
+  ormUtenteProfilo,
+};
+
 // Associazioni Many-to-Many
-ormUtente.belongsToMany(ormProfilo, { through: ormUtenteProfilo, foreignKey: 'id_utente',as: 'profili' });
-ormProfilo.belongsToMany(ormUtente, { through: ormUtenteProfilo, foreignKey: 'id_profilo',as: 'utenti' });
+ormUtente.belongsToMany(ormProfilo, {
+  through: ormUtenteProfilo,
+  foreignKey: 'id_utente',
+  as: 'profili',
+});
+ormProfilo.belongsToMany(ormUtente, {
+  through: ormUtenteProfilo,
+  foreignKey: 'id_profilo',
+  as: 'utenti',
+});
 
 export { sequelize, models };
