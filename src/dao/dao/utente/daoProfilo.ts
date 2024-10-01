@@ -1,3 +1,4 @@
+import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
 import { eProfilo } from '../../../entity/utente/eProfilo';
 import { ormProfilo } from '../../../models/utente/ormProfilo';
 import { Transaction } from 'sequelize';
@@ -55,12 +56,25 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
     );
   }
 
-  // Aggiorna un profilo esistente nel database
-  async update(t: eProfilo): Promise<void> {
+  // Aggiorna un utente esistente nel database
+  async update(t: eProfilo, options?: object): Promise<void> {
     const ormObj = await ormProfilo.findByPk(t.get_id());
     if (!ormObj) {
       throw new Error('Profilo not found');
     }
+
+    // Imposto le opzioni di default o applico quelle fornite dall'utente
+    const defaultOptions = {
+      where: { id: t.get_id() },
+      fields: ['cod', 'descrizione', 'stato'], // Campi aggiornabili di default
+      returning: true,
+      individualHooks: true,
+      validate: true,
+    };
+
+    // Combina le opzioni di default con quelle passate dall'esterno
+    const updateOptions = { ...defaultOptions, ...options };
+
     await ormObj.update(
       {
         cod: t.get_cod(),
@@ -68,9 +82,7 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
         stato: t.get_stato(),
         // Aggiungi altri campi che devono essere aggiornati
       },
-      {
-        where: { id: t.get_id() },
-      },
+      updateOptions,
     );
   }
 

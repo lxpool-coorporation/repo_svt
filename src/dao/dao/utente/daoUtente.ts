@@ -1,3 +1,4 @@
+import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
 import { eUtente } from '../../../entity/utente/eUtente';
 import { ormUtente } from '../../../models/utente/ormUtente';
 import { Transaction } from 'sequelize';
@@ -44,20 +45,31 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   }
 
   // Aggiorna un utente esistente nel database
-  async update(t: eUtente): Promise<void> {
+  async update(t: eUtente, options?: object): Promise<void> {
     const ormObj = await ormUtente.findByPk(t.get_id());
     if (!ormObj) {
       throw new Error('Utente not found');
     }
+
+    // Imposto le opzioni di default o applico quelle fornite dall'utente
+    const defaultOptions = {
+      where: { id: t.get_id() },
+      fields: ['codice_fiscale', 'id_stato'], // Campi aggiornabili di default
+      returning: true,
+      individualHooks: true,
+      validate: true,
+    };
+
+    // Combina le opzioni di default con quelle passate dall'esterno
+    const updateOptions = { ...defaultOptions, ...options };
+
     await ormObj.update(
       {
         codice_fiscale: t.get_codiceFiscale(),
         id_stato: t.get_stato(),
         // Aggiungi altri campi che devono essere aggiornati
       },
-      {
-        where: { id: t.get_id() },
-      },
+      updateOptions,
     );
   }
 

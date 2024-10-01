@@ -10,6 +10,7 @@ import {
   daoInitUtente,
   daoInitUtenteImplementation,
 } from '../dao/utente/daoInitUtente';
+import { DaoInterfaceGeneric } from '../interfaces/generic/daoInterfaceGeneric';
 
 class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   private daoUtente: daoUtenteImplementation;
@@ -33,8 +34,8 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   ): Promise<eUtente | null> {
     return this.daoUtente.save(t, options);
   }
-  update(t: eUtente, ...params: string[]): Promise<void> {
-    return this.daoUtente.update(t, ...params);
+  update(t: eUtente, options?: object): Promise<void> {
+    return this.daoUtente.update(t, options);
   }
   delete(t: eUtente, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoUtente.delete(t, options);
