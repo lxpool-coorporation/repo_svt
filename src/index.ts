@@ -60,3 +60,5 @@ app
   .on('error', (err: Error) => {
     logger.error(err.message);
   });
+
+export default app;

@@ -9,7 +9,11 @@ dotenv.config(); // Per leggere la chiave segreta dal file .env
 
 const JWT_SECRET_PRIVATE = process.env.SERVER_KEY_PRIVATE || ''; // Fallback in caso il JWT_SECRET non venga trovato
 const JWT_SECRET_PUBLIC = process.env.SERVER_KEY_PUBLIC || ''; // Fallback in caso il JWT_SECRET non venga trovato
-const options: SignOptions = { expiresIn: '1h', algorithm: 'RS256' };
+const JWT_TOKEN_EXPIRED = process.env.JWT_TOKEN_EXPIRED || '1h';
+const options: SignOptions = {
+  expiresIn: JWT_TOKEN_EXPIRED,
+  algorithm: 'RS256',
+};
 
 export interface JwtPayload {
   id: number; // Aggiungiamo altre proprietà se hai più dati nel payload
@@ -54,6 +58,7 @@ export class authController {
   ): void => {
     try {
       const { username, password } = req.body as any;
+
       // Eseguiamo qui la validazione dell'utente
       if (username === 'admin' && password === 'password') {
         const token: string = authController.generateToken(1); // Passa l'ID utente
