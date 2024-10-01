@@ -2,12 +2,9 @@ import logger from './utils/logger-winston';
 
 import { sequelize, models } from './models/utente/ormInitUtente';
 import { eUtente } from './entity/utente/eUtente';
-import { daoUtente } from './dao/utente/daoUtente';
-import { ormUtente } from './models/utente/ormUtente';
 import { enumStato } from './entity/enum/enumStato';
-import { daoProfilo } from './dao/utente/daoProfilo';
 import { eProfilo } from './entity/utente/eProfilo';
-import { ormProfilo } from './models/utente/ormProfilo';
+import { serviceUtente } from './services/serviceUtente';
 
 logger.info('app started');
 
@@ -44,20 +41,22 @@ async function readUser1() {
 
 async function readUser2() {
  // const utenteConProfili1 = await ormUtente.findByPk(2)
-  const utenteConProfili = await ormUtente.findByPk(2, {
-      include: [{
-          model: ormProfilo,
-          as: 'profili',  // Usa il nome dell'associazione esplicita
-          through: { attributes: [] }  // Evita di restituire i campi della tabella di associazione
-      }],
-  });
-if(utenteConProfili)
-  if (utenteConProfili && utenteConProfili.profili) {
-    // Ora hai accesso agli oggetti ormProfilo
-    utenteConProfili.profili.forEach(profilo => {
-        console.log(profilo.descrizione);  // Questo sarà un oggetto ormProfilo
-    });
-}
+  const utente = await serviceUtente.getUtenteById(2);
+  if(utente)
+  {
+      console.log("TROVATO UTENTE: " + utente.get_codiceFiscale())
+      console.log(console.log(JSON.stringify(utente)))
+      const profiliUtente = await serviceUtente.getProfiliByIdUtente(utente.get_id())
+      if(profiliUtente){
+          console.log("PROFILI ASSOCIATI: ")
+          profiliUtente.forEach(a => {
+            console.log(`- ${a.get_descrizione()}`)
+            console.log(JSON.stringify(a))
+          })
+      }
+      
+  }
+
 }
 
 //readUser1()

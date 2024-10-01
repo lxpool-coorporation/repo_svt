@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { daoUtente } from '../dao/utente/daoUtente';  // Il DAO
+import { daoUtente } from '../dao/dao/utente/daoUtente';  // Il DAO
 import { eUtente } from '../entity/utente/eUtente';
 import { enumStato } from '@/entity/enum/enumStato';
 

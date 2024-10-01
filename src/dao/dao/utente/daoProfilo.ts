@@ -1,9 +1,9 @@
-import { eProfilo } from "../../entity/utente/eProfilo";
-import { ormProfilo } from "../../models/utente/ormProfilo"
+import { eProfilo } from "../../../entity/utente/eProfilo";
+import { ormProfilo } from "../../../models/utente/ormProfilo"
 import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Profilo`
-class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
+export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
     // Trova un profilo per ID usando Sequelize
     async get(id: number): Promise<eProfilo | null> {
         const ormObj = await ormProfilo.findByPk(id);
@@ -62,9 +62,6 @@ class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
         await ormObj.destroy();
     }
 }
-
-// Esporta il DAO per l'uso nel repository
-export {daoProfiloImplementation};
 
 // Esporta il DAO per l'uso nei servizi o nei controller
 export const daoProfilo = new daoProfiloImplementation();

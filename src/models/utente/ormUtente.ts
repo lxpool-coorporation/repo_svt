@@ -23,8 +23,6 @@ export class ormUtente extends Model {
        public removeProfili!: (profili: ormProfilo[], options?: any) => Promise<void>;
 }
 
-
-
 // Definizione del modello
 ormUtente.init({
     id: {

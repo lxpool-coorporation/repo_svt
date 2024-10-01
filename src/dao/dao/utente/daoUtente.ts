@@ -1,9 +1,9 @@
-import { eUtente } from "../../entity/utente/eUtente";
-import { ormUtente } from "../../models/utente/ormUtente"
+import { eUtente } from "../../../entity/utente/eUtente";
+import { ormUtente } from "../../../models/utente/ormUtente"
 import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Utente`
-class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
+export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     // Trova un utente per ID usando Sequelize
     async get(id: number): Promise<eUtente | null> {
         const ormObj = await ormUtente.findByPk(id);
@@ -59,10 +59,10 @@ class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
         }
         await ormObj.destroy();
     }
-}
 
-// Esporta il DAO per l'uso nel repository
-export {daoUtenteImplementation};
+
+
+}
 
 // Esporta il DAO per l'uso nei servizi o nei controller
 export const daoUtente = new daoUtenteImplementation();
