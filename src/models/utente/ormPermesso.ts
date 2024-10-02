@@ -7,7 +7,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormProfilo extends Model {
+export class ormPermesso extends Model {
   public id!: number;
   public cod!: string;
   public descrizione!: string;
@@ -15,7 +15,7 @@ export class ormProfilo extends Model {
 }
 
 // Definizione del modello
-ormProfilo.init(
+ormPermesso.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -39,7 +39,7 @@ ormProfilo.init(
   },
   {
     sequelize,
-    modelName: 'utn_prf_profilo',
-    tableName: 'utn_prf_profilo',
+    modelName: 'utn_prf_permesso',
+    tableName: 'utn_prf_permesso',
   },
 );

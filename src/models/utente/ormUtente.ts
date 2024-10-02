@@ -1,4 +1,4 @@
-import Database from '../../utils/database';
+import database from '../../utils/database';
 import { DataTypes, Sequelize, Model } from 'sequelize';
 import { enumStato } from '../../entity/enum/enumStato';
 import { ormProfilo } from './ormProfilo';
@@ -6,15 +6,12 @@ import { ormProfilo } from './ormProfilo';
 /**
  * Instanziazione della connessione verso il RDBMS
  */
-const sequelize: Sequelize = Database.getInstance();
+const sequelize: Sequelize = database.getInstance();
 
 export class ormUtente extends Model {
   public id!: number;
   public codice_fiscale!: string;
   public stato!: enumStato;
-
-  // Dichiarazione manuale della proprietà 'profili' per risolvere l'errore di TypeScript
-  public profili?: ormProfilo[]; // Associazione many-to-many con profili
 
   // Metodi di associazione generati da Sequelize
   public addProfilo!: (
@@ -27,6 +24,7 @@ export class ormUtente extends Model {
     profili: ormProfilo[],
     options?: any,
   ) => Promise<void>;
+
 }
 
 // Definizione del modello

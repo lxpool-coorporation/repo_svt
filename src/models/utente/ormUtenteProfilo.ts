@@ -1,14 +1,14 @@
-import Database from '../../utils/database';
-import { DataTypes, Sequelize, Model } from 'sequelize';
+import database from '../../utils/database';
+import { DataTypes, Sequelize } from 'sequelize';
 import { ormUtente } from './ormUtente';
 import { ormProfilo } from './ormProfilo';
 
 /**
  * Instanziazione della connessione verso il RDBMS
  */
-const sequelize: Sequelize = Database.getInstance();
+const sequelize: Sequelize = database.getInstance();
 
-export class ormUtenteProfilo extends Model {}
+export class ormUtenteProfilo extends ormUtente {}
 
 // Definizione del modello
 ormUtenteProfilo.init(

@@ -15,8 +15,8 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   }
 
   // Trova tutti gli utenti usando Sequelize
-  async getAll(): Promise<eUtente[]> {
-    const objs = await ormUtente.findAll();
+  async getAll(options?: object): Promise<eUtente[]> {
+    const objs = await ormUtente.findAll(options);
     return objs.map(
       (ormObj) => new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato),
     );
