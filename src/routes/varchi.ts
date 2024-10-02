@@ -10,7 +10,8 @@ routerVarchi.get('/:id', function (req, res, _next) {
 /*
 routerVarchi.post('/');
 routerVarchi.delete('/:id');
-routerVarchi.update('/:id');
+routerVarchi.put('/:id');
 routerVarchi.patch('/:id');
 */
+
 export default routerVarchi;

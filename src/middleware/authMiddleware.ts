@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import logger from '../utils/logger-winston';
 import createError from 'http-errors';
 import { Request, Response, NextFunction } from 'express';
-import { authController, JwtPayload } from '../controller/authController';
+import { authController, JwtPayload } from '../controllers/authController';
 
 dotenv.config();
 

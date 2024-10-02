@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../../index';
-import { authController } from '../../controller/authController';
+import { authController } from '../../controllers/authController';
 
 describe('POST /login', () => {
   it('should return a valid JWT token for correct credentials', async () => {
