@@ -9,18 +9,18 @@ import {
 } from '../dao/utente/daoProfiloPermesso';
 import { eUtente } from '@/entity/utente/eUtente';
 import {
-  daoUtenteProfilo,
-  daoUtenteProfiloImplementation,
-} from '../dao/utente/daoUtenteProfilo';
+  daoProfiloUtente,
+  daoProfiloUtenteImplementation,
+} from '../dao/utente/daoProfiloUtente';
 
 class repositoryProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
   private daoProfilo: daoProfiloImplementation;
-  private daoUtenteProfilo: daoUtenteProfiloImplementation;
+  private daoProfiloUtente: daoProfiloUtenteImplementation;
   private daoProfiloPermesso: daoProfiloPermessoImplementation;
 
   constructor() {
     this.daoProfilo = daoProfilo;
-    this.daoUtenteProfilo = daoUtenteProfilo;
+    this.daoProfiloUtente = daoProfiloUtente;
     this.daoProfiloPermesso = daoProfiloPermesso;
   }
   get(id: number): Promise<eProfilo | null> {
@@ -41,14 +41,11 @@ class repositoryProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
   delete(t: eProfilo, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoProfilo.delete(t, options);
   }
-  getUtenti(id: number): Promise<eUtente[] | null> {
-    return this.daoUtenteProfilo.getUtenti(id);
+  getUtenti(idProfilo: number): Promise<eUtente[] | null> {
+    return this.daoProfiloUtente.getUtenti(idProfilo);
   }
   getPermessi(id: number): Promise<ePermesso[] | null> {
     return this.daoProfiloPermesso.getPermessi(id);
-  }
-  getProfili(id: number): Promise<eProfilo[] | null> {
-    return this.daoProfiloPermesso.getProfili(id);
   }
 }
 

@@ -1,3 +1,5 @@
+import { enumPermessoCategoria } from '../../entity/enum/enumPermessoCategoria';
+import { enumPermessoTipo } from '../../entity/enum/enumPermessoTipo';
 import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
@@ -9,6 +11,8 @@ const sequelize: Sequelize = database.getInstance();
 
 export class ormPermesso extends Model {
   public id!: number;
+  public categoria!: enumPermessoCategoria;
+  public tipo!: enumPermessoTipo;
   public cod!: string;
   public descrizione!: string;
   public stato!: enumStato;
@@ -21,6 +25,14 @@ ormPermesso.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    categoria: {
+      type: DataTypes.ENUM(...Object.values(enumPermessoCategoria)),
+      allowNull: false,
+    },
+    tipo: {
+      type: DataTypes.ENUM(...Object.values(enumPermessoTipo)),
+      allowNull: false,
     },
     cod: {
       type: DataTypes.STRING,

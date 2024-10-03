@@ -14,6 +14,10 @@ class eProfilo {
     this.stato = stato;
   }
 
+  static fromJSON(data: any): eProfilo {
+    return new eProfilo(data.id, data.cod, data.descrizione, data.stato);
+  }
+
   // Metodi Getters
   get_id(): number {
     return this.id;

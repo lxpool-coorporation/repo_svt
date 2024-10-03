@@ -11,14 +11,14 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     if (!ormObj) {
       throw new Error(`utente non trovato per l'id ${id}`);
     }
-    return new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato);
+    return new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato);
   }
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eUtente[]> {
     const objs = await ormUtente.findAll(options);
     return objs.map(
-      (ormObj) => new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato),
+      (ormObj) => new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato),
     );
   }
 
@@ -36,17 +36,22 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     const ormObj = await ormUtente.create(
       {
         id: t.get_id(),
-        codice_fiscale: t.get_codiceFiscale(),
+        identificativo: t.get_identificativo(),
         stato: t.get_stato(),
       },
       { transaction: options?.transaction },
     );
-    return new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato);
+    return new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato);
   }
 
   // Aggiorna un utente esistente nel database
-  async update(t: eUtente, options?: object): Promise<void> {
-    const ormObj = await ormUtente.findByPk(t.get_id());
+  async update(
+    t: eUtente,
+    options?: { transaction?: Transaction },
+  ): Promise<void> {
+    const ormObj = await ormUtente.findByPk(t.get_id(), {
+      transaction: options?.transaction,
+    });
     if (!ormObj) {
       throw new Error('Utente not found');
     }
@@ -54,7 +59,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['codice_fiscale', 'id_stato'], // Campi aggiornabili di default
+      fields: ['identificativo', 'id_stato'], // Campi aggiornabili di default
       returning: true,
       individualHooks: true,
       validate: true,
@@ -65,7 +70,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
 
     await ormObj.update(
       {
-        codice_fiscale: t.get_codiceFiscale(),
+        identificativo: t.get_identificativo(),
         id_stato: t.get_stato(),
         // Aggiungi altri campi che devono essere aggiornati
       },

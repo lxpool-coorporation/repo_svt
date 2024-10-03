@@ -57,8 +57,13 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
   }
 
   // Aggiorna un utente esistente nel database
-  async update(t: eProfilo, options?: object): Promise<void> {
-    const ormObj = await ormProfilo.findByPk(t.get_id());
+  async update(
+    t: eProfilo,
+    options?: { transaction?: Transaction },
+  ): Promise<void> {
+    const ormObj = await ormProfilo.findByPk(t.get_id(), {
+      transaction: options?.transaction,
+    });
     if (!ormObj) {
       throw new Error('Profilo not found');
     }

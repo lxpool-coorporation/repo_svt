@@ -16,6 +16,7 @@ export class daoInitUtenteImplementation {
         logging: options?.logging ?? false, // Valorizza `logging`, default false
       };
       await sequelize.sync(syncOptions); // Usa `force: true` se vuoi ricreare le tabelle ogni volta
+      logger.info(models);
       logger.info('Database synchronized');
       return true;
     } catch (error) {

@@ -29,7 +29,7 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     this.daoProfiloPermesso = daoProfiloPermesso;
     this.daoInitUtente = daoInitUtente;
   }
-  
+
   get(id: number): Promise<eUtente | null> {
     return this.daoUtente.get(id);
   }

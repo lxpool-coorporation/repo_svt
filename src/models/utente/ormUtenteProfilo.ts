@@ -8,7 +8,19 @@ import { ormProfilo } from './ormProfilo';
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormUtenteProfilo extends ormUtente {}
+export class ormUtenteProfilo extends ormUtente {
+  // Metodi di associazione utente -> profili
+  public addProfilo!: (
+    profilo: ormProfilo | ormProfilo[],
+    options?: any,
+  ) => Promise<void>;
+  public getProfili!: (options?: any) => Promise<ormProfilo[]>;
+  public setProfili!: (profili: ormProfilo[], options?: any) => Promise<void>;
+  public removeProfili!: (
+    profili: ormProfilo[],
+    options?: any,
+  ) => Promise<void>;
+}
 
 // Definizione del modello
 ormUtenteProfilo.init(
