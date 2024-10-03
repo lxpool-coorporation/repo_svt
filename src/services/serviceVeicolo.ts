@@ -100,7 +100,12 @@ class serviceSvtImplementation {
   async deleteVeicolo(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const VeicoloDaEliminare = new eVeicolo(id, enumVeicoloTipo.autobus, '', enumStato.attivo);
+    const VeicoloDaEliminare = new eVeicolo(
+      id,
+      enumVeicoloTipo.autobus,
+      '',
+      enumStato.attivo,
+    );
     await repositoryVeicolo.delete(VeicoloDaEliminare);
 
     // Invalida la cache dell'Veicolo eliminato e la cache generale

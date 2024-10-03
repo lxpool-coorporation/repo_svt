@@ -11,12 +11,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     if (!ormObj) {
       throw new Error(`Veicolo non trovato per l'id ${id}`);
     }
-    return new eVeicolo(
-      ormObj.id,
-      ormObj.tipo,
-      ormObj.targa,
-      ormObj.stato,
-    );
+    return new eVeicolo(ormObj.id, ormObj.tipo, ormObj.targa, ormObj.stato);
   }
 
   // Trova tutti gli utenti usando Sequelize
@@ -48,12 +43,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
       },
       { transaction: options?.transaction },
     );
-    return new eVeicolo(
-      ormObj.id,
-      ormObj.tipo,
-      ormObj.targa,
-      ormObj.stato,
-    );
+    return new eVeicolo(ormObj.id, ormObj.tipo, ormObj.targa, ormObj.stato);
   }
 
   // Aggiorna un svt esistente nel database

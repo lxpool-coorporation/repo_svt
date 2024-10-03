@@ -71,7 +71,14 @@ class serviceSvtImplementation {
   ): Promise<eVarco | null> {
     const redisClient = await databaseCache.getInstance();
 
-    const nuovoVarco = new eVarco(0, cod, descrizione, latitudine, longitudine, stato);
+    const nuovoVarco = new eVarco(
+      0,
+      cod,
+      descrizione,
+      latitudine,
+      longitudine,
+      stato,
+    );
     const savedVarco = await repositoryVarco.save(nuovoVarco);
 
     // Invalida la cache degli Veicoli
@@ -90,7 +97,14 @@ class serviceSvtImplementation {
   ): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const Varco = new eVarco(id, cod,descrizione,latitudine,longitudine, stato);
+    const Varco = new eVarco(
+      id,
+      cod,
+      descrizione,
+      latitudine,
+      longitudine,
+      stato,
+    );
     await repositoryVarco.update(Varco);
 
     // Invalida la cache dell'Varco aggiornato e la cache generale
@@ -102,7 +116,7 @@ class serviceSvtImplementation {
   async deleteVarco(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const VarcoDaEliminare = new eVarco(id, '','', 0,0, enumStato.attivo);
+    const VarcoDaEliminare = new eVarco(id, '', '', 0, 0, enumStato.attivo);
     await repositoryVarco.delete(VarcoDaEliminare);
 
     // Invalida la cache dell'Varco eliminato e la cache generale
@@ -118,7 +132,6 @@ class serviceSvtImplementation {
   }): Promise<boolean> {
     return await repositoryVarco.init(options);
   }
-
 }
 
 export const serviceSvt = new serviceSvtImplementation();

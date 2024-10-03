@@ -8,7 +8,12 @@ class eVeicolo {
   private targa: string;
   private stato: enumStato;
 
-  constructor(id: number, tipo: enumVeicoloTipo, targa: string, stato: enumStato) {
+  constructor(
+    id: number,
+    tipo: enumVeicoloTipo,
+    targa: string,
+    stato: enumStato,
+  ) {
     this.id = id;
     this.tipo = tipo;
     this.targa = targa;

@@ -23,7 +23,7 @@ export async function getUtenteById(req: Request, res: Response) {
 }
 
 // Recupera tutti gli utenti
-export async function getAllUtenti(req: Request, res: Response) {
+export async function getAllUtenti(_req: Request, res: Response) {
   try {
     const utenti = await daoUtente.getAll();
     return res.json(utenti);

@@ -1,7 +1,8 @@
+import sequelize from 'sequelize';
 import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
 import { eUtente } from '../../../entity/utente/eUtente';
 import { ormUtente } from '../../../models/utente/ormUtente';
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Utente`
 export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
@@ -12,6 +13,24 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
       throw new Error(`utente non trovato per l'id ${id}`);
     }
     return new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato);
+  }
+
+  async getByIdentificativo(cf: string): Promise<eUtente | null> {
+    let ret: eUtente | null = null;
+    const ormObj = await ormUtente.findOne({
+      where: {
+        [Op.and]: [
+          sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('identificativo')),
+            cf.toLowerCase(),
+          ),
+        ],
+      },
+    });
+    if (!!ormObj) {
+      ret = new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato);
+    }
+    return ret;
   }
 
   // Trova tutti gli utenti usando Sequelize
