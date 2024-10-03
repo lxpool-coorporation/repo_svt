@@ -62,8 +62,14 @@ jobs:
     - name: Set permissions for wait-for-it.sh
       run: chmod +x ./wait-for-it.sh
 
+    - name: Show Docker Compose logs
+      run: docker-compose logs
+
+    - name: Check if svt-db is running
+      run: docker ps | grep svt-db
+
     - name: Wait for services to be ready
-      run: docker-compose exec -T app ./wait-for-it.sh svt-db:3306 --timeout=60 --strict -- echo "Database is up"
+      run: ./wait-for-it.sh svt-db:3306 --timeout=30 --strict -- echo "Database is up"
 
     - name: Run Migrations
       run: npm run migrate
