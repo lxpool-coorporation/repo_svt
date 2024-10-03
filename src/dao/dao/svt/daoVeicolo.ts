@@ -75,7 +75,6 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
         tipo: t.get_tipo(),
         targa: t.get_targa(),
         stato: t.get_stato(),
-        // Aggiungi altri campi che devono essere aggiornati
       },
       updateOptions,
     );

@@ -100,7 +100,6 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
         latitudine: t.get_latitudine(),
         longitudine: t.get_longitudine(),
         stato: t.get_stato(),
-        // Aggiungi altri campi che devono essere aggiornati
       },
       updateOptions,
     );
