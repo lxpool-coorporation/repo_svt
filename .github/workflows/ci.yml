@@ -63,7 +63,7 @@ jobs:
       run: chmod +x ./wait-for-it.sh
 
     - name: Wait for services to be ready
-      run: ./wait-for-it.sh svt-db:3306 --timeout=30 --strict -- echo "Database is up"
+      run: docker-compose exec app ./wait-for-it.sh svt-db:3306 --timeout=60 --strict -- echo "Database is up"
 
     - name: Run Migrations
       run: npm run migrate
