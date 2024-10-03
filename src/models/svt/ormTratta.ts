@@ -44,9 +44,9 @@ ormTratta.init(
       allowNull: false,
     },
     distanza: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     stato: {
       type: DataTypes.ENUM(...Object.values(enumStato)),
       allowNull: false,

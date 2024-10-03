@@ -12,23 +12,21 @@ export class daoTrattaVarcoImplementation extends daoTrattaImplementation {
       throw new Error('Tratta non trovato');
     } else {
       const objOrmTrattaVarco = obj as ormTrattaVarco;
-      const objVarchi: ormVarco[] =
-        await objOrmTrattaVarco.getVarchi(); // Metodo Sequelize
+      const objVarchi: ormVarco[] = await objOrmTrattaVarco.getVarchi(); // Metodo Sequelize
 
       return objVarchi.map((a) => {
         return new eVarco(
-            a.id,
-            a.cod,
-            a.descrizione,
-            a.latitudine,
-            a.longitudine,
-            a.stato,
-          )
-        });
+          a.id,
+          a.cod,
+          a.descrizione,
+          a.latitudine,
+          a.longitudine,
+          a.stato,
+        );
+      });
     }
   }
 }
 
-
 // Esporta il DAO per l'uso nei servizi o nei controller
-export const daoTrattaVarco= new daoTrattaVarcoImplementation();
+export const daoTrattaVarco = new daoTrattaVarcoImplementation();

@@ -79,7 +79,7 @@ class eTratta {
   set_id_varco_uscita(id_varco_uscita: number): void {
     this.id_varco_uscita = id_varco_uscita;
   }
-  set_distanza(distanza: number): void{
+  set_distanza(distanza: number): void {
     this.distanza = distanza;
   }
   set_stato(stato: enumStato): void {

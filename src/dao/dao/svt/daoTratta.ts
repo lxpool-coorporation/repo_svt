@@ -63,13 +63,13 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
       { transaction: options?.transaction },
     );
     return new eTratta(
-        ormObj.id,
-        ormObj.cod,
-        ormObj.descrizione,
-        ormObj.id_varco_ingresso,
-        ormObj.id_varco_uscita,
-        ormObj.distanza,
-        ormObj.stato,
+      ormObj.id,
+      ormObj.cod,
+      ormObj.descrizione,
+      ormObj.id_varco_ingresso,
+      ormObj.id_varco_uscita,
+      ormObj.distanza,
+      ormObj.stato,
     );
   }
 
@@ -88,7 +88,13 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['cod', 'descrizione', 'id_varco_ingresso', 'id_varco_uscita', 'stato'], // Campi aggiornabili di default
+      fields: [
+        'cod',
+        'descrizione',
+        'id_varco_ingresso',
+        'id_varco_uscita',
+        'stato',
+      ], // Campi aggiornabili di default
       returning: true,
       individualHooks: true,
       validate: true,

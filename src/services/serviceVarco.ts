@@ -38,27 +38,27 @@ class serviceVarcoImplementation {
     }
   }
 
-  // Recupera tutti gli Veicoli
-  async getAllVeicoli(options?: object): Promise<eVarco[]> {
+  // Recupera tutti gli Varchi
+  async getAllVarchi(options?: object): Promise<eVarco[]> {
     const redisClient = await databaseCache.getInstance();
 
-    const cacheKey = 'Veicoli_tutti';
+    const cacheKey = 'Varchi_tutti';
 
-    // Controlla se gli Veicoli sono in cache
-    const cachedVeicoli = await redisClient.get(cacheKey);
-    if (cachedVeicoli) {
-      return JSON.parse(cachedVeicoli); // Restituisce gli Veicoli dalla cache
+    // Controlla se gli Varchi sono in cache
+    const cachedVarchi = await redisClient.get(cacheKey);
+    if (cachedVarchi) {
+      return JSON.parse(cachedVarchi); // Restituisce gli Varchi dalla cache
     }
 
     // Se non sono in cache, recupera dal repository
-    const Veicoli = await repositoryVarco.getAll(options);
-    if (Veicoli) {
-      // Memorizza gli Veicoli in cache per 1 ora
-      await redisClient.set(cacheKey, JSON.stringify(Veicoli), {
+    const Varchi = await repositoryVarco.getAll(options);
+    if (Varchi) {
+      // Memorizza gli Varchi in cache per 1 ora
+      await redisClient.set(cacheKey, JSON.stringify(Varchi), {
         EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
       });
     }
-    return Veicoli;
+    return Varchi;
     //return await repositoryVarco.getAll();
   }
 
@@ -82,8 +82,8 @@ class serviceVarcoImplementation {
     );
     const savedVarco = await repositoryVarco.save(nuovoVarco);
 
-    // Invalida la cache degli Veicoli
-    await redisClient.del(`Veicoli_tutti`);
+    // Invalida la cache degli Varchi
+    await redisClient.del(`Varchi_tutti`);
     return savedVarco;
   }
 
@@ -110,7 +110,7 @@ class serviceVarcoImplementation {
 
     // Invalida la cache dell'Varco aggiornato e la cache generale
     await redisClient.del(`Varco_${id}`);
-    await redisClient.del('Veicoli_tutti');
+    await redisClient.del('Varchi_tutti');
   }
 
   // Elimina un Varco
@@ -122,7 +122,7 @@ class serviceVarcoImplementation {
 
     // Invalida la cache dell'Varco eliminato e la cache generale
     await redisClient.del(`Varco_${id}`);
-    await redisClient.del('Veicoli_tutti');
+    await redisClient.del('Varchi_tutti');
   }
 
   // Ottieni Transiti di un Varco

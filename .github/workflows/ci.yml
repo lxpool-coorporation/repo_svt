@@ -30,6 +30,43 @@ jobs:
     - name: Run Linter
       run: npm run lint
 
+    - name: Set environment variables
+      run: |
+        echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
+        echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASS=${{ secrets.DB_PASS }}" >> $GITHUB_ENV
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
+        echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
+        echo "LOG_DIRECTORY=${{ secrets.LOG_DIRECTORY }}" >> $GITHUB_ENV
+        echo "LOG_LEVEL=${{ secrets.LOG_LEVEL }}" >> $GITHUB_ENV
+        echo "LOG_OUTPUT_MODE=${{ secrets.LOG_OUTPUT_MODE }}" >> $GITHUB_ENV
+        echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> $GITHUB_ENV
+        echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> $GITHUB_ENV
+        echo "REDIS_CACHE_TIMEOUT=${{ secrets.REDIS_CACHE_TIMEOUT }}" >> $GITHUB_ENV
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> $GITHUB_ENV
+        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
+        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
+        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> $GITHUB_ENV
+        echo "SERVER_PORT=${{ secrets.SERVER_PORT }}" >> $GITHUB_ENV
+        echo "JWT_PRIVATE_KEY=${{ secrets.JWT_PRIVATE_KEY }}" >> $GITHUB_ENV
+        echo "JWT_PUBLIC_KEY=${{ secrets.JWT_PUBLIC_KEY }}" >> $GITHUB_ENV
+        echo "JWT_TOKEN_EXPIRED=${{ secrets.JWT_TOKEN_EXPIRED }}" >> $GITHUB_ENV
+
+    - name: Start Docker Compose stack
+      run: docker-compose up -d
+
+    - name: Wait for services to be ready
+      run: ./wait-for-it.sh ${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }} --timeout=30 --strict -- echo "Database is up"
+
+    - name: Run Migrations
+      run: npm run migrate
+
+    - name: Run Seeders
+      run: npm run seed
+
+    - name: Run Linter
+      run: npm run lint
+
     - name: Run Tests
       run: npm test   
 
@@ -44,4 +81,7 @@ jobs:
 
     - name: Push Docker Image
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/svt-app:latest
+
+    - name: Shutdown Docker Compose stack
+      run: docker-compose down
 

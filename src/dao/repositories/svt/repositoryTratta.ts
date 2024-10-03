@@ -10,7 +10,10 @@ import {
   daoInitSvtImplementation,
 } from '../../../dao/dao/svt/daoInitSvt';
 import { eVarco } from '../../../entity/svt/eVarco';
-import { daoTrattaVarco, daoTrattaVarcoImplementation } from '../../../dao/dao/svt/daoTrattaVarco';
+import {
+  daoTrattaVarco,
+  daoTrattaVarcoImplementation,
+} from '../../../dao/dao/svt/daoTrattaVarco';
 
 class repositoryTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
   private daoTratta: daoTrattaImplementation;

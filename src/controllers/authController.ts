@@ -10,8 +10,26 @@ import { retMiddleware } from '../utils/retMiddleware';
 
 dotenv.config(); // Per leggere la chiave segreta dal file .env
 
-const JWT_SECRET_PRIVATE = process.env.SERVER_KEY_PRIVATE || ''; // Fallback in caso il JWT_SECRET non venga trovato
-const JWT_SECRET_PUBLIC = process.env.SERVER_KEY_PUBLIC || ''; // Fallback in caso il JWT_SECRET non venga trovato
+// Leggiamo le chiavi in base all'ambiente
+let JWT_SECRET_PRIVATE: string;
+let JWT_SECRET_PUBLIC: string;
+
+const PRIVATE_KEY_PATH = process.env.JWT_PRIVATE_KEY || '';
+const PUBLIC_KEY_PATH = process.env.JWT_PUBLIC_KEY || '';
+
+if (
+  process.env.NODE_ENV === 'development' ||
+  process.env.NODE_ENV === 'production'
+) {
+  // In development e production leggiamo le chiavi dai file
+  JWT_SECRET_PRIVATE = fs.readFileSync(PRIVATE_KEY_PATH, 'utf8');
+  JWT_SECRET_PUBLIC = fs.readFileSync(PUBLIC_KEY_PATH, 'utf8');
+} else if (process.env.NODE_ENV === 'test') {
+  // In test leggiamo le chiavi direttamente dalle variabili d'ambiente
+  JWT_SECRET_PRIVATE = process.env.JWT_PRIVATE_KEY || ''; // Fallback se la variabile non è presente
+  JWT_SECRET_PUBLIC = process.env.JWT_PUBLIC_KEY || ''; // Fallback se la variabile non è presente
+}
+
 const JWT_TOKEN_EXPIRED = process.env.JWT_TOKEN_EXPIRED || '1h';
 const options: SignOptions = {
   expiresIn: JWT_TOKEN_EXPIRED,
@@ -28,7 +46,7 @@ export class authController {
     let ret: string = '';
     try {
       if (!!userId && userId !== undefined) {
-        const private_key = fs.readFileSync(JWT_SECRET_PRIVATE);
+        const private_key = JWT_SECRET_PRIVATE; // Usiamo la chiave corretta in base all'ambiente
         const payload = { id_utente: userId };
         ret = jwt.sign(payload, private_key, options);
         logger.info(
@@ -46,7 +64,7 @@ export class authController {
     let ret: JwtPayload | null = null;
     try {
       if (!!token && token !== undefined && token.trim() != '') {
-        const public_key = fs.readFileSync(JWT_SECRET_PUBLIC);
+        const public_key = JWT_SECRET_PUBLIC; // Usiamo la chiave corretta in base all'ambiente
         ret = jwt.verify(token, public_key, options) as JwtPayload;
       }
     } catch (error: any) {

@@ -121,7 +121,15 @@ class serviceTrattaImplementation {
   async deleteTratta(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const TrattaDaEliminare = new eTratta(id, '', '', 0, 0, 0, enumStato.attivo);
+    const TrattaDaEliminare = new eTratta(
+      id,
+      '',
+      '',
+      0,
+      0,
+      0,
+      enumStato.attivo,
+    );
     await repositoryTratta.delete(TrattaDaEliminare);
 
     // Invalida la cache dell'Tratta eliminato e la cache generale

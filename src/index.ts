@@ -9,7 +9,6 @@ import { authMiddleware } from './middleware/authMiddleware';
 import { serviceUtente } from './services/serviceUtente';
 import { enumPermessoTipo } from './entity/enum/enumPermessoTipo';
 import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
-import { serviceTransito } from './services/serviceTransito';
 
 dotenv.config();
 logger.info('app started');
@@ -59,7 +58,7 @@ const PORT = process.env.SERVER_PORT || 3000;
 
 app
   .listen(PORT, () => {
-    //_readUser2() 
+    //_readUser2()
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {

@@ -1,5 +1,6 @@
 // src/utils/database.ts
 import { Sequelize } from 'sequelize';
+import config from '../config/database.config';
 import dotenv from 'dotenv';
 import logger from './logger-winston';
 
@@ -14,25 +15,22 @@ class Database {
 
   public static getInstance(): Sequelize {
     if (!Database.instance) {
+      const currentEnv =
+        (process.env.NODE_ENV as 'development' | 'test' | 'production') ||
+        'development';
+      const dbConfig = config[currentEnv]; // Usa config.ts per gestire i diversi ambienti
+
       Database.instance = new Sequelize(
         process.env.DB_NAME || 'svt_db',
         process.env.DB_USER || 'user',
         process.env.DB_PASS || 'password',
         {
-          host: process.env.DB_HOST || 'localhost',
+          host: dbConfig.host,
           port: parseInt(process.env.DB_PORT || '3306'),
-          dialect: 'mysql',
+          dialect: dbConfig.dialect,
           logging: process.env.NODE_ENV === 'development' ? console.log : false,
-          define: {
-            timestamps: true,
-            freezeTableName: true,
-          },
-          pool: {
-            max: 10,
-            min: 0,
-            acquire: 30000,
-            idle: 10000,
-          },
+          define: dbConfig.define,
+          pool: dbConfig.pool,
         },
       );
 
