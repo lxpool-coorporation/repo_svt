@@ -31,7 +31,7 @@ jobs:
       run: npm run lint
 
     - name: Set environment variables
-      env: |
+      env:
         DB_NAME: ${{ secrets.DB_NAME }}
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASS: ${{ secrets.DB_PASS }}
