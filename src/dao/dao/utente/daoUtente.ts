@@ -16,6 +16,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   }
 
   async getByIdentificativo(cf: string): Promise<eUtente | null> {
+    let ret: eUtente | null = null;
     const ormObj = await ormUtente.findOne({
       where: {
         [Op.and]: [
@@ -26,11 +27,10 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
         ],
       },
     });
-    if (!ormObj) {
-      throw new Error(`utente non trovato per cf ${cf}`);
+    if (!!ormObj) {
+      ret = new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato);
     }
-    console.log(3);
-    return new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato);
+    return ret;
   }
 
   // Trova tutti gli utenti usando Sequelize
