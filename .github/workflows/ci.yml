@@ -31,26 +31,26 @@ jobs:
       run: npm run lint
 
     - name: Set environment variables
-      run: |
-        echo "DB_NAME=${{ secrets.DB_NAME }}" >> $GITHUB_ENV
-        echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
-        echo "DB_PASS=${{ secrets.DB_PASS }}" >> $GITHUB_ENV
-        echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
-        echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
-        echo "LOG_DIRECTORY=${{ secrets.LOG_DIRECTORY }}" >> $GITHUB_ENV
-        echo "LOG_LEVEL=${{ secrets.LOG_LEVEL }}" >> $GITHUB_ENV
-        echo "LOG_OUTPUT_MODE=${{ secrets.LOG_OUTPUT_MODE }}" >> $GITHUB_ENV
-        echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> $GITHUB_ENV
-        echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> $GITHUB_ENV
-        echo "REDIS_CACHE_TIMEOUT=${{ secrets.REDIS_CACHE_TIMEOUT }}" >> $GITHUB_ENV
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> $GITHUB_ENV
-        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
-        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
-        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> $GITHUB_ENV
-        echo "SERVER_PORT=${{ secrets.SERVER_PORT }}" >> $GITHUB_ENV
-        echo "JWT_PRIVATE_KEY=${{ secrets.JWT_PRIVATE_KEY }}" >> $GITHUB_ENV
-        echo "JWT_PUBLIC_KEY=${{ secrets.JWT_PUBLIC_KEY }}" >> $GITHUB_ENV
-        echo "JWT_TOKEN_EXPIRED=${{ secrets.JWT_TOKEN_EXPIRED }}" >> $GITHUB_ENV
+      env: |
+        DB_NAME: ${{ secrets.DB_NAME }}
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASS: ${{ secrets.DB_PASS }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
+        LOG_DIRECTORY: ${{ secrets.LOG_DIRECTORY }}
+        LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+        LOG_OUTPUT_MODE: ${{ secrets.LOG_OUTPUT_MODE }}
+        REDIS_HOST: ${{ secrets.REDIS_HOST }}
+        REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        REDIS_CACHE_TIMEOUT: ${{ secrets.REDIS_CACHE_TIMEOUT }}
+        MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+        MYSQL_USER: ${{ secrets.MYSQL_USER }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+        JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+        JWT_TOKEN_EXPIRED: ${{ secrets.JWT_TOKEN_EXPIRED }}
 
     - name: Start Docker Compose stack
       run: docker-compose up -d
