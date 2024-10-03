@@ -37,27 +37,27 @@ class serviceSvtImplementation {
     }
   }
 
-  // Recupera tutti gli Veicoli
-  async getAllVeicoli(options?: object): Promise<eVarco[]> {
+  // Recupera tutti gli Varco
+  async getAllVarco(options?: object): Promise<eVarco[]> {
     const redisClient = await databaseCache.getInstance();
 
-    const cacheKey = 'Veicoli_tutti';
+    const cacheKey = 'Varco_tutti';
 
-    // Controlla se gli Veicoli sono in cache
-    const cachedVeicoli = await redisClient.get(cacheKey);
-    if (cachedVeicoli) {
-      return JSON.parse(cachedVeicoli); // Restituisce gli Veicoli dalla cache
+    // Controlla se gli Varco sono in cache
+    const cachedVarco = await redisClient.get(cacheKey);
+    if (cachedVarco) {
+      return JSON.parse(cachedVarco); // Restituisce gli Varco dalla cache
     }
 
     // Se non sono in cache, recupera dal repository
-    const Veicoli = await repositoryVarco.getAll(options);
-    if (Veicoli) {
-      // Memorizza gli Veicoli in cache per 1 ora
-      await redisClient.set(cacheKey, JSON.stringify(Veicoli), {
+    const Varco = await repositoryVarco.getAll(options);
+    if (Varco) {
+      // Memorizza gli Varco in cache per 1 ora
+      await redisClient.set(cacheKey, JSON.stringify(Varco), {
         EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
       });
     }
-    return Veicoli;
+    return Varco;
     //return await repositoryVarco.getAll();
   }
 
@@ -81,8 +81,8 @@ class serviceSvtImplementation {
     );
     const savedVarco = await repositoryVarco.save(nuovoVarco);
 
-    // Invalida la cache degli Veicoli
-    await redisClient.del(`Veicoli_tutti`);
+    // Invalida la cache degli Varco
+    await redisClient.del(`Varco_tutti`);
     return savedVarco;
   }
 
@@ -109,7 +109,7 @@ class serviceSvtImplementation {
 
     // Invalida la cache dell'Varco aggiornato e la cache generale
     await redisClient.del(`Varco_${id}`);
-    await redisClient.del('Veicoli_tutti');
+    await redisClient.del('Varco_tutti');
   }
 
   // Elimina un Varco
@@ -121,7 +121,7 @@ class serviceSvtImplementation {
 
     // Invalida la cache dell'Varco eliminato e la cache generale
     await redisClient.del(`Varco_${id}`);
-    await redisClient.del('Veicoli_tutti');
+    await redisClient.del('Varco_tutti');
   }
 
   // Inizializza struttura db Svt

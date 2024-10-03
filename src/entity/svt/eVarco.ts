@@ -63,7 +63,7 @@ class eVarco {
   set_cod(cod: string): void {
     this.cod = cod;
   }
-  set_codiceFiscale(descrizione: string): void {
+  set_descrizione(descrizione: string): void {
     this.descrizione = descrizione;
   }
   set_latitudine(latitudine: number): void {
