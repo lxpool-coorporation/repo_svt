@@ -60,10 +60,14 @@ jobs:
       run: docker-compose up -d
 
     - name: Run Migrations
-      run: npm run migrate
+      run: 
+        export NODE_ENV=test
+        npm run migrate
 
     - name: Run Seeders
-      run: npm run seed
+      run: 
+        export NODE_ENV=test
+        npm run seed
 
     - name: Run Linter
       run: npm run lint
