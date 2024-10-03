@@ -71,7 +71,7 @@ async function _readUser2() {
   //await serviceUtente.initStruttura({alter:true })
   //await serviceTransito.initStruttura({alter:true })
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
-  //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo) 
+  //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)
 
   // const utenteConProfili1 = await ormUtente.findByPk(2)
   const utente = await serviceUtente.getUtenteById(1);
