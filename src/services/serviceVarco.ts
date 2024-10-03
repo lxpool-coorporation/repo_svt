@@ -3,6 +3,7 @@ import { eVarco } from '../entity/svt/eVarco';
 import { repositoryVarco } from '../dao/repositories/svt/repositoryVarco';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
+import { eTransito } from '../entity/svt/eTransito';
 
 // classe che gestisce la logica di business dell'Varco
 class serviceSvtImplementation {
@@ -122,6 +123,33 @@ class serviceSvtImplementation {
     // Invalida la cache dell'Varco eliminato e la cache generale
     await redisClient.del(`Varco_${id}`);
     await redisClient.del('Veicoli_tutti');
+  }
+
+  // Ottieni Transiti di un Varco
+  async getTransitiByIdVarco(idVarco: number): Promise<eTransito[] | null> {
+    const redisClient = await databaseCache.getInstance();
+
+    const cacheKey = `Transiti_Varco_${idVarco}`;
+
+    // Controlla se i Transiti sono in cache
+    const jsonData = await redisClient.get(cacheKey);
+    if (jsonData) {
+      const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
+      const cacheObjectArray = dataArray.map((data: any) =>
+        eTransito.fromJSON(data),
+      );
+      return cacheObjectArray;
+    }
+
+    // Se non sono in cache, recupera dal repository
+    const transiti = await repositoryVarco.getTransiti(idVarco);
+    if (transiti) {
+      // Memorizza i profili in cache per 1 ora
+      await redisClient.set(cacheKey, JSON.stringify(transiti), {
+        EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
+      });
+    }
+    return transiti;
   }
 
   // Inizializza struttura db Svt

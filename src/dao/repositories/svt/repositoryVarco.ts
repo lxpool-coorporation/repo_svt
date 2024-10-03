@@ -6,16 +6,23 @@ import {
   daoVarcoImplementation,
 } from '../../../dao/dao/svt/daoVarco';
 import {
+  daoVarcoTransito,
+  daoVarcoTransitoImplementation,
+} from '../../dao/svt/daoVarcoTransito';
+import {
   daoInitSvt,
   daoInitSvtImplementation,
 } from '../../../dao/dao/svt/daoInitSvt';
+import { eTransito } from '../../../entity/svt/eTransito';
 
 class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   private daoVarco: daoVarcoImplementation;
+  private daoVarcoTransito: daoVarcoTransitoImplementation;
   private daoInitSvt: daoInitSvtImplementation;
 
   constructor() {
     this.daoVarco = daoVarco;
+    this.daoVarcoTransito = daoVarcoTransito;
     this.daoInitSvt = daoInitSvt;
   }
   get(id: number): Promise<eVarco | null> {
@@ -35,6 +42,9 @@ class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   }
   delete(t: eVarco, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoVarco.delete(t, options);
+  }
+  getTransiti(idVarco: number): Promise<eTransito[] | null> {
+    return this.daoVarcoTransito.getTransiti(idVarco);
   }
   init(options?: {
     force?: boolean;
