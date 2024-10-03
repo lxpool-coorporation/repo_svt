@@ -35,12 +35,12 @@ ormVarco.init(
       unique: true,
     },
     latitudine: {
-        type: DataTypes.DECIMAL(9, 6),
-        allowNull: false
-      },
+      type: DataTypes.DECIMAL(9, 6),
+      allowNull: false,
+    },
     longitudine: {
-        type: DataTypes.DECIMAL(9, 6),
-        allowNull: false
+      type: DataTypes.DECIMAL(9, 6),
+      allowNull: false,
     },
     stato: {
       type: DataTypes.ENUM(...Object.values(enumStato)),
