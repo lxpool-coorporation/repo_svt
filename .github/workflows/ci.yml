@@ -59,18 +59,6 @@ jobs:
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
       run: docker-compose up -d
 
-    - name: Set permissions for wait-for-it.sh
-      run: chmod +x ./wait-for-it.sh
-
-    - name: Show Docker Compose logs
-      run: docker-compose logs
-
-    - name: Check if svt-db is running
-      run: docker ps | grep svt-db
-
-    - name: Wait for services to be ready
-      run: ./wait-for-it.sh svt-db:3306 --timeout=30 --strict -- echo "Database is up"
-
     - name: Run Migrations
       run: npm run migrate
 
