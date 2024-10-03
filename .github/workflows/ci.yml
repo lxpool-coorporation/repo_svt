@@ -35,38 +35,34 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
-    - name: Set environment variables
+    - name: Start Docker Compose stack
       env:
-        DB_NAME: ${{ secrets.DB_NAME }}
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASS: ${{ secrets.DB_PASS }}
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASS: ${{ secrets.DB_PASS }}
+        DB_NAME: ${{ secrets.DB_NAME }}
         LOG_DIRECTORY: ${{ secrets.LOG_DIRECTORY }}
         LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
         LOG_OUTPUT_MODE: ${{ secrets.LOG_OUTPUT_MODE }}
         REDIS_HOST: ${{ secrets.REDIS_HOST }}
         REDIS_PORT: ${{ secrets.REDIS_PORT }}
         REDIS_CACHE_TIMEOUT: ${{ secrets.REDIS_CACHE_TIMEOUT }}
+        SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        SERVER_KEY_PRIVATE: ${{ secrets.JWT_PRIVATE_KEY }}
+        SERVER_KEY_PUBLIC: ${{ secrets.JWT_PUBLIC_KEY }}
+        JWT_TOKEN_EXPIRED: ${{ secrets.JWT_TOKEN_EXPIRED }}
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_USER: ${{ secrets.MYSQL_USER }}
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        SERVER_PORT: ${{ secrets.SERVER_PORT }}
-        JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
-        JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
-        JWT_TOKEN_EXPIRED: ${{ secrets.JWT_TOKEN_EXPIRED }}
-      run: |
-        echo "Environment variables set!"
-
-    - name: Start Docker Compose stack
       run: docker-compose up -d
 
     - name: Set permissions for wait-for-it.sh
       run: chmod +x ./wait-for-it.sh
 
     - name: Wait for services to be ready
-      run: ./wait-for-it.sh ${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }} --timeout=30 --strict -- echo "Database is up"
+      run: ./wait-for-it.sh svt-db:3306 --timeout=30 --strict -- echo "Database is up"
 
     - name: Run Migrations
       run: npm run migrate
