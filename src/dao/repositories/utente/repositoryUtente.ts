@@ -1,31 +1,35 @@
 import {
   daoUtenteProfilo,
   daoUtenteProfiloImplementation,
-} from '../dao/utente/daoUtenteProfilo';
-import { daoUtente, daoUtenteImplementation } from '../dao/utente/daoUtente';
-import { eUtente } from '../../entity/utente/eUtente';
+} from '../../dao/utente/daoUtenteProfilo';
+import { daoUtente, daoUtenteImplementation } from '../../dao/utente/daoUtente';
+import { eUtente } from '../../../entity/utente/eUtente';
 import { Transaction } from 'sequelize';
-import { eProfilo } from '../../entity/utente/eProfilo';
+import { eProfilo } from '../../../entity/utente/eProfilo';
 import {
   daoInitUtente,
   daoInitUtenteImplementation,
-} from '../dao/utente/daoInitUtente';
-import { DaoInterfaceGeneric } from '../interfaces/generic/daoInterfaceGeneric';
-import { ePermesso } from '@/entity/utente/ePermesso';
+} from '../../dao/utente/daoInitUtente';
+import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
+import { ePermesso } from '../../../entity/utente/ePermesso';
 import {
   daoProfiloPermesso,
   daoProfiloPermessoImplementation,
-} from '../dao/utente/daoProfiloPermesso';
+} from '../../dao/utente/daoProfiloPermesso';
+import { eVeicolo } from '../../../entity/svt/eVeicolo';
+import { daoUtenteVeicolo, daoUtenteVeicoloImplementation } from '../../dao/utente/daoUtenteVeicolo';
 
 class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   private daoUtente: daoUtenteImplementation;
   private daoUtenteProfilo: daoUtenteProfiloImplementation;
+  private daoUtenteVeicolo: daoUtenteVeicoloImplementation;
   private daoInitUtente: daoInitUtenteImplementation;
   private daoProfiloPermesso: daoProfiloPermessoImplementation;
 
   constructor() {
     this.daoUtente = daoUtente;
     this.daoUtenteProfilo = daoUtenteProfilo;
+    this.daoUtenteVeicolo = daoUtenteVeicolo;
     this.daoProfiloPermesso = daoProfiloPermesso;
     this.daoInitUtente = daoInitUtente;
   }
@@ -50,6 +54,9 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   }
   getProfili(idUtente: number): Promise<eProfilo[] | null> {
     return this.daoUtenteProfilo.getProfili(idUtente);
+  }
+  getVeicoli(idUtente: number): Promise<eVeicolo[] | null> {
+    return this.daoUtenteVeicolo.getVeicoli(idUtente);
   }
   async getPermessi(id: number): Promise<ePermesso[] | null> {
     const objProfili = await this.daoUtenteProfilo.getProfili(id);

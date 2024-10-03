@@ -1,20 +1,20 @@
 import { Transaction } from 'sequelize';
-import { ePermesso } from '../../entity/utente/ePermesso';
-import { DaoInterfaceGeneric } from '../interfaces/generic/daoInterfaceGeneric';
-import { eProfilo } from '../../entity/utente/eProfilo';
+import { ePermesso } from '../../../entity/utente/ePermesso';
+import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
+import { eProfilo } from '../../../entity/utente/eProfilo';
 import {
   daoPermesso,
   daoPermessoImplementation,
-} from '../dao/utente/daoPermesso';
+} from '../../dao/utente/daoPermesso';
 import {
   daoPermessoProfilo,
   daoPermessoProfiloImplementation,
-} from '../dao/utente/daoPermessoProfilo';
-import { eUtente } from '../../entity/utente/eUtente';
+} from '../../dao/utente/daoPermessoProfilo';
+import { eUtente } from '../../../entity/utente/eUtente';
 import {
   daoProfiloUtente,
   daoProfiloUtenteImplementation,
-} from '../dao/utente/daoProfiloUtente';
+} from '../../dao/utente/daoProfiloUtente';
 
 class repositoryPermessoImplementation
   implements DaoInterfaceGeneric<ePermesso>

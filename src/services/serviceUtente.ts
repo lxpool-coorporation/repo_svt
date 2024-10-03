@@ -1,7 +1,7 @@
 import { eProfilo } from '../entity/utente/eProfilo';
 import { enumStato } from '../entity/enum/enumStato';
 import { eUtente } from '../entity/utente/eUtente';
-import { repositoryUtente } from '../dao/repositories/repositoryUtente';
+import { repositoryUtente } from '../dao/repositories/utente/repositoryUtente';
 import { ePermesso } from '../entity/utente/ePermesso';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
