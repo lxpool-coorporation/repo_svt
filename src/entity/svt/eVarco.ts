@@ -9,7 +9,14 @@ class eVarco {
   private longitudine: number;
   private stato: enumStato;
 
-  constructor(id: number, cod: string, descrizione: string, latitudine: number, longitudine: number, stato: enumStato) {
+  constructor(
+    id: number,
+    cod: string,
+    descrizione: string,
+    latitudine: number,
+    longitudine: number,
+    stato: enumStato,
+  ) {
     this.id = id;
     this.cod = cod;
     this.descrizione = descrizione;
@@ -19,7 +26,14 @@ class eVarco {
   }
 
   static fromJSON(data: any): eVarco {
-    return new eVarco(data.id, data.cod, data.descrizione, data.latitudine, data.longitudine, data.stato);
+    return new eVarco(
+      data.id,
+      data.cod,
+      data.descrizione,
+      data.latitudine,
+      data.longitudine,
+      data.stato,
+    );
   }
 
   // Metodi Getters
@@ -32,10 +46,10 @@ class eVarco {
   get_descrizione(): string {
     return this.descrizione;
   }
-  get_latitudine(): number{
+  get_latitudine(): number {
     return this.latitudine;
   }
-  get_longitudine(): number{
+  get_longitudine(): number {
     return this.longitudine;
   }
   get_stato(): enumStato {
@@ -52,10 +66,10 @@ class eVarco {
   set_codiceFiscale(descrizione: string): void {
     this.descrizione = descrizione;
   }
-  set_latitudine(latitudine: number): void{
+  set_latitudine(latitudine: number): void {
     this.latitudine = latitudine;
   }
-  set_longitudine(longitudine: number): void{
+  set_longitudine(longitudine: number): void {
     this.longitudine = longitudine;
   }
   set_stato(stato: enumStato): void {

@@ -7,7 +7,6 @@ import morgan from 'morgan';
 import routerLogin from './routes/login';
 import { authMiddleware } from './middleware/authMiddleware';
 import { serviceUtente } from './services/serviceUtente';
-import { enumStato } from './entity/enum/enumStato';
 import { enumPermessoTipo } from './entity/enum/enumPermessoTipo';
 import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
 
@@ -67,8 +66,7 @@ app
 
 export default app;
 
-
-async function readUser2() {
+async function _readUser2() {
   //await serviceUtente.initStrutturaUtente({alter:true })
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
   //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)

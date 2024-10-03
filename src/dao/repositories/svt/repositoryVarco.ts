@@ -1,14 +1,19 @@
 import { Transaction } from 'sequelize';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eVarco } from '../../../entity/svt/eVarco';
-import { daoVarco, daoVarcoImplementation } from '../../../dao/dao/svt/daoVarco';
-import { daoInitSvt, daoInitSvtImplementation } from '../../../dao/dao/svt/daoInitSvt';
-
+import {
+  daoVarco,
+  daoVarcoImplementation,
+} from '../../../dao/dao/svt/daoVarco';
+import {
+  daoInitSvt,
+  daoInitSvtImplementation,
+} from '../../../dao/dao/svt/daoInitSvt';
 
 class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   private daoVarco: daoVarcoImplementation;
   private daoInitSvt: daoInitSvtImplementation;
-  
+
   constructor() {
     this.daoVarco = daoVarco;
     this.daoInitSvt = daoInitSvt;
@@ -38,7 +43,6 @@ class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   }): Promise<boolean> {
     return this.daoInitSvt.init(options);
   }
-
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

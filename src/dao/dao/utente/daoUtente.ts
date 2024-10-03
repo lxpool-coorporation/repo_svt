@@ -15,12 +15,12 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     return new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato);
   }
 
-  async getByCF(cf: string): Promise<eUtente | null> {
+  async getByIdentificativo(cf: string): Promise<eUtente | null> {
     const ormObj = await ormUtente.findOne({
       where: {
         [Op.and]: [
           sequelize.where(
-            sequelize.fn('LOWER', sequelize.col('codice_fiscale')),
+            sequelize.fn('LOWER', sequelize.col('identificativo')),
             cf.toLowerCase(),
           ),
         ],
@@ -30,7 +30,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
       throw new Error(`utente non trovato per cf ${cf}`);
     }
     console.log(3);
-    return new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato);
+    return new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato);
   }
 
   // Trova tutti gli utenti usando Sequelize

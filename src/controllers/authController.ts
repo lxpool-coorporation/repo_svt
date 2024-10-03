@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import logger from '../utils/logger-winston';
 import fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
-import { repositoryUtente } from '../dao/repositories/repositoryUtente';
+import { repositoryUtente } from '../dao/repositories/utente/repositoryUtente';
 import { eUtente } from '../entity/utente/eUtente';
 import { isString } from '../utils/utils';
 import { retMiddleware } from '../utils/retMiddleware';
@@ -61,10 +61,10 @@ export class authController {
   ): Promise<void> => {
     let ret: retMiddleware = new retMiddleware();
     try {
-      const { codice_fiscale } = req.body as any;
-      if (!!codice_fiscale && isString(codice_fiscale)) {
+      const { identificativo } = req.body as any;
+      if (!!identificativo && isString(identificativo)) {
         const user: eUtente | null =
-          await repositoryUtente.getByCF(codice_fiscale);
+          await repositoryUtente.getByIdentificativo(identificativo);
         // Eseguiamo qui la validazione dell'utente
         if (!!user) {
           const token: string = authController.generateToken(user.get_id()); // Passa l'ID utente

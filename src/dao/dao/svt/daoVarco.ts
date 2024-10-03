@@ -1,6 +1,6 @@
 import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
 import { ormVarco } from '../../../models/svt/ormVarco';
-import { eVarco } from '../../../entity/svt/eVarco'
+import { eVarco } from '../../../entity/svt/eVarco';
 import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Varco`
@@ -26,7 +26,14 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     const objs = await ormVarco.findAll(options);
     return objs.map(
       (ormObj) =>
-        new eVarco(ormObj.id, ormObj.cod, ormObj.descrizione, ormObj.latitudine, ormObj.longitudine, ormObj.stato),
+        new eVarco(
+          ormObj.id,
+          ormObj.cod,
+          ormObj.descrizione,
+          ormObj.latitudine,
+          ormObj.longitudine,
+          ormObj.stato,
+        ),
     );
   }
 
@@ -77,7 +84,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['cod', 'descrizione','latitudine','longitudine', 'stato'], // Campi aggiornabili di default
+      fields: ['cod', 'descrizione', 'latitudine', 'longitudine', 'stato'], // Campi aggiornabili di default
       returning: true,
       individualHooks: true,
       validate: true,

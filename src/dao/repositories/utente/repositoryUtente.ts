@@ -17,7 +17,10 @@ import {
   daoProfiloPermessoImplementation,
 } from '../../dao/utente/daoProfiloPermesso';
 import { eVeicolo } from '../../../entity/svt/eVeicolo';
-import { daoUtenteVeicolo, daoUtenteVeicoloImplementation } from '../../dao/utente/daoUtenteVeicolo';
+import {
+  daoUtenteVeicolo,
+  daoUtenteVeicoloImplementation,
+} from '../../dao/utente/daoUtenteVeicolo';
 
 class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   private daoUtente: daoUtenteImplementation;
@@ -37,8 +40,8 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   get(id: number): Promise<eUtente | null> {
     return this.daoUtente.get(id);
   }
-  getByCF(cf: string): Promise<eUtente | null> {
-    return this.daoUtente.getByCF(cf);
+  getByIdentificativo(cf: string): Promise<eUtente | null> {
+    return this.daoUtente.getByIdentificativo(cf);
   }
   getAll(options?: object): Promise<eUtente[]> {
     return this.daoUtente.getAll(options);

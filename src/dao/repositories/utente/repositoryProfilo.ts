@@ -1,5 +1,8 @@
 import { Transaction } from 'sequelize';
-import { daoProfilo, daoProfiloImplementation } from '../../dao/utente/daoProfilo';
+import {
+  daoProfilo,
+  daoProfiloImplementation,
+} from '../../dao/utente/daoProfilo';
 import { eProfilo } from '../../../entity/utente/eProfilo';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { ePermesso } from '../../../entity/utente/ePermesso';
