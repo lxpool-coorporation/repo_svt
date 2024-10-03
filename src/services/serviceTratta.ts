@@ -1,37 +1,37 @@
 import { enumStato } from '../entity/enum/enumStato';
-import { eVarco } from '../entity/svt/eVarco';
-import { repositoryVarco } from '../dao/repositories/svt/repositoryVarco';
+import { eTratta } from '../entity/svt/eTratta';
+import { repositoryTratta } from '../dao/repositories/svt/repositoryTratta';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
-import { eTransito } from '../entity/svt/eTransito';
+import { eVarco } from '../entity/svt/eVarco';
 
-// classe che gestisce la logica di business dell'Varco
-class serviceVarcoImplementation {
-  // Recupera un Varco per ID
-  async getVarcoById(id: number): Promise<eVarco | null> {
+// classe che gestisce la logica di business dell'Tratta
+class serviceTrattaImplementation {
+  // Recupera un Tratta per ID
+  async getTrattaById(id: number): Promise<eTratta | null> {
     try {
       const redisClient = await databaseCache.getInstance();
 
-      const cacheKey = `Varco_${id}`;
+      const cacheKey = `Tratta_${id}`;
 
-      // Controlla se l'Varco è in cache
+      // Controlla se l'Tratta è in cache
       const jsonData = await redisClient.get(cacheKey);
       if (jsonData) {
-        const data = JSON.parse(jsonData); // Restituisce l'Varco dalla cache
-        const cacheObject = eVarco.fromJSON(data); // Assumendo che tu abbia una classe Varco
+        const data = JSON.parse(jsonData); // Restituisce l'Tratta dalla cache
+        const cacheObject = eTratta.fromJSON(data); // Assumendo che tu abbia una classe Tratta
         return cacheObject;
       }
 
       // Se non è in cache, recupera dal repository
-      const Varco = await repositoryVarco.get(id);
-      if (Varco) {
-        // Memorizza l'Varco in cache per 1 ora
-        await redisClient.set(cacheKey, JSON.stringify(Varco), {
+      const Tratta = await repositoryTratta.get(id);
+      if (Tratta) {
+        // Memorizza l'Tratta in cache per 1 ora
+        await redisClient.set(cacheKey, JSON.stringify(Tratta), {
           EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
         });
       }
 
-      return Varco;
+      return Tratta;
     } catch (err) {
       logger.error('serviceSvt - err:', err);
       return null;
@@ -39,7 +39,7 @@ class serviceVarcoImplementation {
   }
 
   // Recupera tutti gli Veicoli
-  async getAllVeicoli(options?: object): Promise<eVarco[]> {
+  async getAllVeicoli(options?: object): Promise<eTratta[]> {
     const redisClient = await databaseCache.getInstance();
 
     const cacheKey = 'Veicoli_tutti';
@@ -51,7 +51,7 @@ class serviceVarcoImplementation {
     }
 
     // Se non sono in cache, recupera dal repository
-    const Veicoli = await repositoryVarco.getAll(options);
+    const Veicoli = await repositoryTratta.getAll(options);
     if (Veicoli) {
       // Memorizza gli Veicoli in cache per 1 ora
       await redisClient.set(cacheKey, JSON.stringify(Veicoli), {
@@ -59,90 +59,94 @@ class serviceVarcoImplementation {
       });
     }
     return Veicoli;
-    //return await repositoryVarco.getAll();
+    //return await repositoryTratta.getAll();
   }
 
-  // Crea un nuovo Varco
-  async createVarco(
+  // Crea un nuovo Tratta
+  async createTratta(
     cod: string,
     descrizione: string,
-    latitudine: number,
-    longitudine: number,
+    id_varco_ingresso: number,
+    id_varco_uscita: number,
+    distanza: number,
     stato: enumStato,
-  ): Promise<eVarco | null> {
+  ): Promise<eTratta | null> {
     const redisClient = await databaseCache.getInstance();
 
-    const nuovoVarco = new eVarco(
+    const nuovoTratta = new eTratta(
       0,
       cod,
       descrizione,
-      latitudine,
-      longitudine,
+      id_varco_ingresso,
+      id_varco_uscita,
+      distanza,
       stato,
     );
-    const savedVarco = await repositoryVarco.save(nuovoVarco);
+    const savedTratta = await repositoryTratta.save(nuovoTratta);
 
     // Invalida la cache degli Veicoli
     await redisClient.del(`Veicoli_tutti`);
-    return savedVarco;
+    return savedTratta;
   }
 
-  // Aggiorna un Varco esistente
-  async updateVarco(
+  // Aggiorna un Tratta esistente
+  async updateTratta(
     id: number,
     cod: string,
     descrizione: string,
-    latitudine: number,
-    longitudine: number,
+    id_varco_ingresso: number,
+    id_varco_uscita: number,
+    distanza: number,
     stato: enumStato,
   ): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const Varco = new eVarco(
+    const Tratta = new eTratta(
       id,
       cod,
       descrizione,
-      latitudine,
-      longitudine,
+      id_varco_ingresso,
+      id_varco_uscita,
+      distanza,
       stato,
     );
-    await repositoryVarco.update(Varco);
+    await repositoryTratta.update(Tratta);
 
-    // Invalida la cache dell'Varco aggiornato e la cache generale
-    await redisClient.del(`Varco_${id}`);
+    // Invalida la cache dell'Tratta aggiornato e la cache generale
+    await redisClient.del(`Tratta_${id}`);
     await redisClient.del('Veicoli_tutti');
   }
 
-  // Elimina un Varco
-  async deleteVarco(id: number): Promise<void> {
+  // Elimina un Tratta
+  async deleteTratta(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const VarcoDaEliminare = new eVarco(id, '', '', 0, 0, enumStato.attivo);
-    await repositoryVarco.delete(VarcoDaEliminare);
+    const TrattaDaEliminare = new eTratta(id, '', '', 0, 0, 0, enumStato.attivo);
+    await repositoryTratta.delete(TrattaDaEliminare);
 
-    // Invalida la cache dell'Varco eliminato e la cache generale
-    await redisClient.del(`Varco_${id}`);
+    // Invalida la cache dell'Tratta eliminato e la cache generale
+    await redisClient.del(`Tratta_${id}`);
     await redisClient.del('Veicoli_tutti');
   }
 
-  // Ottieni Transiti di un Varco
-  async getTransitiByIdVarco(idVarco: number): Promise<eTransito[] | null> {
+  // Ottieni Transiti di un Tratta
+  async getTransitiByIdTratta(idTratta: number): Promise<eVarco[] | null> {
     const redisClient = await databaseCache.getInstance();
 
-    const cacheKey = `Transiti_Varco_${idVarco}`;
+    const cacheKey = `Transiti_Tratta_${idTratta}`;
 
     // Controlla se i Transiti sono in cache
     const jsonData = await redisClient.get(cacheKey);
     if (jsonData) {
       const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
       const cacheObjectArray = dataArray.map((data: any) =>
-        eTransito.fromJSON(data),
+        eVarco.fromJSON(data),
       );
       return cacheObjectArray;
     }
 
     // Se non sono in cache, recupera dal repository
-    const transiti = await repositoryVarco.getTransiti(idVarco);
+    const transiti = await repositoryTratta.getVarchi(idTratta);
     if (transiti) {
       // Memorizza i profili in cache per 1 ora
       await redisClient.set(cacheKey, JSON.stringify(transiti), {
@@ -158,8 +162,8 @@ class serviceVarcoImplementation {
     alter?: boolean;
     logging?: boolean;
   }): Promise<boolean> {
-    return await repositoryVarco.init(options);
+    return await repositoryTratta.init(options);
   }
 }
 
-export const serviceVarco = new serviceVarcoImplementation();
+export const serviceTratta = new serviceTrattaImplementation();
