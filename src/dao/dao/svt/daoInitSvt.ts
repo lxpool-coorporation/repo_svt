@@ -1,9 +1,9 @@
 import logger from '../../../utils/logger-winston';
-import { sequelize } from '../../../models/utente/ormInitUtente';
+import { sequelize, models } from '../../../models/svt/ormInitSvt';
 
-// classe che gestisce la logica di business dell'utente
-export class daoInitUtenteImplementation {
-  // Inizializza il database per la classe utente
+// classe che gestisce la logica di business dell'Svt
+export class daoInitSvtImplementation {
+  // Inizializza il database per la classe Svt
   async init(options?: {
     force?: boolean;
     alter?: boolean;
@@ -21,7 +21,7 @@ export class daoInitUtenteImplementation {
       return true;
     } catch (error) {
       logger.error(
-        'daoInitUtente - Errore durante la sincronizzazione del database:',
+        'daoInitSvt - Errore durante la sincronizzazione del database:',
         error,
       );
       return false;
@@ -30,4 +30,4 @@ export class daoInitUtenteImplementation {
 }
 
 // Esporta il DAO per l'uso nei servizi o repository
-export const daoInitUtente = new daoInitUtenteImplementation();
+export const daoInitSvt = new daoInitSvtImplementation();

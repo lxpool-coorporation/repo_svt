@@ -1,77 +1,83 @@
 import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
-import { eProfilo } from '../../../entity/utente/eProfilo';
-import { ormProfilo } from '../../../models/utente/ormProfilo';
+import { ormVarco } from '../../../models/svt/ormVarco';
+import { eVarco } from '../../../entity/svt/eVarco'
 import { Transaction } from 'sequelize';
 
-// Implementazione del DAO per l'entità `Profilo`
-export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
-  // Trova un profilo per ID usando Sequelize
-  async get(id: number): Promise<eProfilo | null> {
-    const ormObj = await ormProfilo.findByPk(id);
+// Implementazione del DAO per l'entità `Varco`
+export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
+  // Trova un Varco per ID usando Sequelize
+  async get(id: number): Promise<eVarco | null> {
+    const ormObj = await ormVarco.findByPk(id);
     if (!ormObj) {
-      throw new Error(`profilo non trovato per l'id ${id}`);
+      throw new Error(`Varco non trovato per l'id ${id}`);
     }
-    return new eProfilo(
+    return new eVarco(
       ormObj.id,
       ormObj.cod,
       ormObj.descrizione,
+      ormObj.latitudine,
+      ormObj.longitudine,
       ormObj.stato,
     );
   }
 
   // Trova tutti gli utenti usando Sequelize
-  async getAll(options?: object): Promise<eProfilo[]> {
-    const objs = await ormProfilo.findAll(options);
+  async getAll(options?: object): Promise<eVarco[]> {
+    const objs = await ormVarco.findAll(options);
     return objs.map(
       (ormObj) =>
-        new eProfilo(ormObj.id, ormObj.cod, ormObj.descrizione, ormObj.stato),
+        new eVarco(ormObj.id, ormObj.cod, ormObj.descrizione, ormObj.latitudine, ormObj.longitudine, ormObj.stato),
     );
   }
 
-  // Salva un nuovo profilo nel database usando Sequelize
+  // Salva un nuovo Varco nel database usando Sequelize
   async save(
-    t: eProfilo,
+    t: eVarco,
     options?: { transaction?: Transaction },
-  ): Promise<eProfilo | null> {
-    const existingProfilo = await ormProfilo.findByPk(t.get_id(), {
+  ): Promise<eVarco | null> {
+    const existingVarco = await ormVarco.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
-    if (existingProfilo) {
+    if (existingVarco) {
       throw new Error('A User with the specified id already exists');
     }
-    const ormObj = await ormProfilo.create(
+    const ormObj = await ormVarco.create(
       {
         id: t.get_id(),
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
+        latitudine: t.get_latitudine(),
+        longitudine: t.get_longitudine(),
         stato: t.get_stato(),
       },
       { transaction: options?.transaction },
     );
-    return new eProfilo(
+    return new eVarco(
       ormObj.id,
       ormObj.cod,
       ormObj.descrizione,
+      ormObj.latitudine,
+      ormObj.longitudine,
       ormObj.stato,
     );
   }
 
   // Aggiorna un utente esistente nel database
   async update(
-    t: eProfilo,
+    t: eVarco,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormProfilo.findByPk(t.get_id(), {
+    const ormObj = await ormVarco.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
-      throw new Error('Profilo not found');
+      throw new Error('Varco not found');
     }
 
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['cod', 'descrizione', 'stato'], // Campi aggiornabili di default
+      fields: ['cod', 'descrizione','latitudine','longitudine', 'stato'], // Campi aggiornabili di default
       returning: true,
       individualHooks: true,
       validate: true,
@@ -84,6 +90,8 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
+        latitudine: t.get_latitudine(),
+        longitudine: t.get_longitudine(),
         stato: t.get_stato(),
         // Aggiungi altri campi che devono essere aggiornati
       },
@@ -91,20 +99,20 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
     );
   }
 
-  // Elimina un profilo dal database usando Sequelize
+  // Elimina un Varco dal database usando Sequelize
   async delete(
-    t: eProfilo,
+    t: eVarco,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormProfilo.findByPk(t.get_id(), {
+    const ormObj = await ormVarco.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
-      throw new Error('Profilo not found');
+      throw new Error('Varco not found');
     }
     await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
-export const daoProfilo = new daoProfiloImplementation();
+export const daoVarco = new daoVarcoImplementation();

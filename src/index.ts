@@ -8,6 +8,8 @@ import routerLogin from './routes/login';
 import { authMiddleware } from './middleware/authMiddleware';
 import { serviceUtente } from './services/serviceUtente';
 import { enumStato } from './entity/enum/enumStato';
+import { enumPermessoTipo } from './entity/enum/enumPermessoTipo';
+import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
 
 dotenv.config();
 logger.info('app started');
@@ -65,14 +67,17 @@ app
 
 export default app;
 
-async function _readUser2() {
-  //await serviceUtente.initStrutturaUtente({force:true})
+
+async function readUser2() {
+  //await serviceUtente.initStrutturaUtente({alter:true })
+  //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
+  //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)
 
   // const utenteConProfili1 = await ormUtente.findByPk(2)
   const utente = await serviceUtente.getUtenteById(1);
   if (utente) {
-    console.log('TROVATO UTENTE: ' + utente.get_codiceFiscale());
-    console.log(console.log(JSON.stringify(utente)));
+    console.log('TROVATO UTENTE : ' + utente.get_identificativo());
+    console.log(JSON.stringify(utente));
     const profiliUtente = await serviceUtente.getProfiliByIdUtente(
       utente.get_id(),
     );
@@ -83,25 +88,24 @@ async function _readUser2() {
         console.log(JSON.stringify(a));
       });
     }
-  }
-}
-async function _readUser3() {
-  await serviceUtente.initStrutturaUtente({ force: true });
-  await serviceUtente.createUtente('CRLLCU88P11L4872', enumStato.attivo);
-  await serviceUtente.createUtente('BVLOVD43P99ALSJD', enumStato.attivo); // const utenteConProfili1 = await ormUtente.findByPk(2)
-  const utente = await serviceUtente.getUtenteById(1);
-  if (utente) {
-    console.log('TROVATO UTENTE: ' + utente.get_codiceFiscale());
-    console.log(console.log(JSON.stringify(utente)));
-    const profiliUtente = await serviceUtente.getProfiliByIdUtente(
+
+    const permessiUtente = await serviceUtente.getPermessiByIdUtente(
       utente.get_id(),
     );
-    if (profiliUtente) {
-      console.log('PROFILI ASSOCIATI: ');
-      profiliUtente.forEach((a) => {
-        console.log(`- ${a.get_descrizione()}`);
-        console.log(JSON.stringify(a));
+    if (permessiUtente) {
+      console.log('PERMESSI ASSOCIATI: ');
+      permessiUtente.forEach((c) => {
+        console.log(`- ${c.get_descrizione()}`);
+        console.log(JSON.stringify(c));
       });
     }
+
+    const checkPermessoUtente = await serviceUtente.hasPermessoByIdUtente(
+      utente.get_id(),
+      enumPermessoCategoria.varco,
+      enumPermessoTipo.lettura,
+    );
+    if (checkPermessoUtente) console.log('UTENTE HA PERMESSO DI LETTURA SU');
+    else console.log('UTENTE NON HA IL PERMESSO');
   }
 }

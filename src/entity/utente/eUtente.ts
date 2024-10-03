@@ -1,23 +1,27 @@
 import { enumStato } from '../enum/enumStato';
 
 class eUtente {
-  //id numerico, profilo, codice_fiscale, id_stato
+  //id numerico, profilo, identificativo, id_stato
   private id: number;
-  private codice_fiscale: string;
+  private identificativo: string;
   private stato: enumStato;
 
-  constructor(id: number, codice_fiscale: string, stato: enumStato) {
+  constructor(id: number, identificativo: string, stato: enumStato) {
     this.id = id;
-    this.codice_fiscale = codice_fiscale;
+    this.identificativo = identificativo;
     this.stato = stato;
+  }
+
+  static fromJSON(data: any): eUtente {
+    return new eUtente(data.id, data.identificativo, data.stato);
   }
 
   // Metodi Getters
   get_id(): number {
     return this.id;
   }
-  get_codiceFiscale(): string {
-    return this.codice_fiscale;
+  get_identificativo(): string {
+    return this.identificativo;
   }
   get_stato(): enumStato {
     return this.stato;
@@ -27,8 +31,8 @@ class eUtente {
   set_id(id: number): void {
     this.id = id;
   }
-  set_codiceFiscale(codice_fiscale: string): void {
-    this.codice_fiscale = codice_fiscale;
+  set_identificativo(identificativo: string): void {
+    this.identificativo = identificativo;
   }
   set_stato(stato: enumStato): void {
     this.stato = stato;

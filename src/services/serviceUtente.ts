@@ -1,10 +1,12 @@
 import { eProfilo } from '../entity/utente/eProfilo';
 import { enumStato } from '../entity/enum/enumStato';
 import { eUtente } from '../entity/utente/eUtente';
-import { repositoryUtente } from '../dao/repositories/repositoryUtente';
+import { repositoryUtente } from '../dao/repositories/utente/repositoryUtente';
 import { ePermesso } from '../entity/utente/ePermesso';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
+import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
+import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 
 // classe che gestisce la logica di business dell'utente
 class serviceUtenteImplementation {
@@ -16,9 +18,11 @@ class serviceUtenteImplementation {
       const cacheKey = `utente_${id}`;
 
       // Controlla se l'utente è in cache
-      const cachedUtente = await redisClient.get(cacheKey);
-      if (cachedUtente) {
-        return JSON.parse(cachedUtente); // Restituisce l'utente dalla cache
+      const jsonData = await redisClient.get(cacheKey);
+      if (jsonData) {
+        const data = JSON.parse(jsonData); // Restituisce l'utente dalla cache
+        const cacheObject = eUtente.fromJSON(data); // Assumendo che tu abbia una classe Utente
+        return cacheObject;
       }
 
       // Se non è in cache, recupera dal repository
@@ -111,9 +115,13 @@ class serviceUtenteImplementation {
     const cacheKey = `profili_utente_${idUtente}`;
 
     // Controlla se i profili sono in cache
-    const cachedProfili = await redisClient.get(cacheKey);
-    if (cachedProfili) {
-      return JSON.parse(cachedProfili); // Restituisce i profili dalla cache
+    const jsonData = await redisClient.get(cacheKey);
+    if (jsonData) {
+      const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
+      const cacheObjectArray = dataArray.map((data: any) =>
+        eProfilo.fromJSON(data),
+      );
+      return cacheObjectArray;
     }
 
     // Se non sono in cache, recupera dal repository
@@ -133,10 +141,14 @@ class serviceUtenteImplementation {
 
     const cacheKey = `permessi_utente_${id}`;
 
-    // Controlla se i permessi sono in cache
-    const cachedPermessi = await redisClient.get(cacheKey);
-    if (cachedPermessi) {
-      return JSON.parse(cachedPermessi); // Restituisce i permessi dalla cache
+    // Controlla se i profili sono in cache
+    const jsonData = await redisClient.get(cacheKey);
+    if (jsonData) {
+      const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
+      const cacheObjectArray = dataArray.map((data: any) =>
+        ePermesso.fromJSON(data),
+      );
+      return cacheObjectArray;
     }
 
     // Se non sono in cache, recupera dal repository
@@ -150,8 +162,32 @@ class serviceUtenteImplementation {
     return permessi;
   }
 
+  async hasPermessoByIdUtente(
+    id: number,
+    categoriaPermesso: enumPermessoCategoria,
+    tipoPermesso: enumPermessoTipo,
+  ): Promise<boolean> {
+    // Ottieni i permessi dell'utente (dalla cache o dal database)
+    const permessi = await this.getPermessiByIdUtente(id);
+
+    if (!permessi) {
+      console.log('NON HO TROVATO PERMESSI');
+      return false;
+    }
+
+    // Verifica se tra i permessi c'è quello del tipo specificato
+    const hasPermesso = permessi.some(
+      (permesso) =>
+        permesso.get_tipo() === tipoPermesso &&
+        permesso.get_categoria() === categoriaPermesso &&
+        permesso.get_stato() === enumStato.attivo,
+    );
+
+    return hasPermesso;
+  }
+
   // Inizializza struttura db utente
-  async initStrutturaUtente(options?: {
+  async initStruttura(options?: {
     force?: boolean;
     alter?: boolean;
     logging?: boolean;

@@ -1,27 +1,34 @@
-import database from '../../utils/database';
-import { DataTypes, Sequelize, Model } from 'sequelize';
 import { enumStato } from '../../entity/enum/enumStato';
+import { enumVeicoloTipo } from '../../entity/enum/enumVeicoloTipo';
+import database from '../../utils/database';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 
 /**
  * Instanziazione della connessione verso il RDBMS
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormUtente extends Model {
+export class ormVeicolo extends Model {
   public id!: number;
-  public identificativo!: string;
+  public tipo!: enumVeicoloTipo;
+  public targa!: string;
   public stato!: enumStato;
 }
 
 // Definizione del modello
-ormUtente.init(
+ormVeicolo.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    identificativo: {
+    tipo: {
+      type: DataTypes.ENUM(...Object.values(enumVeicoloTipo)),
+      allowNull: false,
+      unique: true,
+    },
+    targa: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
@@ -33,7 +40,7 @@ ormUtente.init(
   },
   {
     sequelize,
-    modelName: 'utente',
-    tableName: 'utn_utente',
+    modelName: 'vst_veicolo',
+    tableName: 'vst_veicolo',
   },
 );

@@ -1,5 +1,3 @@
-import { enumPermessoCategoria } from '../../entity/enum/enumPermessoCategoria';
-import { enumPermessoTipo } from '../../entity/enum/enumPermessoTipo';
 import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
@@ -9,30 +7,22 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormPermesso extends Model {
+export class ormVarco extends Model {
   public id!: number;
-  public categoria!: enumPermessoCategoria;
-  public tipo!: enumPermessoTipo;
   public cod!: string;
   public descrizione!: string;
+  public latitudine!: number;
+  public longitudine!: number;
   public stato!: enumStato;
 }
 
 // Definizione del modello
-ormPermesso.init(
+ormVarco.init(
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-    },
-    categoria: {
-      type: DataTypes.ENUM(...Object.values(enumPermessoCategoria)),
-      allowNull: false,
-    },
-    tipo: {
-      type: DataTypes.ENUM(...Object.values(enumPermessoTipo)),
-      allowNull: false,
     },
     cod: {
       type: DataTypes.STRING,
@@ -44,6 +34,14 @@ ormPermesso.init(
       allowNull: false,
       unique: true,
     },
+    latitudine: {
+        type: DataTypes.DECIMAL(9, 6),
+        allowNull: false
+      },
+    longitudine: {
+        type: DataTypes.DECIMAL(9, 6),
+        allowNull: false
+    },
     stato: {
       type: DataTypes.ENUM(...Object.values(enumStato)),
       allowNull: false,
@@ -51,7 +49,7 @@ ormPermesso.init(
   },
   {
     sequelize,
-    modelName: 'utn_prf_permesso',
-    tableName: 'utn_prf_permesso',
+    modelName: 'vst_varco',
+    tableName: 'vst_varco',
   },
 );

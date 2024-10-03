@@ -1,29 +1,29 @@
 import database from '../../utils/database';
 import { DataTypes, Sequelize } from 'sequelize';
 import { ormUtente } from './ormUtente';
-import { ormProfilo } from './ormProfilo';
+import { ormVeicolo } from '../svt/ormVeicolo';
 
 /**
  * Instanziazione della connessione verso il RDBMS
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormUtenteProfilo extends ormUtente {
-  // Metodi di associazione utente -> profili
-  public addProfilo!: (
-    profilo: ormProfilo | ormProfilo[],
+export class ormUtenteVeicolo extends ormUtente {
+  // Metodi di associazione utente -> Veicoli
+  public addVeicolo!: (
+    Veicolo: ormVeicolo | ormVeicolo[],
     options?: any,
   ) => Promise<void>;
-  public getProfili!: (options?: any) => Promise<ormProfilo[]>;
-  public setProfili!: (profili: ormProfilo[], options?: any) => Promise<void>;
-  public removeProfili!: (
-    profili: ormProfilo[],
+  public getVeicoli!: (options?: any) => Promise<ormVeicolo[]>;
+  public setVeicoli!: (Veicoli: ormVeicolo[], options?: any) => Promise<void>;
+  public removeVeicoli!: (
+    Veicoli: ormVeicolo[],
     options?: any,
   ) => Promise<void>;
 }
 
 // Definizione del modello
-ormUtenteProfilo.init(
+ormUtenteVeicolo.init(
   {
     id_utente: {
       type: DataTypes.INTEGER,
@@ -32,17 +32,17 @@ ormUtenteProfilo.init(
         key: 'id',
       },
     },
-    id_profilo: {
+    id_veicolo: {
       type: DataTypes.INTEGER,
       references: {
-        model: ormProfilo,
+        model: ormVeicolo,
         key: 'id',
       },
     },
   },
   {
     sequelize,
-    modelName: 'utente_profilo',
-    tableName: 'utn_utente_profilo',
+    modelName: 'utente_veicolo',
+    tableName: 'utn_utente_veicolo',
   },
 );

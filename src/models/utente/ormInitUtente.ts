@@ -23,22 +23,22 @@ const models = {
 ormUtente.belongsToMany(ormProfilo, {
   through: ormUtenteProfilo,
   foreignKey: 'id_utente',
-  as: 'profili_utente',
+  as: 'profili',
 });
 ormProfilo.belongsToMany(ormUtente, {
   through: ormUtenteProfilo,
   foreignKey: 'id_profilo',
-  as: 'utenti_permesso',
+  as: 'utenti',
 });
 ormProfilo.belongsToMany(ormPermesso, {
   through: ormProfiloPermesso,
-  foreignKey: 'id_permesso',
-  as: 'permessi_profilo',
+  foreignKey: 'id_profilo',
+  as: 'permessi',
 });
 ormPermesso.belongsToMany(ormProfilo, {
   through: ormProfiloPermesso,
-  foreignKey: 'id_profilo',
-  as: 'profili_permesso',
+  foreignKey: 'id_permesso',
+  as: 'profili',
 });
 
 export { sequelize, models };

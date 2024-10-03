@@ -9,7 +9,7 @@ import { ormPermesso } from './ormPermesso';
 const sequelize: Sequelize = database.getInstance();
 
 export class ormProfiloPermesso extends ormProfilo {
-  // Metodi di associazione manuale per la tipizzazione dei permessi
+  // Metodi di associazione profili -> permessi
   public addPermesso!: (
     utente: ormPermesso | ormPermesso[],
     options?: any,
