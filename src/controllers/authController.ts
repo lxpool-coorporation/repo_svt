@@ -2,8 +2,11 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import logger from '../utils/logger-winston';
 import fs from 'fs';
-import createError from 'http-errors';
 import { Request, Response, NextFunction } from 'express';
+import { repositoryUtente } from '../dao/repositories/repositoryUtente';
+import { eUtente } from '../entity/utente/eUtente';
+import { isString } from '../utils/utils';
+import { retMiddleware } from '../utils/retMiddleware';
 
 dotenv.config(); // Per leggere la chiave segreta dal file .env
 
@@ -16,7 +19,7 @@ const options: SignOptions = {
 };
 
 export interface JwtPayload {
-  id: number; // Aggiungiamo altre proprietà se hai più dati nel payload
+  id_utente: number; // Aggiungiamo altre proprietà se hai più dati nel payload
 }
 
 export class authController {
@@ -26,7 +29,7 @@ export class authController {
     try {
       if (!!userId && userId !== undefined) {
         const private_key = fs.readFileSync(JWT_SECRET_PRIVATE);
-        const payload = { id: userId };
+        const payload = { id_utente: userId };
         ret = jwt.sign(payload, private_key, options);
         logger.info(
           'authController.generateToken : token generato per id [' +
@@ -51,28 +54,35 @@ export class authController {
     }
     return ret;
   };
-  public static login = (
+  public static login = async (
     req: Request,
     res: Response,
     next: NextFunction,
-  ): void => {
+  ): Promise<void> => {
+    let ret: retMiddleware = new retMiddleware();
     try {
-      const { username, password } = req.body as any;
-
-      // Eseguiamo qui la validazione dell'utente
-      if (username === 'admin' && password === 'password') {
-        const token: string = authController.generateToken(1); // Passa l'ID utente
-        if (!!token && token.trim() !== '') {
-          res.status(200).json({ token });
+      const { codice_fiscale } = req.body as any;
+      if (!!codice_fiscale && isString(codice_fiscale)) {
+        const user: eUtente | null =
+          await repositoryUtente.getByCF(codice_fiscale);
+        // Eseguiamo qui la validazione dell'utente
+        if (!!user) {
+          const token: string = authController.generateToken(user.get_id()); // Passa l'ID utente
+          if (!!token && token.trim() !== '') {
+            ret.setResponse(200, { token });
+          } else {
+            ret.setResponse(500, { message: 'errore generazione Token' });
+          }
         } else {
-          next(createError(500, { message: 'errore generazione Token' }));
+          ret.setResponse(401, { message: 'Credenziali non valide' });
         }
       } else {
-        next(createError(401, { message: 'Credenziali non valide' }));
+        ret.setResponse(401, { message: 'Credenziali non valide' });
       }
     } catch (error: any) {
       logger.error('authController.verifyToken :' + error?.message);
-      next(createError(500, { message: 'errore generazione Token' }));
+      ret.setResponse(500, { message: 'errore generazione Token' });
     }
+    ret.returnResponseJson(res, next);
   };
 }

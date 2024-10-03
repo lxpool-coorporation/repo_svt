@@ -29,9 +29,12 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     this.daoProfiloPermesso = daoProfiloPermesso;
     this.daoInitUtente = daoInitUtente;
   }
-  
+
   get(id: number): Promise<eUtente | null> {
     return this.daoUtente.get(id);
+  }
+  getByCF(cf: string): Promise<eUtente | null> {
+    return this.daoUtente.getByCF(cf);
   }
   getAll(options?: object): Promise<eUtente[]> {
     return this.daoUtente.getAll(options);

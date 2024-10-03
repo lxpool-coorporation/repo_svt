@@ -24,7 +24,6 @@ export class ormUtente extends Model {
     profili: ormProfilo[],
     options?: any,
   ) => Promise<void>;
-
 }
 
 // Definizione del modello

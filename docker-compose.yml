@@ -16,13 +16,13 @@ services:
       - LOG_DIRECTORY=${LOG_DIRECTORY}
       - LOG_LEVEL=${LOG_LEVEL}
       - LOG_OUTPUT_MODE=${LOG_OUTPUT_MODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_CACHE_TIMEOUT=${REDIS_CACHE_TIMEOUT}
       - SERVER_PORT=${SERVER_PORT}
       - SERVER_KEY_PRIVATE=${SERVER_KEY_PRIVATE}
       - SERVER_KEY_PUBLIC=${SERVER_KEY_PUBLIC}
       - JWT_TOKEN_EXPIRED=${JWT_TOKEN_EXPIRED}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_CACHE_TIMEOUT=${REDIS_CACHE_TIMEOUT}
     depends_on:
       - svt-db
       - svt-redis_cache
@@ -39,6 +39,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "3306:3306"
     expose:
@@ -54,6 +55,9 @@ services:
     container_name: svt-redis_cache
     ports:
       - "6379:6379"  # Porta di Redis
+    expose:
+      # Opens port 3306 on the container
+      - '6379'
     networks:
       - app_network
 
@@ -63,3 +67,4 @@ networks:
 
 volumes:
   db_data:
+  

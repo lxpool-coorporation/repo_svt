@@ -1,5 +1,5 @@
 import logger from '../../../utils/logger-winston';
-import { sequelize, models } from '../../../models/utente/ormInitUtente';
+import { sequelize } from '../../../models/utente/ormInitUtente';
 
 // classe che gestisce la logica di business dell'utente
 export class daoInitUtenteImplementation {

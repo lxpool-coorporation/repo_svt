@@ -1,7 +1,8 @@
+import sequelize from 'sequelize';
 import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
 import { eUtente } from '../../../entity/utente/eUtente';
 import { ormUtente } from '../../../models/utente/ormUtente';
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Utente`
 export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
@@ -11,6 +12,24 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     if (!ormObj) {
       throw new Error(`utente non trovato per l'id ${id}`);
     }
+    return new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato);
+  }
+
+  async getByCF(cf: string): Promise<eUtente | null> {
+    const ormObj = await ormUtente.findOne({
+      where: {
+        [Op.and]: [
+          sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('codice_fiscale')),
+            cf.toLowerCase(),
+          ),
+        ],
+      },
+    });
+    if (!ormObj) {
+      throw new Error(`utente non trovato per cf ${cf}`);
+    }
+    console.log(3);
     return new eUtente(ormObj.id, ormObj.codice_fiscale, ormObj.stato);
   }
 
