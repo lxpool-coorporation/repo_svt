@@ -6,7 +6,7 @@ import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
 import { enumMeteoTipo } from '@/entity/enum/enumMeteoTipo';
 
 // classe che gestisce la logica di business dell'Transito
-class serviceSvtImplementation {
+class serviceTransitoImplementation {
   // Recupera un Transito per ID
   async getTransitoById(id: number): Promise<eTransito | null> {
     try {
@@ -137,4 +137,4 @@ class serviceSvtImplementation {
   }
 }
 
-export const serviceSvt = new serviceSvtImplementation();
+export const serviceTransito = new serviceTransitoImplementation();

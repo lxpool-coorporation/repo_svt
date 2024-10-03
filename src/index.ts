@@ -9,6 +9,7 @@ import { authMiddleware } from './middleware/authMiddleware';
 import { serviceUtente } from './services/serviceUtente';
 import { enumPermessoTipo } from './entity/enum/enumPermessoTipo';
 import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
+import { serviceTransito } from './services/serviceTransito';
 
 dotenv.config();
 logger.info('app started');
@@ -58,6 +59,7 @@ const PORT = process.env.SERVER_PORT || 3000;
 
 app
   .listen(PORT, () => {
+    //_readUser2() 
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {
@@ -67,7 +69,8 @@ app
 export default app;
 
 async function _readUser2() {
-  //await serviceUtente.initStrutturaUtente({alter:true })
+  //await serviceUtente.initStruttura({alter:true })
+  //await serviceTransito.initStruttura({alter:true })
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
   //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)
 
