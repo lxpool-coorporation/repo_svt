@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import logger from '../utils/logger-winston';
 import { serviceUtente } from '../services/serviceUtente';
-import { serviceSvt } from '../services/serviceVarco';
+import { serviceVarco } from '../services/serviceVarco';
 import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
 import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 import { Request, Response, NextFunction } from 'express';
@@ -46,7 +46,7 @@ export class varchiController {
   ): Promise<void> => {
     let ret: retMiddleware = new retMiddleware();
     try {
-      const varchi: eVarco[] = await serviceSvt.getAllVarco();
+      const varchi: eVarco[] = await serviceVarco.getAllVarchi();
       if (!!varchi) {
         ret.setResponse(200, varchi);
       } else {
@@ -66,7 +66,7 @@ export class varchiController {
     let ret: retMiddleware = new retMiddleware();
     try {
       if (StringisNumeric(req.params.id)) {
-        const varco: eVarco | null = await serviceSvt.getVarcoById(
+        const varco: eVarco | null = await serviceVarco.getVarcoById(
           parseInt(req.params.id),
         );
         if (!!varco) {
@@ -92,7 +92,7 @@ export class varchiController {
     try {
       const varco = req.body as iEVarco | null;
       if (!!varco) {
-        const varcoRes: eVarco | null = await serviceSvt.createVarco(
+        const varcoRes: eVarco | null = await serviceVarco.createVarco(
           varco?.cod,
           varco?.descrizione,
           varco?.latitudine,
@@ -122,9 +122,9 @@ export class varchiController {
     try {
       if (StringisNumeric(req.params.id)) {
         const idVarco: number = parseInt(req.params.id);
-        const varco: eVarco | null = await serviceSvt.getVarcoById(idVarco);
+        const varco: eVarco | null = await serviceVarco.getVarcoById(idVarco);
         if (!!varco) {
-          await serviceSvt.deleteVarco(idVarco);
+          await serviceVarco.deleteVarco(idVarco);
           ret.setResponse(200, varco);
         } else {
           ret.setResponse(404, { message: 'varco non presente' });
@@ -149,7 +149,7 @@ export class varchiController {
         const idVarco: number = parseInt(req.params.id);
         const varcoReq = req.body as iEVarco | null;
         if (!!varcoReq) {
-          await serviceSvt.updateVarco(
+          await serviceVarco.updateVarco(
             idVarco,
             varcoReq?.cod,
             varcoReq?.descrizione,
@@ -157,7 +157,7 @@ export class varchiController {
             varcoReq?.longitudine,
             varcoReq?.stato,
           );
-          const varco: eVarco | null = await serviceSvt.getVarcoById(idVarco);
+          const varco: eVarco | null = await serviceVarco.getVarcoById(idVarco);
           if (!!varco) {
             ret.setResponse(200, varco);
           } else {
@@ -186,7 +186,7 @@ export class varchiController {
         const idVarco: number = parseInt(req.params.id);
         const varcoReq = req.body as Partial<iEVarco> | null;
         if (!!varcoReq) {
-          let varco: eVarco | null = await serviceSvt.getVarcoById(idVarco);
+          let varco: eVarco | null = await serviceVarco.getVarcoById(idVarco);
           if (!!varco) {
             let trovato: boolean = false;
             if (varcoReq.cod) {
@@ -210,7 +210,7 @@ export class varchiController {
               trovato = true;
             }
             if (!!trovato) {
-              await serviceSvt.updateVarco(
+              await serviceVarco.updateVarco(
                 idVarco,
                 varco?.get_cod(),
                 varco?.get_descrizione(),
@@ -219,7 +219,7 @@ export class varchiController {
                 varco?.get_stato(),
               );
               const varcoRes: eVarco | null =
-                await serviceSvt.getVarcoById(idVarco);
+                await serviceVarco.getVarcoById(idVarco);
               if (!!varcoRes) {
                 ret.setResponse(200, varcoRes);
               } else {
