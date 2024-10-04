@@ -1,8 +1,5 @@
 // src/__tests__/index.test.ts
-import { Server } from 'http';
 import logger from '../utils/logger-winston';
-import dotenv from 'dotenv';
-
 
 // Mock del logger-winston
 jest.mock('../utils/logger-winston', () => ({

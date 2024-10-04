@@ -23,8 +23,8 @@ describe('POST /login', () => {
   it('should return 401 for incorrect credentials', async () => {
     const response = await request(app)
       .post('/login')
-      .send({ identificativo: 'wrongpassword' })
-     
+      .send({ identificativo: 'wrongpassword' });
+
     // Verifica che lo status code sia 401 per credenziali errate
     expect(response.status).toBe(401);
     expect(response.body.error.message).toBe('Credenziali non valide');
