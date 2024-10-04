@@ -58,7 +58,7 @@ jobs:
         MYSQL_USER: ${{ secrets.MYSQL_USER }}
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      run: docker-compose up -d
+      run: docker-compose up --abort-on-container-exit --exit-code-from svt-test
 
     - name: Run Migrations
       run: 
@@ -72,10 +72,6 @@ jobs:
 
     - name: Run Linter
       run: npm run lint
-
-    - name: Build and Test Application
-      run: |
-        docker-compose up --abort-on-container-exit --exit-code-from test
 
     - name: Build Docker Image
       run: docker build -t lxpool/svt-app:latest .
