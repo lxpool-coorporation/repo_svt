@@ -1,4 +1,6 @@
 import { QueryInterface, DataTypes } from 'sequelize';
+import {enumStato} from '../src/entity/enum/enumStato';
+import {enumMeteoTipo} from '../src/entity/enum/enumMeteoTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -30,9 +32,9 @@ export default {
         },
       },
       meteo: {
-        type: DataTypes.ENUM('sereno', 'pioggia'), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumMeteoTipo)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: 'sereno',
+        defaultValue: enumMeteoTipo.sereno,
       },
       id_veicolo: {
         type: DataTypes.INTEGER,
@@ -47,9 +49,9 @@ export default {
         type: DataTypes.STRING,
       },
       stato: {
-        type: DataTypes.ENUM('attivo', 'disattivo'), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumStato)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: 'attivo',
+        defaultValue: enumStato.attivo,
       },
       createdAt: {
         allowNull: false,

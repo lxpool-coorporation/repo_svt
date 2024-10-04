@@ -1,4 +1,8 @@
 import { QueryInterface, DataTypes } from 'sequelize';
+import {enumStato} from '../src/entity/enum/enumStato';
+import {enumVeicoloTipo} from '../src/entity/enum/enumVeicoloTipo';
+
+
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -10,9 +14,9 @@ export default {
         type: DataTypes.INTEGER,
       },
       tipo: {
-        type: DataTypes.ENUM('automobile', 'motoveicoli', 'rimorchi', 'autobus', 'camion',), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumVeicoloTipo )), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: 'automobile',
+        defaultValue: enumVeicoloTipo.autoveicoli,
       },
       targa: {
         type: DataTypes.STRING,
@@ -20,9 +24,9 @@ export default {
         unique: true,
       },
       stato: {
-        type: DataTypes.ENUM('attivo', 'disattivo'), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumStato)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: 'attivo',
+        defaultValue: enumStato.attivo  ,
       },
       createdAt: {
         allowNull: false,

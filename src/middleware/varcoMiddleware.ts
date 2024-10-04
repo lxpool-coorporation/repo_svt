@@ -3,12 +3,12 @@ import logger from '../utils/logger-winston';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
-import { varchiController } from '../controllers/varchiController';
+import { varcoController } from '../controllers/varcoController';
 import { isNumeric } from '../utils/utils';
 
 dotenv.config();
 
-export class varchiMiddleware {
+export class varcoMiddleware {
   private constructor() {}
   public static checkPermissionRead = async (
     req: Request,
@@ -18,7 +18,7 @@ export class varchiMiddleware {
     let ret: retMiddleware = new retMiddleware();
     try {
       if (isNumeric(req.userId)) {
-        const isPermit: boolean = await varchiController.checkPermission(
+        const isPermit: boolean = await varcoController.checkPermission(
           req.userId,
           enumPermessoTipo.lettura,
         );
@@ -29,7 +29,7 @@ export class varchiMiddleware {
         ret.setResponse(403, { message: 'errore verifica permessi LETTURA' });
       }
     } catch (error: any) {
-      logger.error('varchiMiddleware.checkPermission :' + error?.message);
+      logger.error('varcoMiddleware.checkPermission :' + error?.message);
       ret.setResponse(403, { message: 'errore verifica permessi LETTURA' });
     }
     ret.returnNext(next);
@@ -42,7 +42,7 @@ export class varchiMiddleware {
     let ret: retMiddleware = new retMiddleware();
     try {
       if (isNumeric(req.userId)) {
-        const isPermit: boolean = await varchiController.checkPermission(
+        const isPermit: boolean = await varcoController.checkPermission(
           req.userId,
           enumPermessoTipo.scrittura,
         );
@@ -55,7 +55,7 @@ export class varchiMiddleware {
         ret.setResponse(403, { message: 'errore verifica permessi SCRITTURA' });
       }
     } catch (error: any) {
-      logger.error('varchiMiddleware.checkPermission :' + error?.message);
+      logger.error('varcoMiddleware.checkPermission :' + error?.message);
       ret.setResponse(403, { message: 'errore verifica permessi SCRITTURA' });
     }
     ret.returnNext(next);

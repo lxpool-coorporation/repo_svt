@@ -1,4 +1,5 @@
 import { Op, QueryInterface, Sequelize } from 'sequelize';
+import {enumStato} from '../src/entity/enum/enumStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -7,7 +8,7 @@ export default {
         id: 1,
         cod: 'OPR',
         descrizione: 'OPERATORE',
-        stato: 'attivo',
+        stato: enumStato.attivo,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -15,7 +16,7 @@ export default {
         id: 2,
         cod: 'ATM',
         descrizione: 'AUTOMOBILISTA',
-        stato: 'attivo',
+        stato: enumStato.attivo,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -23,7 +24,7 @@ export default {
         id: 3,
         cod: 'VRC',
         descrizione: 'VARCO',
-        stato: 'attivo',
+        stato: enumStato.attivo,
         createdAt: new Date(),
         updatedAt: new Date()
       },

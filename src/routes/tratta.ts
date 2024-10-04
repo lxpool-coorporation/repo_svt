@@ -3,43 +3,43 @@ import { authMiddleware } from '../middleware/authMiddleware';
 import { Router } from 'express';
 import { trattaController } from '../controllers/trattaController';
 
-const routerTratte = Router();
+const routerTratta = Router();
 
-routerTratte.get(
+routerTratta.get(
   '/',
   authMiddleware.verifyToken,
   trattaMiddleware.checkPermissionRead,
   trattaController.getAll,
 );
-routerTratte.get(
+routerTratta.get(
   '/:id',
   authMiddleware.verifyToken,
   trattaMiddleware.checkPermissionRead,
   trattaController.getById,
 );
-routerTratte.post(
+routerTratta.post(
   '/',
   authMiddleware.verifyToken,
   trattaMiddleware.checkPermissionWrite,
   trattaController.saveTratta,
 );
-routerTratte.delete(
+routerTratta.delete(
   '/:id',
   authMiddleware.verifyToken,
   trattaMiddleware.checkPermissionWrite,
   trattaController.deleteById,
 );
-routerTratte.put(
+routerTratta.put(
   '/:id',
   authMiddleware.verifyToken,
   trattaMiddleware.checkPermissionWrite,
   trattaController.putTratta,
 );
-routerTratte.patch(
+routerTratta.patch(
   '/:id',
   authMiddleware.verifyToken,
   trattaMiddleware.checkPermissionWrite,
   trattaController.patchTratta,
 );
 
-export default routerTratte;
+export default routerTratta;
