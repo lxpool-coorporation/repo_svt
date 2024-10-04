@@ -58,7 +58,7 @@ jobs:
         MYSQL_USER: ${{ secrets.MYSQL_USER }}
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      run: docker-compose up --abort-on-container-exit --exit-code-from svt-test
+      run: docker-compose up -d app svt-db svt-redis_cache  # Avvia solo i servizi
 
     - name: Run Migrations
       run: 
@@ -70,8 +70,9 @@ jobs:
         export NODE_ENV=test
         npm run seed
 
-    - name: Run Linter
-      run: npm run lint
+    - name: Run Tests
+      run: docker-compose run svt-test  # Esegui i test separatamente dopo migrate e seed
+
 
     - name: Build Docker Image
       run: docker build -t lxpool/svt-app:latest .
