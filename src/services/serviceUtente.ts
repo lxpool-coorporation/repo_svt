@@ -135,7 +135,7 @@ class serviceUtenteImplementation {
     return profili;
   }
 
-  // Ottieni profili di un utente
+  // Ottieni permessi di un utente
   async getPermessiByIdUtente(id: number): Promise<ePermesso[] | null> {
     const redisClient = await databaseCache.getInstance();
 

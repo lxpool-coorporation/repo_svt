@@ -3,9 +3,10 @@ import { eVarco } from '../entity/svt/eVarco';
 import { repositoryVarco } from '../dao/repositories/svt/repositoryVarco';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
+import { eTransito } from '../entity/svt/eTransito';
 
 // classe che gestisce la logica di business dell'Varco
-class serviceSvtImplementation {
+class serviceVarcoImplementation {
   // Recupera un Varco per ID
   async getVarcoById(id: number): Promise<eVarco | null> {
     try {
@@ -37,27 +38,27 @@ class serviceSvtImplementation {
     }
   }
 
-  // Recupera tutti gli Varco
-  async getAllVarco(options?: object): Promise<eVarco[]> {
+  // Recupera tutti gli Varchi
+  async getAllVarchi(options?: object): Promise<eVarco[]> {
     const redisClient = await databaseCache.getInstance();
 
-    const cacheKey = 'Varco_tutti';
+    const cacheKey = 'Varchi_tutti';
 
-    // Controlla se gli Varco sono in cache
-    const cachedVarco = await redisClient.get(cacheKey);
-    if (cachedVarco) {
-      return JSON.parse(cachedVarco); // Restituisce gli Varco dalla cache
+    // Controlla se gli Varchi sono in cache
+    const cachedVarchi = await redisClient.get(cacheKey);
+    if (cachedVarchi) {
+      return JSON.parse(cachedVarchi); // Restituisce gli Varchi dalla cache
     }
 
     // Se non sono in cache, recupera dal repository
-    const Varco = await repositoryVarco.getAll(options);
-    if (Varco) {
-      // Memorizza gli Varco in cache per 1 ora
-      await redisClient.set(cacheKey, JSON.stringify(Varco), {
+    const Varchi = await repositoryVarco.getAll(options);
+    if (Varchi) {
+      // Memorizza gli Varchi in cache per 1 ora
+      await redisClient.set(cacheKey, JSON.stringify(Varchi), {
         EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
       });
     }
-    return Varco;
+    return Varchi;
     //return await repositoryVarco.getAll();
   }
 
@@ -81,8 +82,8 @@ class serviceSvtImplementation {
     );
     const savedVarco = await repositoryVarco.save(nuovoVarco);
 
-    // Invalida la cache degli Varco
-    await redisClient.del(`Varco_tutti`);
+    // Invalida la cache degli Varchi
+    await redisClient.del(`Varchi_tutti`);
     return savedVarco;
   }
 
@@ -109,7 +110,7 @@ class serviceSvtImplementation {
 
     // Invalida la cache dell'Varco aggiornato e la cache generale
     await redisClient.del(`Varco_${id}`);
-    await redisClient.del('Varco_tutti');
+    await redisClient.del('Varchi_tutti');
   }
 
   // Elimina un Varco
@@ -121,7 +122,34 @@ class serviceSvtImplementation {
 
     // Invalida la cache dell'Varco eliminato e la cache generale
     await redisClient.del(`Varco_${id}`);
-    await redisClient.del('Varco_tutti');
+    await redisClient.del('Varchi_tutti');
+  }
+
+  // Ottieni Transiti di un Varco
+  async getTransitiByIdVarco(idVarco: number): Promise<eTransito[] | null> {
+    const redisClient = await databaseCache.getInstance();
+
+    const cacheKey = `Transiti_Varco_${idVarco}`;
+
+    // Controlla se i Transiti sono in cache
+    const jsonData = await redisClient.get(cacheKey);
+    if (jsonData) {
+      const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
+      const cacheObjectArray = dataArray.map((data: any) =>
+        eTransito.fromJSON(data),
+      );
+      return cacheObjectArray;
+    }
+
+    // Se non sono in cache, recupera dal repository
+    const transiti = await repositoryVarco.getTransiti(idVarco);
+    if (transiti) {
+      // Memorizza i profili in cache per 1 ora
+      await redisClient.set(cacheKey, JSON.stringify(transiti), {
+        EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
+      });
+    }
+    return transiti;
   }
 
   // Inizializza struttura db Svt
@@ -134,4 +162,4 @@ class serviceSvtImplementation {
   }
 }
 
-export const serviceSvt = new serviceSvtImplementation();
+export const serviceVarco = new serviceVarcoImplementation();
