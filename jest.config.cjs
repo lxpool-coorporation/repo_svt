@@ -1,5 +1,6 @@
 // jest.config.js
 module.exports = {
+  setupFiles: ['./jest.setup.cjs'],
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
