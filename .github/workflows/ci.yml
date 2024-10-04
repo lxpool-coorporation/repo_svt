@@ -51,8 +51,8 @@ jobs:
         REDIS_PORT: ${{ secrets.REDIS_PORT }}
         REDIS_CACHE_TIMEOUT: ${{ secrets.REDIS_CACHE_TIMEOUT }}
         SERVER_PORT: ${{ secrets.SERVER_PORT }}
-        SERVER_KEY_PRIVATE: ${{ secrets.JWT_PRIVATE_KEY }}
-        SERVER_KEY_PUBLIC: ${{ secrets.JWT_PUBLIC_KEY }}
+        JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+        JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
         JWT_TOKEN_EXPIRED: ${{ secrets.JWT_TOKEN_EXPIRED }}
         MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
         MYSQL_USER: ${{ secrets.MYSQL_USER }}
@@ -73,8 +73,9 @@ jobs:
     - name: Run Linter
       run: npm run lint
 
-    - name: Run Tests
-      run: npm test   
+    - name: Build and Test Application
+      run: |
+        docker-compose up --abort-on-container-exit --exit-code-from test
 
     - name: Build Docker Image
       run: docker build -t lxpool/svt-app:latest .
