@@ -1,6 +1,10 @@
 
 
 import { QueryInterface, DataTypes } from 'sequelize';
+import {enumPermessoCategoria} from '../src/entity/enum/enumPermessoCategoria';
+import {enumPermessoTipo} from '../src/entity/enum/enumPermessoTipo';
+import {enumStato} from '../src/entity/enum/enumStato';
+
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -12,14 +16,14 @@ export default {
         type: DataTypes.INTEGER,
       },
       tipo: {
-        type: DataTypes.ENUM('lettura', 'scrittura'), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumPermessoTipo)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: 'lettura',
+        defaultValue: enumPermessoTipo.lettura,
       },
       categoria: {
-        type: DataTypes.ENUM('varco', 'tratta', 'transito','multa','bollettino'), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumPermessoCategoria)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: 'varco',
+        defaultValue: enumPermessoCategoria.varco,
       },
       cod: {
         type: DataTypes.STRING,
@@ -31,9 +35,9 @@ export default {
         unique: true,
       },
       stato: {
-        type: DataTypes.ENUM('attivo', 'disattivo'), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumStato)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: 'attivo',
+        defaultValue: enumStato.attivo,
       },
       createdAt: {
         allowNull: false,

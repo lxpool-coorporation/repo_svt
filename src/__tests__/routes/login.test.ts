@@ -6,7 +6,7 @@ describe('POST /login', () => {
   it('should return a valid JWT token for correct credentials', async () => {
     const response = await request(app)
       .post('/login')
-      .send({ identificativo: 'BVLOVD43P99ALSJD' });
+      .send({ identificativo: 'CRMNTU89P26A392R' });
 
     // Verifica che lo status code sia 200
     expect(response.status).toBe(200);
@@ -17,7 +17,7 @@ describe('POST /login', () => {
 
     // Verifica che il token sia un JWT valido
     const decoded = authController.verifyToken(token);
-    expect((decoded as any).id_utente).toBe(2);
+    expect((decoded as any).id_utente).toBe(1);
   });
 
   it('should return 401 for incorrect credentials', async () => {

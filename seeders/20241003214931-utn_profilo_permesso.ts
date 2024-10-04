@@ -22,6 +22,36 @@ export default {
         updatedAt: new Date()
       },
       {
+        id_profilo: 1,
+        id_permesso: 4,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id_profilo: 1,
+        id_permesso: 5,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id_profilo: 1,
+        id_permesso: 6,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id_profilo: 1,
+        id_permesso: 7,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id_profilo: 1,
+        id_permesso: 8,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
         id_profilo: 2,
         id_permesso: 2,
         createdAt: new Date(),

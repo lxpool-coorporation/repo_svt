@@ -8,8 +8,9 @@ import routerLogin from './routes/login';
 import { serviceUtente } from './services/serviceUtente';
 import { enumPermessoTipo } from './entity/enum/enumPermessoTipo';
 import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
-import routerVarchi from './routes/varchi';
-import routerTratte from './routes/tratta';
+import routerVarco from './routes/varco';
+import routerTratta from './routes/tratta';
+import routerVeicolo from './routes/veicolo';
 
 dotenv.config();
 logger.info('app started');
@@ -29,8 +30,9 @@ app.use(morganMiddleware);
 app.use(express.json());
 
 app.use('/login', routerLogin);
-app.use('/varchi', routerVarchi);
-app.use('/tratte', routerTratte);
+app.use('/varco', routerVarco);
+app.use('/tratta', routerTratta);
+app.use('/veicolo', routerVeicolo);
 
 // catch 404 and forward to error handler
 app.use(function (_req, _res, next) {
@@ -58,7 +60,6 @@ const PORT = process.env.SERVER_PORT || 3000;
 
 app
   .listen(PORT, () => {
-    _readUser2();
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {

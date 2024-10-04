@@ -150,4 +150,4 @@ class serviceSvtImplementation {
   }
 }
 
-export const serviceSvt = new serviceSvtImplementation();
+export const serviceVeicolo = new serviceSvtImplementation();

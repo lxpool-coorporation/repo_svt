@@ -1,4 +1,5 @@
 import { QueryInterface } from 'sequelize';
+import {enumStato} from '../src/entity/enum/enumStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -6,14 +7,14 @@ export default {
       {
         id: 1,
         identificativo: 'CRMNTU89P26A392R',
-        stato: 'attivo',
+        stato: enumStato.attivo,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         id: 2,
         identificativo: 'PPTREQ22P36A423B',
-        stato: 'attivo',
+        stato: enumStato.attivo,
         createdAt: new Date(),
         updatedAt: new Date()
       }

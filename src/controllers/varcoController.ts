@@ -20,7 +20,7 @@ interface iEVarco {
   stato: enumStato;
 }
 
-export class varchiController {
+export class varcoController {
   private constructor() {}
   public static checkPermission = async (
     idUtente: number,
@@ -34,7 +34,7 @@ export class varchiController {
         tipoPermesso,
       );
     } catch (error: any) {
-      logger.error('varchiController.checkPermission :' + error?.message);
+      logger.error('varcoController.checkPermission :' + error?.message);
       ret = false;
     }
     return ret;
@@ -53,7 +53,7 @@ export class varchiController {
         ret.setResponse(404, { message: 'errore caricamento varchi' });
       }
     } catch (error: any) {
-      logger.error('varchiController.getAll :' + error?.message);
+      logger.error('varcoController.getAll :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento varchi' });
     }
     ret.returnResponseJson(res, next);
@@ -78,7 +78,7 @@ export class varchiController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('varchiController.getById :' + error?.message);
+      logger.error('varcoController.getById :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento varco' });
     }
     ret.returnResponseJson(res, next);
@@ -108,7 +108,7 @@ export class varchiController {
         ret.setResponse(400, { message: 'oggetto non presente' });
       }
     } catch (error: any) {
-      logger.error('varchiController.saveVarco :' + error?.message);
+      logger.error('varcoController.saveVarco :' + error?.message);
       ret.setResponse(500, { message: 'errore salvataggio varco' });
     }
     ret.returnResponseJson(res, next);
@@ -133,7 +133,7 @@ export class varchiController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('varchiController.deleteById :' + error?.message);
+      logger.error('varcoController.deleteById :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento varco' });
     }
     ret.returnResponseJson(res, next);
@@ -170,7 +170,7 @@ export class varchiController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('varchiController.putVarco :' + error?.message);
+      logger.error('varcoController.putVarco :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento varco' });
     }
     ret.returnResponseJson(res, next);
@@ -240,7 +240,7 @@ export class varchiController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('varchiController.patchVarco :' + error?.message);
+      logger.error('varcoController.patchVarco :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento varco' });
     }
     ret.returnResponseJson(res, next);

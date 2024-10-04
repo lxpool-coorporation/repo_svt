@@ -45,7 +45,7 @@ class eVeicolo {
   set_tipo(tipo: enumVeicoloTipo): void {
     this.tipo = tipo;
   }
-  set_tipoiceFiscale(targa: string): void {
+  set_targa(targa: string): void {
     this.targa = targa;
   }
   set_stato(stato: enumStato): void {

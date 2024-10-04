@@ -1,5 +1,7 @@
 
 import { QueryInterface, DataTypes } from 'sequelize';
+import {enumStato} from '../src/entity/enum/enumStato';
+
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -20,9 +22,9 @@ export default {
         unique: true,
       },
       stato: {
-        type: DataTypes.ENUM('attivo', 'disattivo'), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumStato)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: 'attivo',
+        defaultValue: enumStato.attivo,
       },
       createdAt: {
         allowNull: false,
