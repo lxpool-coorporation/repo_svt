@@ -5,11 +5,11 @@ import createError from 'http-errors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import routerLogin from './routes/login';
-import { authMiddleware } from './middleware/authMiddleware';
 import { serviceUtente } from './services/serviceUtente';
 import { enumPermessoTipo } from './entity/enum/enumPermessoTipo';
 import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
 import routerVarchi from './routes/varchi';
+import routerTratte from './routes/tratta';
 
 dotenv.config();
 logger.info('app started');
@@ -30,10 +30,8 @@ app.use(express.json());
 
 app.use('/login', routerLogin);
 app.use('/varchi', routerVarchi);
-// Route protetta, accessibile solo con un token valido
-app.get('/*', authMiddleware.verifyToken, (_req, res) => {
-  res.status(200).json({ message: `Benvenuto, utente` });
-});
+app.use('/tratte', routerTratte);
+
 // catch 404 and forward to error handler
 app.use(function (_req, _res, next) {
   next(createError(404));

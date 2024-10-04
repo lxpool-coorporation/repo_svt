@@ -70,7 +70,7 @@ class eTratta {
   set_cod(cod: string): void {
     this.cod = cod;
   }
-  set_codiceFiscale(descrizione: string): void {
+  set_descrizione(descrizione: string): void {
     this.descrizione = descrizione;
   }
   set_id_varco_ingresso(id_varco_ingresso: number): void {

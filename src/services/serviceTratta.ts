@@ -38,27 +38,27 @@ class serviceTrattaImplementation {
     }
   }
 
-  // Recupera tutti gli Veicoli
-  async getAllVeicoli(options?: object): Promise<eTratta[]> {
+  // Recupera tutti gli Tratta
+  async getAllTratte(options?: object): Promise<eTratta[]> {
     const redisClient = await databaseCache.getInstance();
 
-    const cacheKey = 'Veicoli_tutti';
+    const cacheKey = 'Tratta_tutti';
 
-    // Controlla se gli Veicoli sono in cache
-    const cachedVeicoli = await redisClient.get(cacheKey);
-    if (cachedVeicoli) {
-      return JSON.parse(cachedVeicoli); // Restituisce gli Veicoli dalla cache
+    // Controlla se gli Tratta sono in cache
+    const cachedTratta = await redisClient.get(cacheKey);
+    if (cachedTratta) {
+      return JSON.parse(cachedTratta); // Restituisce gli Tratta dalla cache
     }
 
     // Se non sono in cache, recupera dal repository
-    const Veicoli = await repositoryTratta.getAll(options);
-    if (Veicoli) {
-      // Memorizza gli Veicoli in cache per 1 ora
-      await redisClient.set(cacheKey, JSON.stringify(Veicoli), {
+    const Tratta = await repositoryTratta.getAll(options);
+    if (Tratta) {
+      // Memorizza gli Tratta in cache per 1 ora
+      await redisClient.set(cacheKey, JSON.stringify(Tratta), {
         EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
       });
     }
-    return Veicoli;
+    return Tratta;
     //return await repositoryTratta.getAll();
   }
 
@@ -84,8 +84,8 @@ class serviceTrattaImplementation {
     );
     const savedTratta = await repositoryTratta.save(nuovoTratta);
 
-    // Invalida la cache degli Veicoli
-    await redisClient.del(`Veicoli_tutti`);
+    // Invalida la cache degli Tratta
+    await redisClient.del(`Tratta_tutti`);
     return savedTratta;
   }
 
@@ -114,7 +114,7 @@ class serviceTrattaImplementation {
 
     // Invalida la cache dell'Tratta aggiornato e la cache generale
     await redisClient.del(`Tratta_${id}`);
-    await redisClient.del('Veicoli_tutti');
+    await redisClient.del('Tratta_tutti');
   }
 
   // Elimina un Tratta
@@ -134,7 +134,7 @@ class serviceTrattaImplementation {
 
     // Invalida la cache dell'Tratta eliminato e la cache generale
     await redisClient.del(`Tratta_${id}`);
-    await redisClient.del('Veicoli_tutti');
+    await redisClient.del('Tratta_tutti');
   }
 
   // Ottieni Transiti di un Tratta
