@@ -3,8 +3,8 @@ import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ormPolicy } from './ormPolicy';
-import { enumMeteoTipo } from '@/entity/enum/enumMeteoTipo';
-import { enumVeicoloTipo } from '@/entity/enum/enumVeicoloTipo';
+import { enumMeteoTipo } from '../../entity/enum/enumMeteoTipo';
+import { enumVeicoloTipo } from '../../entity/enum/enumVeicoloTipo';
 
 const sequelize: Sequelize = database.getInstance();
 

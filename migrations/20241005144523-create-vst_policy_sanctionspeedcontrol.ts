@@ -8,7 +8,7 @@ export default {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {
-          model: ormPolicySanction,
+          model: 'vst_plc_sanction',
           key: 'id',
         },
         onDelete: 'CASCADE',
@@ -21,6 +21,14 @@ export default {
       speed_max: {
           type: DataTypes.INTEGER,
           allowNull: false,
+      },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
       },
     });
   },

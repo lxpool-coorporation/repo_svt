@@ -10,7 +10,7 @@ export default {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {
-          model: ormPolicy,
+          model: 'vst_plc_policy',
           key: 'id',
         },
         onDelete: 'CASCADE',

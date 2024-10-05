@@ -144,6 +144,7 @@ class serviceUtenteImplementation {
     // Controlla se i profili sono in cache
     const jsonData = await redisClient.get(cacheKey);
     if (jsonData) {
+      console.log('CACHE! PERMESSI');
       const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
       const cacheObjectArray = dataArray.map((data: any) =>
         ePermesso.fromJSON(data),
@@ -184,6 +185,20 @@ class serviceUtenteImplementation {
     );
 
     return hasPermesso;
+  }
+
+  // Funzione per pulire la cache di Redis
+  async clearRedisCache() {
+    const redisClient = await databaseCache.getInstance();
+    try {
+      // Pulisce tutti i database di Redis
+      await redisClient.flushAll();
+      console.log('Cache Redis pulita con successo!');
+    } catch (error) {
+      console.error('Errore durante la pulizia della cache Redis:', error);
+    } finally {
+      //redisClient.disconnect(); // Chiudi la connessione
+    }
   }
 }
 

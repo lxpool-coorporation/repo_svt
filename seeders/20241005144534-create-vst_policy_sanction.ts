@@ -6,7 +6,7 @@ import { enumMeteoTipo } from '../src/entity/enum/enumMeteoTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkInsert('vst_plc_policy_sanction', [
+    await queryInterface.bulkInsert('vst_plc_sanction', [
       {
         id: 1,
         tipo_policy: enumPolicyTipo.speed_control,
@@ -59,6 +59,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkDelete('vst_plc_policy_sanction',{}, {});
+    await queryInterface.bulkDelete('vst_plc_sanction',{}, {});
   }
 };

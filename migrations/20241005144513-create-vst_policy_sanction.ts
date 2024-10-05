@@ -39,6 +39,14 @@ export default {
         type: DataTypes.ENUM(...Object.values(enumStato)),
         allowNull: false,
       },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
     });
   },
 

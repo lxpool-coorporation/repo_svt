@@ -11,6 +11,7 @@ import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
 import routerVarco from './routes/varco';
 import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
+import { ormAssociazioni } from './models/utente/ormAssociazioni';
 
 dotenv.config();
 logger.info('app started');
@@ -61,6 +62,8 @@ const PORT = process.env.SERVER_PORT || 3000;
 app
   .listen(PORT, () => {
     //_readUser2();
+    const o = new ormAssociazioni();
+    o.read_associazioni();
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {
@@ -74,8 +77,10 @@ async function _readUser2() {
   //await serviceTransito.initStruttura({alter:true })
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
   //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)
-
   // const utenteConProfili1 = await ormUtente.findByPk(2)
+
+  await serviceUtente.clearRedisCache();
+
   const utente = await serviceUtente.getUtenteById(1);
   if (utente) {
     console.log('TROVATO UTENTE : ' + utente.get_identificativo());
