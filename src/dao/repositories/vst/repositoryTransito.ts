@@ -6,7 +6,6 @@ import {
   daoTransitoImplementation,
 } from '../../dao/vst/daoTransito';
 
-
 class repositoryTransitoImplementation
   implements DaoInterfaceGeneric<eTransito>
 {

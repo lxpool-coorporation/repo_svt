@@ -136,7 +136,6 @@ class repositoryPolicySanctionImplementation
       throw error;
     }
   }
-
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

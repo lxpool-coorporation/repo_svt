@@ -11,9 +11,7 @@ import { ePolicy } from '../../../entity/vst/ePolicy';
 
 const db = database.getInstance();
 
-class repositoryPolicyImplementation
-  implements DaoInterfaceGeneric<ePolicy>
-{
+class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
   private daoPolicy: daoPolicyImplementation;
   private daoPolicySpeedControl: daoPolicySpeedControlImplementation;
 
@@ -28,7 +26,7 @@ class repositoryPolicyImplementation
     return this.daoPolicy.getAll(options);
   }
   async save(t: ePolicy): Promise<ePolicy | null> {
-    return daoPolicy.save(t)
+    return daoPolicy.save(t);
   }
   update(t: ePolicySpeedControl): Promise<void> {
     return this.daoPolicySpeedControl.update(t);
@@ -37,7 +35,7 @@ class repositoryPolicyImplementation
     return this.daoPolicySpeedControl.delete(t);
   }
 
-// Metodi PolicySpeedControl 
+  // Metodi PolicySpeedControl
 
   getPolicySpeedControl(id: number): Promise<ePolicySpeedControl | null> {
     return this.daoPolicySpeedControl.getWithPolicy(id);
@@ -47,12 +45,12 @@ class repositoryPolicyImplementation
     return this.daoPolicySpeedControl.getAllWithPolicy(options);
   }
 
-  async savePolicySpeedControl(t: ePolicySpeedControl): Promise<ePolicySpeedControl | null> {
-
+  async savePolicySpeedControl(
+    t: ePolicySpeedControl,
+  ): Promise<ePolicySpeedControl | null> {
     const transaction: Transaction = await db.transaction();
 
-    try{
-      
+    try {
       const options = { transaction };
 
       // Salva la policy base
@@ -60,13 +58,13 @@ class repositoryPolicyImplementation
       if (!policyBase) {
         throw new Error('Failed to save base policy.');
       }
-  
+
       // Salva la policy speed control
       const policySpeedControl = await daoPolicySpeedControl.save(t, options);
       if (!policySpeedControl) {
         throw new Error('Failed to save policy speed control.');
       }
-  
+
       await transaction.commit();
 
       return new ePolicySpeedControl(
@@ -79,8 +77,7 @@ class repositoryPolicyImplementation
         policySpeedControl.get_veicolo(),
         policySpeedControl.get_speed_limit(),
       );
-
-    }catch(error){
+    } catch (error) {
       await transaction.rollback();
       throw error;
     }
@@ -123,9 +120,7 @@ class repositoryPolicyImplementation
       throw error;
     }
   }
-
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
-export const repositoryPolicy =
-  new repositoryPolicyImplementation();
+export const repositoryPolicy = new repositoryPolicyImplementation();

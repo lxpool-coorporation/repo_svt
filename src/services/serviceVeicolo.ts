@@ -139,15 +139,6 @@ class serviceSvtImplementation {
     }
     return Utenti;
   }
-
-  // Inizializza struttura db Svt
-  async initStruttura(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return await repositoryVeicolo.init(options);
-  }
 }
 
 export const serviceVeicolo = new serviceSvtImplementation();

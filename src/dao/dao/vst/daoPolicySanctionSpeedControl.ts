@@ -115,7 +115,6 @@ export class daoPolicySanctionSpeedControlImplementation
     t: ePolicySanctionSpeedControl,
     options?: { transaction?: Transaction },
   ): Promise<ePolicySanctionSpeedControl | null> {
-
     try {
       // Crea la policy speed control
       await ormPolicySanctionSpeedControl.create(

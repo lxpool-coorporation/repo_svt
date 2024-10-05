@@ -46,7 +46,6 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     t: eUtente,
     options?: { transaction?: Transaction },
   ): Promise<eUtente | null> {
-
     const ormObj = await ormUtente.create(
       {
         id: t.get_id(),

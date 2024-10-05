@@ -185,15 +185,6 @@ class serviceUtenteImplementation {
 
     return hasPermesso;
   }
-
-  // Inizializza struttura db utente
-  async initStruttura(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return await repositoryUtente.init(options);
-  }
 }
 
 export const serviceUtente = new serviceUtenteImplementation();

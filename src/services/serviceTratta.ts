@@ -163,15 +163,6 @@ class serviceTrattaImplementation {
     }
     return transiti;
   }
-
-  // Inizializza struttura db Svt
-  async initStruttura(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return await repositoryTratta.init(options);
-  }
 }
 
 export const serviceTratta = new serviceTrattaImplementation();

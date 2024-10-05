@@ -151,15 +151,6 @@ class serviceVarcoImplementation {
     }
     return transiti;
   }
-
-  // Inizializza struttura db Svt
-  async initStruttura(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return await repositoryVarco.init(options);
-  }
 }
 
 export const serviceVarco = new serviceVarcoImplementation();
