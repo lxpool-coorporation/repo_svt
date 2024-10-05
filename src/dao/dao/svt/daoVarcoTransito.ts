@@ -25,7 +25,7 @@ export class daoVarcoTransitoImplementation extends daoVarcoImplementation {
             .setIdVarco(a.id_varco)
             .setMeteo(a.meteo)
             .setIdVeicolo(a.id_veicolo)
-            .setImmagine(a.immagine)
+            .setpath_immagine(a.path_immagine)
             .setStato(a.stato),
         );
       });

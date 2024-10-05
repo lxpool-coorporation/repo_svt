@@ -44,7 +44,7 @@ export default {
           key: 'id',
         },
       },
-      immagine: {
+      path_immagine: {
         allowNull: true,
         type: DataTypes.STRING,
       },

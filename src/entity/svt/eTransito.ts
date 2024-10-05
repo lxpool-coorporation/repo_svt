@@ -10,7 +10,7 @@ class eTransito {
   private id_varco: number;
   private meteo: enumMeteoTipo | null;
   private id_veicolo: number | null;
-  private immagine: string | null;
+  private path_immagine: string | null;
   private stato: enumTransitoStato;
 
   constructor(builder: eTransitoBuilder) {
@@ -21,7 +21,7 @@ class eTransito {
     this.id_varco = builder.id_varco!;
     this.meteo = builder.meteo ?? null;
     this.id_veicolo = builder.id_veicolo ?? null;
-    this.immagine = builder.immagine ?? null;
+    this.path_immagine = builder.path_immagine ?? null;
     this.stato = builder.stato!;
   }
 
@@ -35,7 +35,7 @@ class eTransito {
       .setIdVarco(data.id_varco)
       .setMeteo(data.meteo ?? null)
       .setIdVeicolo(data.id_veicolo ?? null)
-      .setImmagine(data.immagine ?? null)
+      .setpath_immagine(data.path_immagine ?? null)
       .setStato(data.stato)
       .build(); // Costruisce l'oggetto usando il Builder
   }
@@ -62,8 +62,8 @@ class eTransito {
   get_id_veicolo(): number | null {
     return this.id_veicolo;
   }
-  get_immagine(): string | null {
-    return this.immagine;
+  get_path_immagine(): string | null {
+    return this.path_immagine;
   }
   get_stato(): enumTransitoStato {
     return this.stato;
@@ -91,8 +91,8 @@ class eTransito {
   set_id_veicolo(id_veicolo: number): void {
     this.id_veicolo = id_veicolo;
   }
-  set_immagine(immagine: string) {
-    this.immagine = immagine;
+  set_path_immagine(path_immagine: string) {
+    this.path_immagine = path_immagine;
   }
   set_stato(stato: enumTransitoStato): void {
     this.stato = stato;
@@ -107,7 +107,7 @@ class eTransitoBuilder {
   public id_varco?: number;
   public meteo?: enumMeteoTipo | null;
   public id_veicolo?: number | null;
-  public immagine?: string | null;
+  public path_immagine?: string | null;
   public stato?: enumTransitoStato;
 
   // Metodi del builder per impostare i valori
@@ -146,8 +146,8 @@ class eTransitoBuilder {
     return this;
   }
 
-  setImmagine(immagine: string | null | undefined): eTransitoBuilder {
-    this.immagine = immagine;
+  setpath_immagine(path_immagine: string | null | undefined): eTransitoBuilder {
+    this.path_immagine = path_immagine;
     return this;
   }
 

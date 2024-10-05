@@ -1,4 +1,4 @@
-import { Op, QueryInterface, Sequelize } from 'sequelize';
+import { QueryInterface } from 'sequelize';
 import { enumVeicoloTipo } from '../src/entity/enum/enumVeicoloTipo';
 import { enumMeteoTipo } from '../src/entity/enum/enumMeteoTipo';
 

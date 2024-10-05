@@ -1,4 +1,4 @@
-import { Op, QueryInterface, Sequelize } from 'sequelize';
+import { Op, QueryInterface } from 'sequelize';
 import {enumStato} from '../src/entity/enum/enumStato';
 
 export default {

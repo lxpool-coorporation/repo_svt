@@ -1,4 +1,4 @@
-import { Op, QueryInterface, Sequelize } from 'sequelize';
+import { QueryInterface, Sequelize } from 'sequelize';
 
 export default {
   up: async (queryInterface: QueryInterface) => {

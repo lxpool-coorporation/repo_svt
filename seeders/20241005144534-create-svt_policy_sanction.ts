@@ -1,8 +1,6 @@
-import { Op, QueryInterface, Sequelize } from 'sequelize';
+import { QueryInterface } from 'sequelize';
 import { enumStato } from '../src/entity/enum/enumStato';
 import { enumPolicyTipo } from '../src/entity/enum/enumPolicyTipo';
-import { enumVeicoloTipo } from '../src/entity/enum/enumVeicoloTipo';
-import { enumMeteoTipo } from '../src/entity/enum/enumMeteoTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {

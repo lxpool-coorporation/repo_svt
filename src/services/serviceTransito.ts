@@ -92,7 +92,7 @@ class serviceTransitoImplementation {
     speed_real?: number | null,
     meteo?: enumMeteoTipo | null,
     id_veicolo?: number | null,
-    immagine?: string | null,
+    path_immagine?: string | null,
   ): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
@@ -105,7 +105,7 @@ class serviceTransitoImplementation {
         .setIdVarco(id_varco)
         .setMeteo(meteo)
         .setIdVeicolo(id_veicolo)
-        .setImmagine(immagine)
+        .setpath_immagine(path_immagine)
         .setStato(stato),
     );
     await repositoryTransito.update(Transito);
