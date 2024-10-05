@@ -4,7 +4,6 @@ import {
   daoPolicySpeedControl,
   daoPolicySpeedControlImplementation,
 } from '../../dao/vst/daoPolicySpeedControl';
-import { daoInitSvt, daoInitSvtImplementation } from '../../dao/vst/daoInitSvt';
 import { Transaction } from 'sequelize';
 import database from '../../../utils/database';
 import { daoPolicy, daoPolicyImplementation } from '../../dao/vst/daoPolicy';
@@ -12,15 +11,15 @@ import { ePolicy } from '../../../entity/vst/ePolicy';
 
 const db = database.getInstance();
 
-class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
+class repositoryPolicyImplementation
+  implements DaoInterfaceGeneric<ePolicy>
+{
   private daoPolicy: daoPolicyImplementation;
   private daoPolicySpeedControl: daoPolicySpeedControlImplementation;
-  private daoInitSvt: daoInitSvtImplementation;
 
   constructor() {
     this.daoPolicy = daoPolicy;
     this.daoPolicySpeedControl = daoPolicySpeedControl;
-    this.daoInitSvt = daoInitSvt;
   }
   get(id: number): Promise<ePolicy | null> {
     return this.daoPolicy.get(id);
@@ -29,7 +28,7 @@ class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     return this.daoPolicy.getAll(options);
   }
   async save(t: ePolicy): Promise<ePolicy | null> {
-    return daoPolicy.save(t);
+    return daoPolicy.save(t)
   }
   update(t: ePolicySpeedControl): Promise<void> {
     return this.daoPolicySpeedControl.update(t);
@@ -38,7 +37,7 @@ class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     return this.daoPolicySpeedControl.delete(t);
   }
 
-  // Metodi PolicySpeedControl
+// Metodi PolicySpeedControl 
 
   getPolicySpeedControl(id: number): Promise<ePolicySpeedControl | null> {
     return this.daoPolicySpeedControl.getWithPolicy(id);
@@ -48,12 +47,12 @@ class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     return this.daoPolicySpeedControl.getAllWithPolicy(options);
   }
 
-  async savePolicySpeedControl(
-    t: ePolicySpeedControl,
-  ): Promise<ePolicySpeedControl | null> {
+  async savePolicySpeedControl(t: ePolicySpeedControl): Promise<ePolicySpeedControl | null> {
+
     const transaction: Transaction = await db.transaction();
 
-    try {
+    try{
+      
       const options = { transaction };
 
       // Salva la policy base
@@ -61,13 +60,13 @@ class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
       if (!policyBase) {
         throw new Error('Failed to save base policy.');
       }
-
+  
       // Salva la policy speed control
       const policySpeedControl = await daoPolicySpeedControl.save(t, options);
       if (!policySpeedControl) {
         throw new Error('Failed to save policy speed control.');
       }
-
+  
       await transaction.commit();
 
       return new ePolicySpeedControl(
@@ -80,7 +79,8 @@ class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
         policySpeedControl.get_veicolo(),
         policySpeedControl.get_speed_limit(),
       );
-    } catch (error) {
+
+    }catch(error){
       await transaction.rollback();
       throw error;
     }
@@ -124,16 +124,8 @@ class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     }
   }
 
-  // OTHERS
-
-  init(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return this.daoInitSvt.init(options);
-  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
-export const repositoryPolicy = new repositoryPolicyImplementation();
+export const repositoryPolicy =
+  new repositoryPolicyImplementation();

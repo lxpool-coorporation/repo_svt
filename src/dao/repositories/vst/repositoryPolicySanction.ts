@@ -4,7 +4,6 @@ import {
   daoPolicySanctionSpeedControl,
   daoPolicySanctionSpeedControlImplementation,
 } from '../../dao/vst/daoPolicySanctionSpeedControl';
-import { daoInitSvt, daoInitSvtImplementation } from '../../dao/vst/daoInitSvt';
 import { Transaction } from 'sequelize';
 import database from '../../../utils/database';
 import {
@@ -20,12 +19,10 @@ class repositoryPolicySanctionImplementation
 {
   private daoPolicySanction: daoPolicySanctionImplementation;
   private daoPolicySanctionSpeedControl: daoPolicySanctionSpeedControlImplementation;
-  private daoInitSvt: daoInitSvtImplementation;
 
   constructor() {
     this.daoPolicySanction = daoPolicySanction;
     this.daoPolicySanctionSpeedControl = daoPolicySanctionSpeedControl;
-    this.daoInitSvt = daoInitSvt;
   }
   get(id: number): Promise<ePolicySanction | null> {
     return this.daoPolicySanction.get(id);
@@ -140,15 +137,6 @@ class repositoryPolicySanctionImplementation
     }
   }
 
-  // OTHERS
-
-  init(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return this.daoInitSvt.init(options);
-  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
