@@ -1,5 +1,5 @@
-import { veicoloMiddleware } from '../middleware/veicoloMiddleware';
-import { authMiddleware } from '../middleware/authMiddleware';
+import { veicoloMiddleware } from '../middleware/middlewareVeicolo';
+import { authMiddleware } from '../middleware/middlewareAuth';
 import { Router } from 'express';
 import { veicoloController } from '../controllers/controllerVeicolo';
 

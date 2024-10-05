@@ -1,5 +1,5 @@
-import { trattaMiddleware } from '../middleware/trattaMiddleware';
-import { authMiddleware } from '../middleware/authMiddleware';
+import { trattaMiddleware } from '../middleware/middlewareTratta';
+import { authMiddleware } from '../middleware/middlewareAuth';
 import { Router } from 'express';
 import { trattaController } from '../controllers/controllerTratta';
 

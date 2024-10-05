@@ -1,5 +1,5 @@
-import { varcoMiddleware } from '../middleware/varcoMiddleware';
-import { authMiddleware } from '../middleware/authMiddleware';
+import { varcoMiddleware } from '../middleware/middlewareVarco';
+import { authMiddleware } from '../middleware/middlewareAuth';
 import { Router } from 'express';
 import { varcoController } from '../controllers/controllerVarco';
 
