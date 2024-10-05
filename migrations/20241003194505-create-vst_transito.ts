@@ -4,7 +4,7 @@ import {enumMeteoTipo} from '../src/entity/enum/enumMeteoTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('vst_transito', {
+    await queryInterface.createTable('svt_transito', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -27,7 +27,7 @@ export default {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'vst_varco', // Nome della tabella a cui si riferisce
+          model: 'svt_varco', // Nome della tabella a cui si riferisce
           key: 'id',
         },
       },
@@ -40,7 +40,7 @@ export default {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: 'vst_veicolo', // Nome della tabella a cui si riferisce
+          model: 'svt_veicolo', // Nome della tabella a cui si riferisce
           key: 'id',
         },
       },
@@ -65,6 +65,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('vst_transito');
+    await queryInterface.dropTable('svt_transito');
   },
 };

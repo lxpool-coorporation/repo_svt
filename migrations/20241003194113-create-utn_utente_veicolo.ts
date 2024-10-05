@@ -15,7 +15,7 @@ export default {
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
-          model: 'vst_veicolo', 
+          model: 'svt_veicolo', 
           key: 'id',            
         },
       },

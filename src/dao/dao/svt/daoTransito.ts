@@ -1,6 +1,6 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { ormTransito } from '../../../models/vst/ormTransito';
-import { eTransito, eTransitoBuilder } from '../../../entity/vst/eTransito';
+import { ormTransito } from '../../../models/svt/ormTransito';
+import { eTransito, eTransitoBuilder } from '../../../entity/svt/eTransito';
 import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Transito`

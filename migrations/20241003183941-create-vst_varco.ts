@@ -3,7 +3,7 @@ import {enumStato} from '../src/entity/enum/enumStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('vst_varco', {
+    await queryInterface.createTable('svt_varco', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -44,6 +44,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('vst_varco');
+    await queryInterface.dropTable('svt_varco');
   },
 };

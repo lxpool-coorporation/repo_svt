@@ -1,10 +1,10 @@
 import { Transaction } from 'sequelize';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { eTransito } from '../../../entity/vst/eTransito';
+import { eTransito } from '../../../entity/svt/eTransito';
 import {
   daoTransito,
   daoTransitoImplementation,
-} from '../../dao/vst/daoTransito';
+} from '../../dao/svt/daoTransito';
 
 class repositoryTransitoImplementation
   implements DaoInterfaceGeneric<eTransito>

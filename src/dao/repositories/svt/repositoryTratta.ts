@@ -1,12 +1,12 @@
 import { Transaction } from 'sequelize';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { eTratta } from '../../../entity/vst/eTratta';
-import { daoTratta, daoTrattaImplementation } from '../../dao/vst/daoTratta';
-import { eVarco } from '../../../entity/vst/eVarco';
+import { eTratta } from '../../../entity/svt/eTratta';
+import { daoTratta, daoTrattaImplementation } from '../../dao/svt/daoTratta';
+import { eVarco } from '../../../entity/svt/eVarco';
 import {
   daoTrattaVarco,
   daoTrattaVarcoImplementation,
-} from '../../dao/vst/daoTrattaVarco';
+} from '../../dao/svt/daoTrattaVarco';
 
 class repositoryTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
   private daoTratta: daoTrattaImplementation;

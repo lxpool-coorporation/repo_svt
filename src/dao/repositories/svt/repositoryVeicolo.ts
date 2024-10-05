@@ -1,12 +1,12 @@
 import { Transaction } from 'sequelize';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eUtente } from '../../../entity/utente/eUtente';
-import { eVeicolo } from '../../../entity/vst/eVeicolo';
-import { daoVeicolo, daoVeicoloImplementation } from '../../dao/vst/daoVeicolo';
+import { eVeicolo } from '../../../entity/svt/eVeicolo';
+import { daoVeicolo, daoVeicoloImplementation } from '../../dao/svt/daoVeicolo';
 import {
   daoVeicoloUtente,
   daoVeicoloUtenteImplementation,
-} from '../../dao/vst/daoVeicoloUtente';
+} from '../../dao/svt/daoVeicoloUtente';
 
 class repositoryVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   private daoVeicolo: daoVeicoloImplementation;

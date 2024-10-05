@@ -1,16 +1,16 @@
 import { QueryInterface, DataTypes } from 'sequelize';
-import { ormPolicy } from '../src/models/vst/ormPolicy';
+import { ormPolicy } from '../src/models/svt/ormPolicy';
 import {enumMeteoTipo} from '../src/entity/enum/enumMeteoTipo';
 import {enumVeicoloTipo} from '../src/entity/enum/enumVeicoloTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('vst_plc_speed_control', {
+    await queryInterface.createTable('svt_plc_speed_control', {
       id_policy: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         references: {
-          model: ormPolicy,
+          model: 'svt_plc_policy',
           key: 'id',
         },
         onDelete: 'CASCADE',
@@ -40,6 +40,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('vst_plc_speed_control');
+    await queryInterface.dropTable('svt_plc_speed_control');
   },
 };

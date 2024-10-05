@@ -4,7 +4,7 @@ import { enumPolicyTipo } from '../src/entity/enum/enumPolicyTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkInsert('vst_plc_policy', [
+    await queryInterface.bulkInsert('svt_plc_policy', [
       {
         id: 1,
         cod: 'PLC001',
@@ -27,6 +27,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkDelete('vst_plc_policy',{}, {});
+    await queryInterface.bulkDelete('svt_plc_policy',{}, {});
   }
 };

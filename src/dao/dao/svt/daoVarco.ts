@@ -1,6 +1,6 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { ormVarco } from '../../../models/vst/ormVarco';
-import { eVarco } from '../../../entity/vst/eVarco';
+import { ormVarco } from '../../../models/svt/ormVarco';
+import { eVarco } from '../../../entity/svt/eVarco';
 import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Varco`

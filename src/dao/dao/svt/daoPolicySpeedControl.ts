@@ -1,9 +1,9 @@
 // daoPolicySpeedControl.ts
-import { ormPolicySpeedControl } from '../../../models/vst/ormPolicySpeedControl';
-import { ePolicySpeedControl } from '../../../entity/vst/ePolicySpeedControl';
+import { ormPolicySpeedControl } from '../../../models/svt/ormPolicySpeedControl';
+import { ePolicySpeedControl } from '../../../entity/svt/ePolicySpeedControl';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { Transaction } from 'sequelize';
-import { ormPolicy } from '../../../models/vst/ormPolicy';
+import { ormPolicy } from '../../../models/svt/ormPolicy';
 
 export class daoPolicySpeedControlImplementation
   implements DaoInterfaceGeneric<ePolicySpeedControl>

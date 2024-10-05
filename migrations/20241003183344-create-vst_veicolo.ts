@@ -6,7 +6,7 @@ import {enumVeicoloTipo} from '../src/entity/enum/enumVeicoloTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('vst_veicolo', {
+    await queryInterface.createTable('svt_veicolo', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -40,6 +40,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('vst_veicolo');
+    await queryInterface.dropTable('svt_veicolo');
   },
 };

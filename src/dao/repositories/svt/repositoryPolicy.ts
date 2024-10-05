@@ -1,13 +1,13 @@
-import { ePolicySpeedControl } from '../../../entity/vst/ePolicySpeedControl';
+import { ePolicySpeedControl } from '../../../entity/svt/ePolicySpeedControl';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import {
   daoPolicySpeedControl,
   daoPolicySpeedControlImplementation,
-} from '../../dao/vst/daoPolicySpeedControl';
+} from '../../dao/svt/daoPolicySpeedControl';
 import { Transaction } from 'sequelize';
 import database from '../../../utils/database';
-import { daoPolicy, daoPolicyImplementation } from '../../dao/vst/daoPolicy';
-import { ePolicy } from '../../../entity/vst/ePolicy';
+import { daoPolicy, daoPolicyImplementation } from '../../dao/svt/daoPolicy';
+import { ePolicy } from '../../../entity/svt/ePolicy';
 
 const db = database.getInstance();
 

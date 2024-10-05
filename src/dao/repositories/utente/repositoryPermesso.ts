@@ -43,6 +43,7 @@ class repositoryPermessoImplementation
   update(t: ePermesso, options?: object): Promise<void> {
     return this.daoPermesso.update(t, options);
   }
+
   delete(t: ePermesso, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoPermesso.delete(t, options);
   }

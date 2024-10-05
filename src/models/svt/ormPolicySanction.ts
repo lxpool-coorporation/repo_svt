@@ -61,6 +61,6 @@ ormPolicySanction.init(
   {
     sequelize,
     modelName: 'ormPolicySanction',
-    tableName: 'vst_plc_sanction',
+    tableName: 'svt_plc_sanction',
   },
 );

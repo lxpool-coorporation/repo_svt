@@ -73,7 +73,7 @@ ormTransito.init(
   },
   {
     sequelize,
-    modelName: 'vst_transito',
-    tableName: 'vst_transito',
+    modelName: 'svt_transito',
+    tableName: 'svt_transito',
   },
 );

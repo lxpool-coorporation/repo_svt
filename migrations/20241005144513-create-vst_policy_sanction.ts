@@ -5,7 +5,7 @@ import { enumVeicoloTipo } from '../src/entity/enum/enumVeicoloTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('vst_plc_sanction', {
+    await queryInterface.createTable('svt_plc_sanction', {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -39,10 +39,18 @@ export default {
         type: DataTypes.ENUM(...Object.values(enumStato)),
         allowNull: false,
       },
+      createdAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: DataTypes.DATE,
+      },
     });
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('vst_plc_sanction');
+    await queryInterface.dropTable('svt_plc_sanction');
   },
 };

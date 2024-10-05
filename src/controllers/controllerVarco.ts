@@ -7,7 +7,7 @@ import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { StringisNumeric } from '../utils/utils';
-import { eVarco } from '../entity/vst/eVarco';
+import { eVarco } from '../entity/svt/eVarco';
 import { enumStato } from '../entity/enum/enumStato';
 
 dotenv.config();

@@ -1,16 +1,16 @@
-import { ePolicySanctionSpeedControl } from '../../../entity/vst/ePolicySanctionSpeedControl';
+import { ePolicySanctionSpeedControl } from '../../../entity/svt/ePolicySanctionSpeedControl';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import {
   daoPolicySanctionSpeedControl,
   daoPolicySanctionSpeedControlImplementation,
-} from '../../dao/vst/daoPolicySanctionSpeedControl';
+} from '../../dao/svt/daoPolicySanctionSpeedControl';
 import { Transaction } from 'sequelize';
 import database from '../../../utils/database';
 import {
   daoPolicySanction,
   daoPolicySanctionImplementation,
-} from '../../dao/vst/daoPolicySanction';
-import { ePolicySanction } from '../../../entity/vst/ePolicySanction';
+} from '../../dao/svt/daoPolicySanction';
+import { ePolicySanction } from '../../../entity/svt/ePolicySanction';
 
 const db = database.getInstance();
 

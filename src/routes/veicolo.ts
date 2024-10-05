@@ -1,7 +1,10 @@
 import { middlewareVeicolo } from '../middleware/middlewareVeicolo';
 import { middlewareAuth } from '../middleware/middlewareAuth';
+<<<<<<< HEAD
 import { middlewareValidate } from '../middleware/middlewareValidate';
 
+=======
+>>>>>>> main
 import { Router } from 'express';
 import { controllerVeicolo } from '../controllers/controllerVeicolo';
 
@@ -23,8 +26,6 @@ routerVeicolo.post(
   '/',
   middlewareAuth.verifyToken,
   middlewareVeicolo.checkPermissionWrite,
-  middlewareVeicolo.validate,
-  middlewareValidate.handleValidationErrors,
   controllerVeicolo.saveVeicolo,
 );
 routerVeicolo.delete(
@@ -37,16 +38,12 @@ routerVeicolo.put(
   '/:id',
   middlewareAuth.verifyToken,
   middlewareVeicolo.checkPermissionWrite,
-  middlewareVeicolo.validate,
-  middlewareValidate.handleValidationErrors,
   controllerVeicolo.putVeicolo,
 );
 routerVeicolo.patch(
   '/:id',
   middlewareAuth.verifyToken,
   middlewareVeicolo.checkPermissionWrite,
-  middlewareVeicolo.validate,
-  middlewareValidate.handleValidationErrors,
   controllerVeicolo.patchVeicolo,
 );
 

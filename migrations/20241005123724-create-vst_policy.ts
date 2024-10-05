@@ -4,7 +4,7 @@ import {enumPolicyTipo} from '../src/entity/enum/enumPolicyTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('vst_plc_policy', {
+    await queryInterface.createTable('svt_plc_policy', {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -41,6 +41,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('vst_plc_policy');
+    await queryInterface.dropTable('svt_plc_policy');
   },
 };

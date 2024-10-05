@@ -7,7 +7,7 @@ import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { StringisNumeric } from '../utils/utils';
-import { eTratta } from '../entity/vst/eTratta';
+import { eTratta } from '../entity/svt/eTratta';
 import { enumStato } from '../entity/enum/enumStato';
 
 dotenv.config();

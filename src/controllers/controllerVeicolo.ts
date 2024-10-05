@@ -7,7 +7,7 @@ import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { StringisNumeric } from '../utils/utils';
-import { eVeicolo } from '../entity/vst/eVeicolo';
+import { eVeicolo } from '../entity/svt/eVeicolo';
 import { enumStato } from '../entity/enum/enumStato';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 

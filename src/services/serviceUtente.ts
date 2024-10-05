@@ -144,6 +144,7 @@ class serviceUtenteImplementation {
     // Controlla se i profili sono in cache
     const jsonData = await redisClient.get(cacheKey);
     if (jsonData) {
+      console.log('CACHE! PERMESSI');
       const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
       const cacheObjectArray = dataArray.map((data: any) =>
         ePermesso.fromJSON(data),

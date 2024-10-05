@@ -2,7 +2,10 @@ import { middlewareVarco } from '../middleware/middlewareVarco';
 import { middlewareAuth } from '../middleware/middlewareAuth';
 import { Router } from 'express';
 import { controllerVarco } from '../controllers/controllerVarco';
+<<<<<<< HEAD
 import { middlewareValidate } from '../middleware/middlewareValidate';
+=======
+>>>>>>> main
 
 const routerVarco = Router();
 
@@ -22,8 +25,6 @@ routerVarco.post(
   '/',
   middlewareAuth.verifyToken,
   middlewareVarco.checkPermissionWrite,
-  middlewareVarco.validate,
-  middlewareValidate.handleValidationErrors,
   controllerVarco.saveVarco,
 );
 routerVarco.delete(
@@ -36,16 +37,12 @@ routerVarco.put(
   '/:id',
   middlewareAuth.verifyToken,
   middlewareVarco.checkPermissionWrite,
-  middlewareVarco.validate,
-  middlewareValidate.handleValidationErrors,
   controllerVarco.putVarco,
 );
 routerVarco.patch(
   '/:id',
   middlewareAuth.verifyToken,
   middlewareVarco.checkPermissionWrite,
-  middlewareVarco.validate,
-  middlewareValidate.handleValidationErrors,
   controllerVarco.patchVarco,
 );
 

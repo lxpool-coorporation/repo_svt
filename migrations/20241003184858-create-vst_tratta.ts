@@ -4,7 +4,7 @@ import {enumStato} from '../src/entity/enum/enumStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('vst_tratta', {
+    await queryInterface.createTable('svt_tratta', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -24,7 +24,7 @@ export default {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'vst_varco', // Nome della tabella a cui si riferisce
+          model: 'svt_varco', // Nome della tabella a cui si riferisce
           key: 'id',
         },
       },
@@ -32,7 +32,7 @@ export default {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'vst_varco', // Nome della tabella a cui si riferisce
+          model: 'svt_varco', // Nome della tabella a cui si riferisce
           key: 'id',
         },
       },
@@ -58,6 +58,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.dropTable('vst_tratta');
+    await queryInterface.dropTable('svt_tratta');
   },
 };
