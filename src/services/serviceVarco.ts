@@ -4,6 +4,7 @@ import { repositoryVarco } from '../dao/repositories/svt/repositoryVarco';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { eTransito } from '../entity/svt/eTransito';
+import { ePolicy } from '../entity/svt/ePolicy';
 
 // classe che gestisce la logica di business dell'Varco
 class serviceVarcoImplementation {
@@ -150,6 +151,33 @@ class serviceVarcoImplementation {
       });
     }
     return transiti;
+  }
+
+  // Ottieni Policies di un Varco
+  async getPoliciesByIdVarco(idVarco: number): Promise<ePolicy[] | null> {
+    const redisClient = await databaseCache.getInstance();
+
+    const cacheKey = `Policies_Varco_${idVarco}`;
+
+    // Controlla se i Policies sono in cache
+    const jsonData = await redisClient.get(cacheKey);
+    if (jsonData) {
+      const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
+      const cacheObjectArray = dataArray.map((data: any) =>
+        eTransito.fromJSON(data),
+      );
+      return cacheObjectArray;
+    }
+
+    // Se non sono in cache, recupera dal repository
+    const policies = await repositoryVarco.getPolicies(idVarco);
+    if (policies) {
+      // Memorizza i profili in cache per 1 ora
+      await redisClient.set(cacheKey, JSON.stringify(policies), {
+        EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
+      });
+    }
+    return policies;
   }
 }
 

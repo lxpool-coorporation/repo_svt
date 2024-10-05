@@ -3,6 +3,7 @@ import { eTratta } from '../entity/svt/eTratta';
 import { repositoryTratta } from '../dao/repositories/svt/repositoryTratta';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
+import { ePolicy } from '../entity/svt/ePolicy';
 import { eVarco } from '../entity/svt/eVarco';
 
 // classe che gestisce la logica di business dell'Tratta
@@ -148,20 +149,47 @@ class serviceTrattaImplementation {
     if (jsonData) {
       const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
       const cacheObjectArray = dataArray.map((data: any) =>
-        eVarco.fromJSON(data),
+        ePolicy.fromJSON(data),
       );
       return cacheObjectArray;
     }
 
     // Se non sono in cache, recupera dal repository
-    const transiti = await repositoryTratta.getVarchi(idTratta);
-    if (transiti) {
+    const varchi = await repositoryTratta.getVarchi(idTratta);
+    if (varchi) {
       // Memorizza i profili in cache per 1 ora
-      await redisClient.set(cacheKey, JSON.stringify(transiti), {
+      await redisClient.set(cacheKey, JSON.stringify(varchi), {
         EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
       });
     }
-    return transiti;
+    return varchi;
+  }
+
+  // Ottieni Varchi di un Tratta
+  async getPoliciesByIdTratta(idTratta: number): Promise<ePolicy[] | null> {
+    const redisClient = await databaseCache.getInstance();
+
+    const cacheKey = `Policy_Tratta_${idTratta}`;
+
+    // Controlla se i Transiti sono in cache
+    const jsonData = await redisClient.get(cacheKey);
+    if (jsonData) {
+      const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
+      const cacheObjectArray = dataArray.map((data: any) =>
+        ePolicy.fromJSON(data),
+      );
+      return cacheObjectArray;
+    }
+
+    // Se non sono in cache, recupera dal repository
+    const policies = await repositoryTratta.getPolicies(idTratta);
+    if (policies) {
+      // Memorizza i profili in cache per 1 ora
+      await redisClient.set(cacheKey, JSON.stringify(policies), {
+        EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
+      });
+    }
+    return policies;
   }
 }
 

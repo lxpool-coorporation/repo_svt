@@ -7,14 +7,21 @@ import {
   daoVarcoTransitoImplementation,
 } from '../../dao/svt/daoVarcoTransito';
 import { eTransito } from '../../../entity/svt/eTransito';
+import {
+  daoVarcoPolicy,
+  daoVarcoPolicyImplementation,
+} from '../../../dao/dao/svt/daoVarcoPolicy';
+import { ePolicy } from '../../../entity/svt/ePolicy';
 
 class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   private daoVarco: daoVarcoImplementation;
   private daoVarcoTransito: daoVarcoTransitoImplementation;
+  private daoVarcoPolicy: daoVarcoPolicyImplementation;
 
   constructor() {
     this.daoVarco = daoVarco;
     this.daoVarcoTransito = daoVarcoTransito;
+    this.daoVarcoPolicy = daoVarcoPolicy;
   }
   get(id: number): Promise<eVarco | null> {
     return this.daoVarco.get(id);
@@ -36,6 +43,9 @@ class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   }
   getTransiti(idVarco: number): Promise<eTransito[] | null> {
     return this.daoVarcoTransito.getTransiti(idVarco);
+  }
+  getPolicies(idVarco: number): Promise<ePolicy[] | null> {
+    return this.daoVarcoPolicy.getPolicies(idVarco);
   }
 }
 
