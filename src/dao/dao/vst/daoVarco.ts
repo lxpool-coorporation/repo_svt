@@ -11,13 +11,18 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     if (!ormObj) {
       throw new Error(`Varco non trovato per l'id ${id}`);
     }
+    console.log(ormObj);
     return new eVarco(
-      ormObj.id,
-      ormObj.cod,
-      ormObj.descrizione,
-      ormObj.latitudine,
-      ormObj.longitudine,
-      ormObj.stato,
+      ormObj.dataValues.id,
+      ormObj.dataValues.cod,
+      ormObj.dataValues.descrizione,
+      ormObj.dataValues.latitudine
+        ? parseFloat(ormObj.dataValues.latitudine)
+        : 0,
+      ormObj.dataValues.longitudine
+        ? parseFloat(ormObj.dataValues.longitudine)
+        : 0,
+      ormObj.dataValues.stato,
     );
   }
 
@@ -27,12 +32,16 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     return objs.map(
       (ormObj) =>
         new eVarco(
-          ormObj.id,
-          ormObj.cod,
-          ormObj.descrizione,
-          ormObj.latitudine,
-          ormObj.longitudine,
-          ormObj.stato,
+          ormObj.dataValues.id,
+          ormObj.dataValues.cod,
+          ormObj.dataValues.descrizione,
+          ormObj.dataValues.latitudine
+            ? parseFloat(ormObj.dataValues.latitudine)
+            : 0,
+          ormObj.dataValues.longitudine
+            ? parseFloat(ormObj.dataValues.longitudine)
+            : 0,
+          ormObj.dataValues.stato,
         ),
     );
   }
@@ -54,12 +63,16 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
       { transaction: options?.transaction },
     );
     return new eVarco(
-      ormObj.id,
-      ormObj.cod,
-      ormObj.descrizione,
-      ormObj.latitudine,
-      ormObj.longitudine,
-      ormObj.stato,
+      ormObj.dataValues.id,
+      ormObj.dataValues.cod,
+      ormObj.dataValues.descrizione,
+      ormObj.dataValues.latitudine
+        ? parseFloat(ormObj.dataValues.latitudine)
+        : 0,
+      ormObj.dataValues.longitudine
+        ? parseFloat(ormObj.dataValues.longitudine)
+        : 0,
+      ormObj.dataValues.stato,
     );
   }
 
