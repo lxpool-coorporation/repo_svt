@@ -28,12 +28,6 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     t: eVeicolo,
     options?: { transaction?: Transaction },
   ): Promise<eVeicolo | null> {
-    const existingVeicolo = await ormVeicolo.findByPk(t.get_id(), {
-      transaction: options?.transaction,
-    });
-    if (existingVeicolo) {
-      throw new Error('A User with the specified id already exists');
-    }
     const ormObj = await ormVeicolo.create(
       {
         id: t.get_id(),

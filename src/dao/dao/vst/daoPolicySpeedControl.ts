@@ -107,13 +107,6 @@ export class daoPolicySpeedControlImplementation
     t: ePolicySpeedControl,
     options?: { transaction?: Transaction },
   ): Promise<ePolicySpeedControl | null> {
-    const existingPolicySpeedControl = await ormPolicySpeedControl.findByPk(
-      t.get_id(),
-    );
-    if (existingPolicySpeedControl) {
-      throw new Error('A User with the specified id already exists');
-    }
-
     try {
       // Crea la policy speed control
       await ormPolicySpeedControl.create(

@@ -40,12 +40,6 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     t: ePolicy,
     options?: { transaction?: Transaction },
   ): Promise<ePolicy | null> {
-    const existingPolicy = await ormPolicy.findByPk(t.get_id(), {
-      transaction: options?.transaction,
-    });
-    if (existingPolicy) {
-      throw new Error('A User with the specified id already exists');
-    }
     const ormObj = await ormPolicy.create(
       {
         id: t.get_id(),

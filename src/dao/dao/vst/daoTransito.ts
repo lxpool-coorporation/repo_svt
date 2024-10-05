@@ -52,12 +52,6 @@ export class daoTransitoImplementation
     t: eTransito,
     options?: { transaction?: Transaction },
   ): Promise<eTransito | null> {
-    const existingTransito = await ormTransito.findByPk(t.get_id(), {
-      transaction: options?.transaction,
-    });
-    if (existingTransito) {
-      throw new Error('A User with the specified id already exists');
-    }
     const ormObj = await ormTransito.create(
       {
         id: t.get_id(),

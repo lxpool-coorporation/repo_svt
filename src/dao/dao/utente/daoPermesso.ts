@@ -44,12 +44,6 @@ export class daoPermessoImplementation
     t: ePermesso,
     options?: { transaction?: Transaction },
   ): Promise<ePermesso | null> {
-    const existingPermesso = await ormPermesso.findByPk(t.get_id(), {
-      transaction: options?.transaction,
-    });
-    if (existingPermesso) {
-      throw new Error('A User with the specified id already exists');
-    }
     const ormObj = await ormPermesso.create(
       {
         id: t.get_id(),

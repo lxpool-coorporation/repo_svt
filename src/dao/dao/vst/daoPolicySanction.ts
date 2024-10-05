@@ -48,15 +48,6 @@ export class daoPolicySanctionImplementation
     t: ePolicySanction,
     options?: { transaction?: Transaction },
   ): Promise<ePolicySanction | null> {
-    const existingPolicySanction = await ormPolicySanction.findByPk(
-      t.get_id(),
-      {
-        transaction: options?.transaction,
-      },
-    );
-    if (existingPolicySanction) {
-      throw new Error('A User with the specified id already exists');
-    }
     const ormObj = await ormPolicySanction.create(
       {
         id: t.get_id(),

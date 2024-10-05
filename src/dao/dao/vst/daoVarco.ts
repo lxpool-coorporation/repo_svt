@@ -42,12 +42,6 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     t: eVarco,
     options?: { transaction?: Transaction },
   ): Promise<eVarco | null> {
-    const existingVarco = await ormVarco.findByPk(t.get_id(), {
-      transaction: options?.transaction,
-    });
-    if (existingVarco) {
-      throw new Error('A User with the specified id already exists');
-    }
     const ormObj = await ormVarco.create(
       {
         id: t.get_id(),

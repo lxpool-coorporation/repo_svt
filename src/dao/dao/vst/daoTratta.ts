@@ -44,12 +44,6 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     t: eTratta,
     options?: { transaction?: Transaction },
   ): Promise<eTratta | null> {
-    const existingTratta = await ormTratta.findByPk(t.get_id(), {
-      transaction: options?.transaction,
-    });
-    if (existingTratta) {
-      throw new Error('A User with the specified id already exists');
-    }
     const ormObj = await ormTratta.create(
       {
         id: t.get_id(),
