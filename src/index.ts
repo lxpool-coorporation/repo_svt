@@ -11,7 +11,7 @@ import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
 import routerVarco from './routes/varco';
 import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
-import { ormAssociazioni } from './models/utente/ormAssociazioni';
+import { ormAssociazioni } from './models/ormAssociazioni';
 import databaseCache from './utils/database-cache';
 
 dotenv.config();
@@ -115,8 +115,6 @@ async function _readUser2() {
     if (checkPermessoUtente) console.log('UTENTE HA PERMESSO DI LETTURA SU');
     else console.log('UTENTE NON HA IL PERMESSO');
   }
-
-  
 }
 
 // Funzione per pulire la cache di Redis

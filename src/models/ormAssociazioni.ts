@@ -1,16 +1,15 @@
 // Associazioni Many-to-Many
-import { ormUtente } from './ormUtente';
-import { ormUtenteProfilo } from './ormUtenteProfilo';
-import { ormProfilo } from './ormProfilo';
-import { ormPermesso } from './ormPermesso';
-import { ormProfiloPermesso } from './ormProfiloPermesso';
-import { ormVeicolo } from '../vst/ormVeicolo';
-import { ormUtenteVeicolo } from './ormUtenteVeicolo';
-import { ormTransito } from '../vst/ormTransito';
-import { ormVarco } from '../vst/ormVarco';
-import { ormTratta } from '../vst/ormTratta';
-import { ormPolicySpeedControl } from '../vst/ormPolicySpeedControl';
-import { ormPolicy } from '../vst/ormPolicy';
+import { ormUtente } from './utente/ormUtente';
+import { ormUtenteProfilo } from './utente/ormUtenteProfilo';
+import { ormProfilo } from './utente/ormProfilo';
+import { ormPermesso } from './utente/ormPermesso';
+import { ormProfiloPermesso } from './utente/ormProfiloPermesso';
+import { ormVeicolo } from './vst/ormVeicolo';
+import { ormUtenteVeicolo } from './utente/ormUtenteVeicolo';
+import { ormTransito } from './vst/ormTransito';
+import { ormVarco } from './vst/ormVarco';
+import { ormPolicySpeedControl } from './vst/ormPolicySpeedControl';
+import { ormPolicy } from './vst/ormPolicy';
 
 export class ormAssociazioni {
   read_associazioni(): void {

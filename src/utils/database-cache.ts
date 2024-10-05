@@ -30,7 +30,6 @@ class databaseCache {
     }
     return databaseCache.instance;
   }
-
 }
 
 export default databaseCache;

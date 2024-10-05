@@ -186,7 +186,6 @@ class serviceUtenteImplementation {
 
     return hasPermesso;
   }
-
 }
 
 export const serviceUtente = new serviceUtenteImplementation();
