@@ -1,12 +1,12 @@
 import dotenv from 'dotenv';
 import logger from '../utils/logger-winston';
 import { Request, Response, NextFunction } from 'express';
-import { authController, JwtPayload } from '../controllers/controllerAuth';
+import { controllerAuth, JwtPayload } from '../controllers/controllerAuth';
 import { retMiddleware } from '../utils/retMiddleware';
 
 dotenv.config();
 
-export class authMiddleware {
+export class middlewareAuth {
   private constructor() {}
   public static verifyToken = (
     req: Request,
@@ -21,7 +21,7 @@ export class authMiddleware {
 
         if (arrayToken.length === 2) {
           const token = arrayToken[1]; // Estraiamo il token dall'header
-          const decoded = authController.verifyToken(token) as JwtPayload;
+          const decoded = controllerAuth.verifyToken(token) as JwtPayload;
           if (!!decoded) {
             req.userId = decoded.id_utente;
           } else {
@@ -34,7 +34,7 @@ export class authMiddleware {
         ret.setResponse(401, { message: 'Token mancante o non valido' });
       }
     } catch (error: any) {
-      logger.error('authMiddleware.verifyToken :' + error?.message);
+      logger.error('middlewareAuth.verifyToken :' + error?.message);
       ret.setResponse(403, { message: 'Token non valido' });
     }
     ret.returnNext(next);

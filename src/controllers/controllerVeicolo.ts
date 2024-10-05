@@ -19,7 +19,7 @@ interface iEVeicolo {
   stato: enumStato;
 }
 
-export class veicoloController {
+export class controllerVeicolo {
   private constructor() {}
   public static checkPermission = async (
     idUtente: number,
@@ -33,7 +33,7 @@ export class veicoloController {
         tipoPermesso,
       );
     } catch (error: any) {
-      logger.error('veicoloController.checkPermission :' + error?.message);
+      logger.error('controllerVeicolo.checkPermission :' + error?.message);
       ret = false;
     }
     return ret;
@@ -52,7 +52,7 @@ export class veicoloController {
         ret.setResponse(404, { message: 'errore caricamento veicoli' });
       }
     } catch (error: any) {
-      logger.error('veicoloController.getAll :' + error?.message);
+      logger.error('controllerVeicolo.getAll :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento veicoli' });
     }
     ret.returnResponseJson(res, next);
@@ -77,7 +77,7 @@ export class veicoloController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('veicoloController.getById :' + error?.message);
+      logger.error('controllerVeicolo.getById :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento veicolo' });
     }
     ret.returnResponseJson(res, next);
@@ -90,12 +90,14 @@ export class veicoloController {
     let ret: retMiddleware = new retMiddleware();
     try {
       const veicolo = req.body as iEVeicolo | null;
+      console.log(veicolo);
       if (!!veicolo) {
         const veicoloRes: eVeicolo | null = await serviceVeicolo.createVeicolo(
           veicolo?.tipo,
           veicolo?.targa,
           veicolo?.stato,
         );
+        console.log(veicoloRes);
         if (!!veicoloRes) {
           ret.setResponse(200, veicoloRes);
         } else {
@@ -105,7 +107,7 @@ export class veicoloController {
         ret.setResponse(400, { message: 'oggetto non presente' });
       }
     } catch (error: any) {
-      logger.error('veicoloController.saveVeicoli :' + error?.message);
+      logger.error('controllerVeicolo.saveVeicoli :' + error?.message);
       ret.setResponse(500, { message: 'errore salvataggio veicolo' });
     }
     ret.returnResponseJson(res, next);
@@ -131,7 +133,7 @@ export class veicoloController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('veicoloController.deleteById :' + error?.message);
+      logger.error('controllerVeicolo.deleteById :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento veicolo' });
     }
     ret.returnResponseJson(res, next);
@@ -167,7 +169,7 @@ export class veicoloController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('veicoloController.putveicolo :' + error?.message);
+      logger.error('controllerVeicolo.putveicolo :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento veicolo' });
     }
     ret.returnResponseJson(res, next);
@@ -228,7 +230,7 @@ export class veicoloController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('veicoloController.patchveicolo :' + error?.message);
+      logger.error('controllerVeicolo.patchveicolo :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento veicolo' });
     }
     ret.returnResponseJson(res, next);
