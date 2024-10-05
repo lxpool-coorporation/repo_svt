@@ -48,18 +48,6 @@ export class ormAssociazioni {
       as: 'transiti',
     });
 
-    // Associazioni belongsTo
-    ormVarco.belongsTo(ormTratta, {
-      foreignKey: 'id_varco_ingresso',
-      as: 'tratta_varco_ingresso',
-    });
-
-    // Associazioni belongsTo
-    ormVarco.belongsTo(ormTratta, {
-      foreignKey: 'id_varco_uscita',
-      as: 'tratta_varco_uscita',
-    });
-
     ormPolicy.hasOne(ormPolicySpeedControl, {
       foreignKey: 'id_policy',
       as: 'policyspeedControl',

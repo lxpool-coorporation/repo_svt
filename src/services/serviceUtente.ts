@@ -187,19 +187,6 @@ class serviceUtenteImplementation {
     return hasPermesso;
   }
 
-  // Funzione per pulire la cache di Redis
-  async clearRedisCache() {
-    const redisClient = await databaseCache.getInstance();
-    try {
-      // Pulisce tutti i database di Redis
-      await redisClient.flushAll();
-      console.log('Cache Redis pulita con successo!');
-    } catch (error) {
-      console.error('Errore durante la pulizia della cache Redis:', error);
-    } finally {
-      //redisClient.disconnect(); // Chiudi la connessione
-    }
-  }
 }
 
 export const serviceUtente = new serviceUtenteImplementation();

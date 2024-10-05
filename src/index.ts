@@ -12,6 +12,7 @@ import routerVarco from './routes/varco';
 import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
 import { ormAssociazioni } from './models/utente/ormAssociazioni';
+import databaseCache from './utils/database-cache';
 
 dotenv.config();
 logger.info('app started');
@@ -64,6 +65,7 @@ app
     //_readUser2();
     const o = new ormAssociazioni();
     o.read_associazioni();
+    clearRedisCache();
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {
@@ -78,8 +80,6 @@ async function _readUser2() {
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
   //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)
   // const utenteConProfili1 = await ormUtente.findByPk(2)
-
-  await serviceUtente.clearRedisCache();
 
   const utente = await serviceUtente.getUtenteById(1);
   if (utente) {
@@ -114,5 +114,21 @@ async function _readUser2() {
     );
     if (checkPermessoUtente) console.log('UTENTE HA PERMESSO DI LETTURA SU');
     else console.log('UTENTE NON HA IL PERMESSO');
+  }
+
+  
+}
+
+// Funzione per pulire la cache di Redis
+async function clearRedisCache() {
+  const redisClient = await databaseCache.getInstance();
+  try {
+    // Pulisce tutti i database di Redis
+    await redisClient.flushAll();
+    console.log('Cache Redis pulita con successo!');
+  } catch (error) {
+    console.error('Errore durante la pulizia della cache Redis:', error);
+  } finally {
+    //redisClient.disconnect(); // Chiudi la connessione
   }
 }
