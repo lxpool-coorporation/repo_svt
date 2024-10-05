@@ -3,7 +3,7 @@ import logger from '../utils/logger-winston';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
-import { veicoloController } from '../controllers/veicoloController';
+import { veicoloController } from '../controllers/controllerVeicolo';
 import { isNumeric } from '../utils/utils';
 
 dotenv.config();

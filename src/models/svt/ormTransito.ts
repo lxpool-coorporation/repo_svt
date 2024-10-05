@@ -2,6 +2,8 @@ import { enumMeteoTipo } from '../../entity/enum/enumMeteoTipo';
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { enumTransitoStato } from '../../entity/enum/enumTransitoStato';
+import { ormVarco } from './ormVarco';
+import { ormVeicolo } from './ormVeicolo';
 
 /**
  * Instanziazione della connessione verso il RDBMS
@@ -43,7 +45,10 @@ ormTransito.init(
     id_varco: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
+      references: {
+        model: ormVarco,
+        key: 'id',
+      },
     },
     meteo: {
       type: DataTypes.ENUM(...Object.values(enumMeteoTipo)),
@@ -52,6 +57,10 @@ ormTransito.init(
     id_veicolo: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      references: {
+        model: ormVeicolo,
+        key: 'id',
+      },
     },
     immagine: {
       type: DataTypes.STRING,

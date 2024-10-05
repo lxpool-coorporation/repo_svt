@@ -3,7 +3,7 @@ import logger from '../utils/logger-winston';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
-import { trattaController } from '../controllers/trattaController';
+import { trattaController } from '../controllers/controllerTratta';
 import { isNumeric } from '../utils/utils';
 
 dotenv.config();

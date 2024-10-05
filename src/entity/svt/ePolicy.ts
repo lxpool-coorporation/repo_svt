@@ -1,21 +1,36 @@
+import { enumPolicyTipo } from '../enum/enumPolicyTipo';
 import { enumStato } from '../enum/enumStato';
 
-class eProfilo {
-  //id numerico, profilo, descrizione, id_stato
+class ePolicy {
+  //id numerico, Policy, descrizione, id_stato
   private id: number;
   private cod: string;
   private descrizione: string;
+  private tipo: enumPolicyTipo;
   private stato: enumStato;
 
-  constructor(id: number, cod: string, descrizione: string, stato: enumStato) {
+  constructor(
+    id: number,
+    cod: string,
+    descrizione: string,
+    tipo: enumPolicyTipo,
+    stato: enumStato,
+  ) {
     this.id = id;
     this.cod = cod;
     this.descrizione = descrizione;
+    this.tipo = tipo;
     this.stato = stato;
   }
 
-  static fromJSON(data: any): eProfilo {
-    return new eProfilo(data.id, data.cod, data.descrizione, data.stato);
+  static fromJSON(data: any): ePolicy {
+    return new ePolicy(
+      data.id,
+      data.cod,
+      data.descrizione,
+      data.tipo,
+      data.stato,
+    );
   }
 
   // Metodi Getters
@@ -27,6 +42,9 @@ class eProfilo {
   }
   get_descrizione(): string {
     return this.descrizione;
+  }
+  get_tipo(): enumPolicyTipo {
+    return this.tipo;
   }
   get_stato(): enumStato {
     return this.stato;
@@ -42,9 +60,12 @@ class eProfilo {
   set_descrizione(descrizione: string): void {
     this.descrizione = descrizione;
   }
+  set_tipo(tipo: enumPolicyTipo): void {
+    this.tipo = tipo;
+  }
   set_stato(stato: enumStato): void {
     this.stato = stato;
   }
 }
 
-export { eProfilo };
+export { ePolicy };

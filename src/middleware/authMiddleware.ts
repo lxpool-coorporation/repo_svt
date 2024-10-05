@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import logger from '../utils/logger-winston';
 import { Request, Response, NextFunction } from 'express';
-import { authController, JwtPayload } from '../controllers/authController';
+import { authController, JwtPayload } from '../controllers/controllerAuth';
 import { retMiddleware } from '../utils/retMiddleware';
 
 dotenv.config();

@@ -14,7 +14,6 @@ describe('Index', () => {
     // Questo assicura che il mock sia applicato prima dell'esecuzione del codice
     require('../index');
   });
-
   it('should log "app started" on startup', () => {
     const infoMock = logger.info as jest.Mock;
     expect(infoMock).toHaveBeenCalledWith('app started');

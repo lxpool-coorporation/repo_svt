@@ -1,7 +1,7 @@
 import { varcoMiddleware } from '../middleware/varcoMiddleware';
 import { authMiddleware } from '../middleware/authMiddleware';
 import { Router } from 'express';
-import { varcoController } from '../controllers/varcoController';
+import { varcoController } from '../controllers/controllerVarco';
 
 const routerVarco = Router();
 
