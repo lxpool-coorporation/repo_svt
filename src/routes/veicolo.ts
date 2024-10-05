@@ -1,7 +1,7 @@
 import { veicoloMiddleware } from '../middleware/veicoloMiddleware';
 import { authMiddleware } from '../middleware/authMiddleware';
 import { Router } from 'express';
-import { veicoloController } from '../controllers/veicoloController';
+import { veicoloController } from '../controllers/controllerVeicolo';
 
 const routerVeicolo = Router();
 

@@ -1,7 +1,7 @@
 import { trattaMiddleware } from '../middleware/trattaMiddleware';
 import { authMiddleware } from '../middleware/authMiddleware';
 import { Router } from 'express';
-import { trattaController } from '../controllers/trattaController';
+import { trattaController } from '../controllers/controllerTratta';
 
 const routerTratta = Router();
 

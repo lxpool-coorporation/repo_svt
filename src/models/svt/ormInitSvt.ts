@@ -6,6 +6,8 @@ import { ormUtenteVeicolo } from '../utente/ormUtenteVeicolo';
 import { ormVarco } from './ormVarco';
 import { ormTransito } from './ormTransito';
 import { ormTratta } from './ormTratta';
+import { ormPolicy } from './ormPolicy';
+import { ormPolicySpeedControl } from './ormPolicySpeedControl';
 
 const sequelize: Sequelize = database.getInstance();
 
@@ -14,6 +16,10 @@ const models = {
   ormVeicolo,
   ormVarco,
   ormTransito,
+  ormUtenteVeicolo,
+  ormTratta,
+  ormPolicy,
+  ormPolicySpeedControl,
 };
 
 // Associazioni Many-to-Many
@@ -40,6 +46,17 @@ ormVarco.belongsTo(ormTratta, {
 ormVarco.belongsTo(ormTratta, {
   foreignKey: 'id_varco_uscita',
   as: 'tratta_varco_uscita',
+});
+
+ormPolicy.hasOne(ormPolicySpeedControl, {
+  foreignKey: 'id_policy',
+  as: 'policyspeedControl',
+});
+
+// Definizione dell'associazione one-to-one
+ormPolicySpeedControl.belongsTo(ormPolicy, {
+  foreignKey: 'id_policy',
+  as: 'policy',
 });
 
 export { sequelize, models };

@@ -1,25 +1,23 @@
+import { enumPolicyTipo } from '../../entity/enum/enumPolicyTipo';
 import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { ormVarco } from './ormVarco';
 
 /**
  * Instanziazione della connessione verso il RDBMS
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormTratta extends Model {
+export class ormPolicy extends Model {
   public id!: number;
   public cod!: string;
   public descrizione!: string;
-  public id_varco_ingresso!: number;
-  public id_varco_uscita!: number;
-  public distanza!: number;
+  public tipo!: enumPolicyTipo;
   public stato!: enumStato;
 }
 
 // Definizione del modello
-ormTratta.init(
+ormPolicy.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -36,24 +34,8 @@ ormTratta.init(
       allowNull: false,
       unique: true,
     },
-    id_varco_ingresso: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: ormVarco,
-        key: 'id',
-      },
-    },
-    id_varco_uscita: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: ormVarco,
-        key: 'id',
-      },
-    },
-    distanza: {
-      type: DataTypes.INTEGER,
+    tipo: {
+      type: DataTypes.ENUM(...Object.values(enumPolicyTipo)),
       allowNull: false,
     },
     stato: {
@@ -63,7 +45,7 @@ ormTratta.init(
   },
   {
     sequelize,
-    modelName: 'vst_tratta',
-    tableName: 'vst_tratta',
+    modelName: 'utn_plc_policy',
+    tableName: 'utn_plc_policy',
   },
 );
