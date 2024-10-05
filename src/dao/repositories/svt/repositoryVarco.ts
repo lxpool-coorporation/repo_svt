@@ -1,12 +1,12 @@
 import { Transaction } from 'sequelize';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { eVarco } from '../../../entity/vst/eVarco';
-import { daoVarco, daoVarcoImplementation } from '../../dao/vst/daoVarco';
+import { eVarco } from '../../../entity/svt/eVarco';
+import { daoVarco, daoVarcoImplementation } from '../../dao/svt/daoVarco';
 import {
   daoVarcoTransito,
   daoVarcoTransitoImplementation,
-} from '../../dao/vst/daoVarcoTransito';
-import { eTransito } from '../../../entity/vst/eTransito';
+} from '../../dao/svt/daoVarcoTransito';
+import { eTransito } from '../../../entity/svt/eTransito';
 
 class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   private daoVarco: daoVarcoImplementation;

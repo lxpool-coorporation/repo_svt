@@ -1,6 +1,6 @@
 import { enumStato } from '../entity/enum/enumStato';
-import { eVeicolo } from '../entity/vst/eVeicolo';
-import { repositoryVeicolo } from '../dao/repositories/vst/repositoryVeicolo';
+import { eVeicolo } from '../entity/svt/eVeicolo';
+import { repositoryVeicolo } from '../dao/repositories/svt/repositoryVeicolo';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';

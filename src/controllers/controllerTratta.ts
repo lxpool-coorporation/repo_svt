@@ -7,7 +7,7 @@ import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { StringisNumeric } from '../utils/utils';
-import { eTratta } from '../entity/vst/eTratta';
+import { eTratta } from '../entity/svt/eTratta';
 import { enumStato } from '../entity/enum/enumStato';
 
 dotenv.config();
@@ -21,7 +21,7 @@ interface iETratta {
   stato: enumStato;
 }
 
-export class trattaController {
+export class controllerTratta {
   private constructor() {}
   public static checkPermission = async (
     idUtente: number,
@@ -35,7 +35,7 @@ export class trattaController {
         tipoPermesso,
       );
     } catch (error: any) {
-      logger.error('trattaController.checkPermission :' + error?.message);
+      logger.error('controllerTratta.checkPermission :' + error?.message);
       ret = false;
     }
     return ret;
@@ -54,7 +54,7 @@ export class trattaController {
         ret.setResponse(404, { message: 'errore caricamento tratte' });
       }
     } catch (error: any) {
-      logger.error('trattaController.getAll :' + error?.message);
+      logger.error('controllerTratta.getAll :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento tratte' });
     }
     ret.returnResponseJson(res, next);
@@ -79,7 +79,7 @@ export class trattaController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('trattaController.getById :' + error?.message);
+      logger.error('controllerTratta.getById :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento Tratta' });
     }
     ret.returnResponseJson(res, next);
@@ -110,7 +110,7 @@ export class trattaController {
         ret.setResponse(400, { message: 'oggetto non presente' });
       }
     } catch (error: any) {
-      logger.error('trattaController.saveTratta :' + error?.message);
+      logger.error('controllerTratta.saveTratta :' + error?.message);
       ret.setResponse(500, { message: 'errore salvataggio Tratta' });
     }
     ret.returnResponseJson(res, next);
@@ -136,7 +136,7 @@ export class trattaController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('trattaController.deleteById :' + error?.message);
+      logger.error('controllerTratta.deleteById :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento Tratta' });
     }
     ret.returnResponseJson(res, next);
@@ -175,7 +175,7 @@ export class trattaController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('trattaController.putTratta :' + error?.message);
+      logger.error('controllerTratta.putTratta :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento Tratta' });
     }
     ret.returnResponseJson(res, next);
@@ -251,7 +251,7 @@ export class trattaController {
         ret.setResponse(400, { message: 'chiave non presente' });
       }
     } catch (error: any) {
-      logger.error('trattaController.patchTratta :' + error?.message);
+      logger.error('controllerTratta.patchTratta :' + error?.message);
       ret.setResponse(500, { message: 'errore caricamento Tratta' });
     }
     ret.returnResponseJson(res, next);

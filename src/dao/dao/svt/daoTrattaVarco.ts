@@ -1,8 +1,8 @@
-import { ormTratta } from '../../../models/vst/ormTratta';
-import { ormVarco } from '../../../models/vst/ormVarco';
+import { ormTratta } from '../../../models/svt/ormTratta';
+import { ormVarco } from '../../../models/svt/ormVarco';
 import { daoTrattaImplementation } from './daoTratta';
-import { ormTrattaVarco } from '../../../models/vst/ormTrattaVarco';
-import { eVarco } from '../../../entity/vst/eVarco';
+import { ormTrattaVarco } from '../../../models/svt/ormTrattaVarco';
+import { eVarco } from '../../../entity/svt/eVarco';
 
 export class daoTrattaVarcoImplementation extends daoTrattaImplementation {
   // Metodo per ottenere gli Varchii associati ad un Tratta

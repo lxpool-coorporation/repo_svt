@@ -1,6 +1,6 @@
 import { enumStato } from '../entity/enum/enumStato';
-import { ePolicySpeedControl } from '../entity/vst/ePolicySpeedControl';
-import { repositoryPolicy } from '../dao/repositories/vst/repositoryPolicy';
+import { ePolicySpeedControl } from '../entity/svt/ePolicySpeedControl';
+import { repositoryPolicy } from '../dao/repositories/svt/repositoryPolicy';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumPolicyTipo } from '../entity/enum/enumPolicyTipo';

@@ -3,12 +3,12 @@ import logger from '../utils/logger-winston';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
-import { veicoloController } from '../controllers/controllerVeicolo';
+import { controllerVeicolo } from '../controllers/controllerVeicolo';
 import { isNumeric } from '../utils/utils';
 
 dotenv.config();
 
-export class veicoloMiddleware {
+export class middlewareVeicolo {
   private constructor() {}
   public static checkPermissionRead = async (
     req: Request,
@@ -18,7 +18,7 @@ export class veicoloMiddleware {
     let ret: retMiddleware = new retMiddleware();
     try {
       if (isNumeric(req.userId)) {
-        const isPermit: boolean = await veicoloController.checkPermission(
+        const isPermit: boolean = await controllerVeicolo.checkPermission(
           req.userId,
           enumPermessoTipo.lettura,
         );
@@ -29,7 +29,7 @@ export class veicoloMiddleware {
         ret.setResponse(403, { message: 'errore verifica permessi LETTURA' });
       }
     } catch (error: any) {
-      logger.error('veicoloMiddleware.checkPermission :' + error?.message);
+      logger.error('middlewareVeicolo.checkPermission :' + error?.message);
       ret.setResponse(403, { message: 'errore verifica permessi LETTURA' });
     }
     ret.returnNext(next);
@@ -42,7 +42,7 @@ export class veicoloMiddleware {
     let ret: retMiddleware = new retMiddleware();
     try {
       if (isNumeric(req.userId)) {
-        const isPermit: boolean = await veicoloController.checkPermission(
+        const isPermit: boolean = await controllerVeicolo.checkPermission(
           req.userId,
           enumPermessoTipo.scrittura,
         );
@@ -55,7 +55,7 @@ export class veicoloMiddleware {
         ret.setResponse(403, { message: 'errore verifica permessi SCRITTURA' });
       }
     } catch (error: any) {
-      logger.error('veicoloMiddleware.checkPermission :' + error?.message);
+      logger.error('middlewareVeicolo.checkPermission :' + error?.message);
       ret.setResponse(403, { message: 'errore verifica permessi SCRITTURA' });
     }
     ret.returnNext(next);

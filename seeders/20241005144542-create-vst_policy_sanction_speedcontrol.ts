@@ -2,7 +2,7 @@ import { Op, QueryInterface, Sequelize } from 'sequelize';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkInsert('vst_plc_sanction_speed_control', [
+    await queryInterface.bulkInsert('svt_plc_sanction_speed_control', [
       {
         id_policy_sanction: 1,
         speed_min: 0,
@@ -35,6 +35,6 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkDelete('vst_plc_sanction_speed_control',{}, {});
+    await queryInterface.bulkDelete('svt_plc_sanction_speed_control',{}, {});
   }
 };

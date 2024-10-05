@@ -1,9 +1,9 @@
 import { enumStato } from '../entity/enum/enumStato';
-import { eVarco } from '../entity/vst/eVarco';
-import { repositoryVarco } from '../dao/repositories/vst/repositoryVarco';
+import { eVarco } from '../entity/svt/eVarco';
+import { repositoryVarco } from '../dao/repositories/svt/repositoryVarco';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
-import { eTransito } from '../entity/vst/eTransito';
+import { eTransito } from '../entity/svt/eTransito';
 
 // classe che gestisce la logica di business dell'Varco
 class serviceVarcoImplementation {

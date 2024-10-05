@@ -3,7 +3,7 @@ import {enumStato} from '../src/entity/enum/enumStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkInsert('vst_veicolo', [
+    await queryInterface.bulkInsert('svt_veicolo', [
       {
         id: 1,
         tipo: 'automobile',
@@ -32,7 +32,7 @@ export default {
   },
 
   down: async (queryInterface: QueryInterface) => {
-    await queryInterface.bulkDelete('vst_veicolo',{
+    await queryInterface.bulkDelete('svt_veicolo',{
       id: {[Op.in]: [1,2,3]},
     }, {});
   }

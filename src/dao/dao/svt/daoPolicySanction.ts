@@ -1,6 +1,6 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { ePolicySanction } from '../../../entity/vst/ePolicySanction';
-import { ormPolicySanction } from '../../../models/vst/ormPolicySanction';
+import { ePolicySanction } from '../../../entity/svt/ePolicySanction';
+import { ormPolicySanction } from '../../../models/svt/ormPolicySanction';
 import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `PolicySanction`

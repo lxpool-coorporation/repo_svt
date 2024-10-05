@@ -1,7 +1,7 @@
-import { ormVarco } from '../../../models/vst/ormVarco';
-import { eTransito, eTransitoBuilder } from '../../../entity/vst/eTransito';
-import { ormTransito } from '../../../models/vst/ormTransito';
-import { ormVarcoTransito } from '../../../models/vst/ormVarcoTransito';
+import { ormVarco } from '../../../models/svt/ormVarco';
+import { eTransito, eTransitoBuilder } from '../../../entity/svt/eTransito';
+import { ormTransito } from '../../../models/svt/ormTransito';
+import { ormVarcoTransito } from '../../../models/svt/ormVarcoTransito';
 import { daoVarcoImplementation } from './daoVarco';
 
 export class daoVarcoTransitoImplementation extends daoVarcoImplementation {

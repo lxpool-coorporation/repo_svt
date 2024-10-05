@@ -1,5 +1,5 @@
 import logger from '../../../utils/logger-winston';
-import { sequelize, models } from '../../../models/vst/ormInitSvt';
+import { sequelize, models } from '../../../models/svt/ormInitSvt';
 
 // classe che gestisce la logica di business dell'Svt
 export class daoInitSvtImplementation {

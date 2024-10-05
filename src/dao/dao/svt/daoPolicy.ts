@@ -1,84 +1,80 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { ormVarco } from '../../../models/vst/ormVarco';
-import { eVarco } from '../../../entity/vst/eVarco';
+import { ePolicy } from '../../../entity/svt/ePolicy';
+import { ormPolicy } from '../../../models/svt/ormPolicy';
 import { Transaction } from 'sequelize';
 
-// Implementazione del DAO per l'entità `Varco`
-export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
-  // Trova un Varco per ID usando Sequelize
-  async get(id: number): Promise<eVarco | null> {
-    const ormObj = await ormVarco.findByPk(id);
+// Implementazione del DAO per l'entità `Policy`
+export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
+  // Trova un Policy per ID usando Sequelize
+  async get(id: number): Promise<ePolicy | null> {
+    const ormObj = await ormPolicy.findByPk(id);
     if (!ormObj) {
-      throw new Error(`Varco non trovato per l'id ${id}`);
+      throw new Error(`Policy non trovato per l'id ${id}`);
     }
-    return new eVarco(
+    return new ePolicy(
       ormObj.id,
       ormObj.cod,
       ormObj.descrizione,
-      ormObj.latitudine,
-      ormObj.longitudine,
+      ormObj.tipo,
       ormObj.stato,
     );
   }
 
   // Trova tutti gli utenti usando Sequelize
-  async getAll(options?: object): Promise<eVarco[]> {
-    const objs = await ormVarco.findAll(options);
+  async getAll(options?: object): Promise<ePolicy[]> {
+    const objs = await ormPolicy.findAll(options);
     return objs.map(
       (ormObj) =>
-        new eVarco(
+        new ePolicy(
           ormObj.id,
           ormObj.cod,
           ormObj.descrizione,
-          ormObj.latitudine,
-          ormObj.longitudine,
+          ormObj.tipo,
           ormObj.stato,
         ),
     );
   }
 
-  // Salva un nuovo Varco nel database usando Sequelize
+  // Salva un nuovo Policy nel database usando Sequelize
   async save(
-    t: eVarco,
+    t: ePolicy,
     options?: { transaction?: Transaction },
-  ): Promise<eVarco | null> {
-    const ormObj = await ormVarco.create(
+  ): Promise<ePolicy | null> {
+    const ormObj = await ormPolicy.create(
       {
         id: t.get_id(),
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
-        latitudine: t.get_latitudine(),
-        longitudine: t.get_longitudine(),
+        tipo: t.get_tipo(),
         stato: t.get_stato(),
       },
       { transaction: options?.transaction },
     );
-    return new eVarco(
+    return new ePolicy(
       ormObj.id,
       ormObj.cod,
       ormObj.descrizione,
-      ormObj.latitudine,
-      ormObj.longitudine,
+      ormObj.tipo,
       ormObj.stato,
     );
   }
 
   // Aggiorna un utente esistente nel database
   async update(
-    t: eVarco,
+    t: ePolicy,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormVarco.findByPk(t.get_id(), {
+    const ormObj = await ormPolicy.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
-      throw new Error('Varco not found');
+      throw new Error('Policy not found');
     }
 
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['cod', 'descrizione', 'latitudine', 'longitudine', 'stato'], // Campi aggiornabili di default
+      fields: ['cod', 'descrizione', 'tipo', 'stato'], // Campi aggiornabili di default
       returning: true,
       individualHooks: true,
       validate: true,
@@ -91,28 +87,28 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
-        latitudine: t.get_latitudine(),
-        longitudine: t.get_longitudine(),
+        tipo: t.get_tipo(),
         stato: t.get_stato(),
+        // Aggiungi altri campi che devono essere aggiornati
       },
       updateOptions,
     );
   }
 
-  // Elimina un Varco dal database usando Sequelize
+  // Elimina un Policy dal database usando Sequelize
   async delete(
-    t: eVarco,
+    t: ePolicy,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormVarco.findByPk(t.get_id(), {
+    const ormObj = await ormPolicy.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
-      throw new Error('Varco not found');
+      throw new Error('Policy not found');
     }
     await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
-export const daoVarco = new daoVarcoImplementation();
+export const daoPolicy = new daoPolicyImplementation();

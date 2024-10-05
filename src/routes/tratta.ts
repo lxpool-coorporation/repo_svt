@@ -1,45 +1,45 @@
-import { trattaMiddleware } from '../middleware/middlewareTratta';
-import { authMiddleware } from '../middleware/middlewareAuth';
+import { middlewareTratta } from '../middleware/middlewareTratta';
+import { middlewareAuth } from '../middleware/middlewareAuth';
 import { Router } from 'express';
-import { trattaController } from '../controllers/controllerTratta';
+import { controllerTratta } from '../controllers/controllerTratta';
 
 const routerTratta = Router();
 
 routerTratta.get(
   '/',
-  authMiddleware.verifyToken,
-  trattaMiddleware.checkPermissionRead,
-  trattaController.getAll,
+  middlewareAuth.verifyToken,
+  middlewareTratta.checkPermissionRead,
+  controllerTratta.getAll,
 );
 routerTratta.get(
   '/:id',
-  authMiddleware.verifyToken,
-  trattaMiddleware.checkPermissionRead,
-  trattaController.getById,
+  middlewareAuth.verifyToken,
+  middlewareTratta.checkPermissionRead,
+  controllerTratta.getById,
 );
 routerTratta.post(
   '/',
-  authMiddleware.verifyToken,
-  trattaMiddleware.checkPermissionWrite,
-  trattaController.saveTratta,
+  middlewareAuth.verifyToken,
+  middlewareTratta.checkPermissionWrite,
+  controllerTratta.saveTratta,
 );
 routerTratta.delete(
   '/:id',
-  authMiddleware.verifyToken,
-  trattaMiddleware.checkPermissionWrite,
-  trattaController.deleteById,
+  middlewareAuth.verifyToken,
+  middlewareTratta.checkPermissionWrite,
+  controllerTratta.deleteById,
 );
 routerTratta.put(
   '/:id',
-  authMiddleware.verifyToken,
-  trattaMiddleware.checkPermissionWrite,
-  trattaController.putTratta,
+  middlewareAuth.verifyToken,
+  middlewareTratta.checkPermissionWrite,
+  controllerTratta.putTratta,
 );
 routerTratta.patch(
   '/:id',
-  authMiddleware.verifyToken,
-  trattaMiddleware.checkPermissionWrite,
-  trattaController.patchTratta,
+  middlewareAuth.verifyToken,
+  middlewareTratta.checkPermissionWrite,
+  controllerTratta.patchTratta,
 );
 
 export default routerTratta;

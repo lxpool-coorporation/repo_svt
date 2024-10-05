@@ -1,7 +1,7 @@
-import { ormVeicolo } from '../../../models/vst/ormVeicolo';
+import { ormVeicolo } from '../../../models/svt/ormVeicolo';
 import { eUtente } from '../../../entity/utente/eUtente';
 import { ormUtente } from '../../../models/utente/ormUtente';
-import { ormVeicoloUtente } from '../../../models/vst/ormVeicoloUtente';
+import { ormVeicoloUtente } from '../../../models/svt/ormVeicoloUtente';
 import { daoVeicoloImplementation } from './daoVeicolo';
 
 export class daoVeicoloUtenteImplementation extends daoVeicoloImplementation {

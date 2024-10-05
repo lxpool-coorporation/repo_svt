@@ -1,9 +1,9 @@
 import { enumStato } from '../entity/enum/enumStato';
-import { eTratta } from '../entity/vst/eTratta';
-import { repositoryTratta } from '../dao/repositories/vst/repositoryTratta';
+import { eTratta } from '../entity/svt/eTratta';
+import { repositoryTratta } from '../dao/repositories/svt/repositoryTratta';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
-import { eVarco } from '../entity/vst/eVarco';
+import { eVarco } from '../entity/svt/eVarco';
 
 // classe che gestisce la logica di business dell'Tratta
 class serviceTrattaImplementation {

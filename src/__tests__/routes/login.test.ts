@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../../index';
-import { authController } from '../../controllers/controllerAuth';
+import { controllerAuth } from '../../controllers/controllerAuth';
 
 describe('POST /login', () => {
   it('should return a valid JWT token for correct credentials', async () => {
@@ -16,7 +16,7 @@ describe('POST /login', () => {
     expect(token).toBeDefined();
 
     // Verifica che il token sia un JWT valido
-    const decoded = authController.verifyToken(token);
+    const decoded = controllerAuth.verifyToken(token);
     expect((decoded as any).id_utente).toBe(1);
   });
 

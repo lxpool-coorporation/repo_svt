@@ -1,6 +1,6 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { eVeicolo } from '../../../entity/vst/eVeicolo';
-import { ormVeicolo } from '../../../models/vst/ormVeicolo';
+import { eVeicolo } from '../../../entity/svt/eVeicolo';
+import { ormVeicolo } from '../../../models/svt/ormVeicolo';
 import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Veicolo`

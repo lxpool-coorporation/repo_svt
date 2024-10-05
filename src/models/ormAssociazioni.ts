@@ -4,12 +4,12 @@ import { ormUtenteProfilo } from './utente/ormUtenteProfilo';
 import { ormProfilo } from './utente/ormProfilo';
 import { ormPermesso } from './utente/ormPermesso';
 import { ormProfiloPermesso } from './utente/ormProfiloPermesso';
-import { ormVeicolo } from './vst/ormVeicolo';
+import { ormVeicolo } from './svt/ormVeicolo';
 import { ormUtenteVeicolo } from './utente/ormUtenteVeicolo';
-import { ormTransito } from './vst/ormTransito';
-import { ormVarco } from './vst/ormVarco';
-import { ormPolicySpeedControl } from './vst/ormPolicySpeedControl';
-import { ormPolicy } from './vst/ormPolicy';
+import { ormTransito } from './svt/ormTransito';
+import { ormVarco } from './svt/ormVarco';
+import { ormPolicySpeedControl } from './svt/ormPolicySpeedControl';
+import { ormPolicy } from './svt/ormPolicy';
 
 export class ormAssociazioni {
   read_associazioni(): void {

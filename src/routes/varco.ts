@@ -1,45 +1,45 @@
-import { varcoMiddleware } from '../middleware/middlewareVarco';
-import { authMiddleware } from '../middleware/middlewareAuth';
+import { middlewareVarco } from '../middleware/middlewareVarco';
+import { middlewareAuth } from '../middleware/middlewareAuth';
 import { Router } from 'express';
-import { varcoController } from '../controllers/controllerVarco';
+import { controllerVarco } from '../controllers/controllerVarco';
 
 const routerVarco = Router();
 
 routerVarco.get(
   '/',
-  authMiddleware.verifyToken,
-  varcoMiddleware.checkPermissionRead,
-  varcoController.getAll,
+  middlewareAuth.verifyToken,
+  middlewareVarco.checkPermissionRead,
+  controllerVarco.getAll,
 );
 routerVarco.get(
   '/:id',
-  authMiddleware.verifyToken,
-  varcoMiddleware.checkPermissionRead,
-  varcoController.getById,
+  middlewareAuth.verifyToken,
+  middlewareVarco.checkPermissionRead,
+  controllerVarco.getById,
 );
 routerVarco.post(
   '/',
-  authMiddleware.verifyToken,
-  varcoMiddleware.checkPermissionWrite,
-  varcoController.saveVarco,
+  middlewareAuth.verifyToken,
+  middlewareVarco.checkPermissionWrite,
+  controllerVarco.saveVarco,
 );
 routerVarco.delete(
   '/:id',
-  authMiddleware.verifyToken,
-  varcoMiddleware.checkPermissionWrite,
-  varcoController.deleteById,
+  middlewareAuth.verifyToken,
+  middlewareVarco.checkPermissionWrite,
+  controllerVarco.deleteById,
 );
 routerVarco.put(
   '/:id',
-  authMiddleware.verifyToken,
-  varcoMiddleware.checkPermissionWrite,
-  varcoController.putVarco,
+  middlewareAuth.verifyToken,
+  middlewareVarco.checkPermissionWrite,
+  controllerVarco.putVarco,
 );
 routerVarco.patch(
   '/:id',
-  authMiddleware.verifyToken,
-  varcoMiddleware.checkPermissionWrite,
-  varcoController.patchVarco,
+  middlewareAuth.verifyToken,
+  middlewareVarco.checkPermissionWrite,
+  controllerVarco.patchVarco,
 );
 
 export default routerVarco;

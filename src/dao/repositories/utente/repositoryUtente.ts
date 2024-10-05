@@ -12,7 +12,7 @@ import {
   daoProfiloPermesso,
   daoProfiloPermessoImplementation,
 } from '../../dao/utente/daoProfiloPermesso';
-import { eVeicolo } from '../../../entity/vst/eVeicolo';
+import { eVeicolo } from '../../../entity/svt/eVeicolo';
 import {
   daoUtenteVeicolo,
   daoUtenteVeicoloImplementation,

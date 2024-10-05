@@ -40,6 +40,6 @@ ormPolicySanctionSpeedControl.init(
   {
     sequelize,
     modelName: 'ormPolicySanctionSpeedControl',
-    tableName: 'vst_plc_sanction_speed_control',
+    tableName: 'svt_plc_sanction_speed_control',
   },
 );

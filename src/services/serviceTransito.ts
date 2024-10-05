@@ -1,5 +1,5 @@
-import { eTransito, eTransitoBuilder } from '../entity/vst/eTransito';
-import { repositoryTransito } from '../dao/repositories/vst/repositoryTransito';
+import { eTransito, eTransitoBuilder } from '../entity/svt/eTransito';
+import { repositoryTransito } from '../dao/repositories/svt/repositoryTransito';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumTransitoStato } from '../entity/enum/enumTransitoStato';

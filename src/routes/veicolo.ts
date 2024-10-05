@@ -1,45 +1,45 @@
-import { veicoloMiddleware } from '../middleware/middlewareVeicolo';
-import { authMiddleware } from '../middleware/middlewareAuth';
+import { middlewareVeicolo } from '../middleware/middlewareVeicolo';
+import { middlewareAuth } from '../middleware/middlewareAuth';
 import { Router } from 'express';
-import { veicoloController } from '../controllers/controllerVeicolo';
+import { controllerVeicolo } from '../controllers/controllerVeicolo';
 
 const routerVeicolo = Router();
 
 routerVeicolo.get(
   '/',
-  authMiddleware.verifyToken,
-  veicoloMiddleware.checkPermissionRead,
-  veicoloController.getAll,
+  middlewareAuth.verifyToken,
+  middlewareVeicolo.checkPermissionRead,
+  controllerVeicolo.getAll,
 );
 routerVeicolo.get(
   '/:id',
-  authMiddleware.verifyToken,
-  veicoloMiddleware.checkPermissionRead,
-  veicoloController.getById,
+  middlewareAuth.verifyToken,
+  middlewareVeicolo.checkPermissionRead,
+  controllerVeicolo.getById,
 );
 routerVeicolo.post(
   '/',
-  authMiddleware.verifyToken,
-  veicoloMiddleware.checkPermissionWrite,
-  veicoloController.saveVeicolo,
+  middlewareAuth.verifyToken,
+  middlewareVeicolo.checkPermissionWrite,
+  controllerVeicolo.saveVeicolo,
 );
 routerVeicolo.delete(
   '/:id',
-  authMiddleware.verifyToken,
-  veicoloMiddleware.checkPermissionWrite,
-  veicoloController.deleteById,
+  middlewareAuth.verifyToken,
+  middlewareVeicolo.checkPermissionWrite,
+  controllerVeicolo.deleteById,
 );
 routerVeicolo.put(
   '/:id',
-  authMiddleware.verifyToken,
-  veicoloMiddleware.checkPermissionWrite,
-  veicoloController.putVeicolo,
+  middlewareAuth.verifyToken,
+  middlewareVeicolo.checkPermissionWrite,
+  controllerVeicolo.putVeicolo,
 );
 routerVeicolo.patch(
   '/:id',
-  authMiddleware.verifyToken,
-  veicoloMiddleware.checkPermissionWrite,
-  veicoloController.patchVeicolo,
+  middlewareAuth.verifyToken,
+  middlewareVeicolo.checkPermissionWrite,
+  controllerVeicolo.patchVeicolo,
 );
 
 export default routerVeicolo;

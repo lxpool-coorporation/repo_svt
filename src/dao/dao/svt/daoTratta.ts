@@ -1,6 +1,6 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { ormTratta } from '../../../models/vst/ormTratta';
-import { eTratta } from '../../../entity/vst/eTratta';
+import { ormTratta } from '../../../models/svt/ormTratta';
+import { eTratta } from '../../../entity/svt/eTratta';
 import { Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Tratta`

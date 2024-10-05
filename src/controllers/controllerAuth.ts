@@ -40,7 +40,7 @@ export interface JwtPayload {
   id_utente: number; // Aggiungiamo altre proprietà se hai più dati nel payload
 }
 
-export class authController {
+export class controllerAuth {
   private constructor() {}
   public static generateToken = (userId: number): string => {
     let ret: string = '';
@@ -50,13 +50,13 @@ export class authController {
         const payload = { id_utente: userId };
         ret = jwt.sign(payload, private_key, options);
         logger.info(
-          'authController.generateToken : token generato per id [' +
+          'controllerAuth.generateToken : token generato per id [' +
             String(userId) +
             ']',
         );
       }
     } catch (error: any) {
-      logger.error('authController.generateToken :' + error?.message);
+      logger.error('controllerAuth.generateToken :' + error?.message);
     }
     return ret;
   };
@@ -68,7 +68,7 @@ export class authController {
         ret = jwt.verify(token, public_key, options) as JwtPayload;
       }
     } catch (error: any) {
-      logger.error('authController.verifyToken :' + error?.message);
+      logger.error('controllerAuth.verifyToken :' + error?.message);
     }
     return ret;
   };
@@ -85,7 +85,7 @@ export class authController {
           await repositoryUtente.getByIdentificativo(identificativo);
         // Eseguiamo qui la validazione dell'utente
         if (!!user) {
-          const token: string = authController.generateToken(user.get_id()); // Passa l'ID utente
+          const token: string = controllerAuth.generateToken(user.get_id()); // Passa l'ID utente
           if (!!token && token.trim() !== '') {
             ret.setResponse(200, { token });
           } else {
@@ -98,7 +98,7 @@ export class authController {
         ret.setResponse(401, { message: 'Credenziali non valide' });
       }
     } catch (error: any) {
-      logger.error('authController.verifyToken :' + error?.message);
+      logger.error('controllerAuth.verifyToken :' + error?.message);
       ret.setResponse(500, { message: 'errore generazione Token' });
     }
     ret.returnResponseJson(res, next);
