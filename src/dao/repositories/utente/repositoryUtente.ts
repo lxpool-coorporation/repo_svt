@@ -6,10 +6,6 @@ import { daoUtente, daoUtenteImplementation } from '../../dao/utente/daoUtente';
 import { eUtente } from '../../../entity/utente/eUtente';
 import { Transaction } from 'sequelize';
 import { eProfilo } from '../../../entity/utente/eProfilo';
-import {
-  daoInitUtente,
-  daoInitUtenteImplementation,
-} from '../../dao/utente/daoInitUtente';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { ePermesso } from '../../../entity/utente/ePermesso';
 import {
@@ -26,7 +22,6 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   private daoUtente: daoUtenteImplementation;
   private daoUtenteProfilo: daoUtenteProfiloImplementation;
   private daoUtenteVeicolo: daoUtenteVeicoloImplementation;
-  private daoInitUtente: daoInitUtenteImplementation;
   private daoProfiloPermesso: daoProfiloPermessoImplementation;
 
   constructor() {
@@ -34,7 +29,6 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     this.daoUtenteProfilo = daoUtenteProfilo;
     this.daoUtenteVeicolo = daoUtenteVeicolo;
     this.daoProfiloPermesso = daoProfiloPermesso;
-    this.daoInitUtente = daoInitUtente;
   }
 
   get(id: number): Promise<eUtente | null> {
@@ -77,13 +71,6 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     }
 
     return null;
-  }
-  init(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return this.daoInitUtente.init(options);
   }
 }
 

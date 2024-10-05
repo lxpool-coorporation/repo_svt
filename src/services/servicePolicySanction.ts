@@ -143,15 +143,6 @@ class servicePolicySanctionSpeedControlImplementation {
     await redisClient.del(`PolicySanctionSpeedControl_${id}`);
     await redisClient.del('PolicySanctionSpeedControl_tutti');
   }
-
-  // Inizializza struttura db Svt
-  async initStruttura(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return await repositoryPolicySanction.init(options);
-  }
 }
 
 export const servicePolicySanctionSpeedControl =

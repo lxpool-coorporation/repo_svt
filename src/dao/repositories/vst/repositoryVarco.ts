@@ -6,18 +6,15 @@ import {
   daoVarcoTransito,
   daoVarcoTransitoImplementation,
 } from '../../dao/vst/daoVarcoTransito';
-import { daoInitSvt, daoInitSvtImplementation } from '../../dao/vst/daoInitSvt';
 import { eTransito } from '../../../entity/vst/eTransito';
 
 class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   private daoVarco: daoVarcoImplementation;
   private daoVarcoTransito: daoVarcoTransitoImplementation;
-  private daoInitSvt: daoInitSvtImplementation;
 
   constructor() {
     this.daoVarco = daoVarco;
     this.daoVarcoTransito = daoVarcoTransito;
-    this.daoInitSvt = daoInitSvt;
   }
   get(id: number): Promise<eVarco | null> {
     return this.daoVarco.get(id);
@@ -39,13 +36,6 @@ class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   }
   getTransiti(idVarco: number): Promise<eTransito[] | null> {
     return this.daoVarcoTransito.getTransiti(idVarco);
-  }
-  init(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return this.daoInitSvt.init(options);
   }
 }
 

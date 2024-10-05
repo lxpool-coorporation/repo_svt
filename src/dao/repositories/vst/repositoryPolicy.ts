@@ -4,7 +4,6 @@ import {
   daoPolicySpeedControl,
   daoPolicySpeedControlImplementation,
 } from '../../dao/vst/daoPolicySpeedControl';
-import { daoInitSvt, daoInitSvtImplementation } from '../../dao/vst/daoInitSvt';
 import { Transaction } from 'sequelize';
 import database from '../../../utils/database';
 import { daoPolicy, daoPolicyImplementation } from '../../dao/vst/daoPolicy';
@@ -15,12 +14,10 @@ const db = database.getInstance();
 class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
   private daoPolicy: daoPolicyImplementation;
   private daoPolicySpeedControl: daoPolicySpeedControlImplementation;
-  private daoInitSvt: daoInitSvtImplementation;
 
   constructor() {
     this.daoPolicy = daoPolicy;
     this.daoPolicySpeedControl = daoPolicySpeedControl;
-    this.daoInitSvt = daoInitSvt;
   }
   get(id: number): Promise<ePolicy | null> {
     return this.daoPolicy.get(id);
@@ -122,16 +119,6 @@ class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
       await transaction.rollback();
       throw error;
     }
-  }
-
-  // OTHERS
-
-  init(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return this.daoInitSvt.init(options);
   }
 }
 

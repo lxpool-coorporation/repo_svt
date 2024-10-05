@@ -137,11 +137,11 @@ class serviceTrattaImplementation {
     await redisClient.del('Tratta_tutti');
   }
 
-  // Ottieni Transiti di un Tratta
-  async getTransitiByIdTratta(idTratta: number): Promise<eVarco[] | null> {
+  // Ottieni Varchi di un Tratta
+  async getVarchiByIdTratta(idTratta: number): Promise<eVarco[] | null> {
     const redisClient = await databaseCache.getInstance();
 
-    const cacheKey = `Transiti_Tratta_${idTratta}`;
+    const cacheKey = `Varchi_Tratta_${idTratta}`;
 
     // Controlla se i Transiti sono in cache
     const jsonData = await redisClient.get(cacheKey);
@@ -162,15 +162,6 @@ class serviceTrattaImplementation {
       });
     }
     return transiti;
-  }
-
-  // Inizializza struttura db Svt
-  async initStruttura(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return await repositoryTratta.init(options);
   }
 }
 

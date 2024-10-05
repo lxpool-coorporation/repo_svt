@@ -7,17 +7,14 @@ import {
   daoVeicoloUtente,
   daoVeicoloUtenteImplementation,
 } from '../../dao/vst/daoVeicoloUtente';
-import { daoInitSvt, daoInitSvtImplementation } from '../../dao/vst/daoInitSvt';
 
 class repositoryVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   private daoVeicolo: daoVeicoloImplementation;
   private daoVeicoloUtente: daoVeicoloUtenteImplementation;
-  private daoInitSvt: daoInitSvtImplementation;
 
   constructor() {
     this.daoVeicolo = daoVeicolo;
     this.daoVeicoloUtente = daoVeicoloUtente;
-    this.daoInitSvt = daoInitSvt;
   }
   get(id: number): Promise<eVeicolo | null> {
     return this.daoVeicolo.get(id);
@@ -39,13 +36,6 @@ class repositoryVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   }
   getUtenti(idVeicolo: number): Promise<eUtente[] | null> {
     return this.daoVeicoloUtente.getUtenti(idVeicolo);
-  }
-  init(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return this.daoInitSvt.init(options);
   }
 }
 

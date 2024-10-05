@@ -5,17 +5,14 @@ import {
   daoTransito,
   daoTransitoImplementation,
 } from '../../dao/vst/daoTransito';
-import { daoInitSvt, daoInitSvtImplementation } from '../../dao/vst/daoInitSvt';
 
 class repositoryTransitoImplementation
   implements DaoInterfaceGeneric<eTransito>
 {
   private daoTransito: daoTransitoImplementation;
-  private daoInitSvt: daoInitSvtImplementation;
 
   constructor() {
     this.daoTransito = daoTransito;
-    this.daoInitSvt = daoInitSvt;
   }
   get(id: number): Promise<eTransito | null> {
     return this.daoTransito.get(id);
@@ -34,13 +31,6 @@ class repositoryTransitoImplementation
   }
   delete(t: eTransito, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoTransito.delete(t, options);
-  }
-  init(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return this.daoInitSvt.init(options);
   }
 }
 

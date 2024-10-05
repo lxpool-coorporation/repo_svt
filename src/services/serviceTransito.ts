@@ -126,15 +126,6 @@ class serviceTransitoImplementation {
     await redisClient.del(`Transito_${id}`);
     await redisClient.del('Transiti_tutti');
   }
-
-  // Inizializza struttura db Svt
-  async initStruttura(options?: {
-    force?: boolean;
-    alter?: boolean;
-    logging?: boolean;
-  }): Promise<boolean> {
-    return await repositoryTransito.init(options);
-  }
 }
 
 export const serviceTransito = new serviceTransitoImplementation();
