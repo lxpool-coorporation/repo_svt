@@ -1,6 +1,6 @@
-import { ormVeicolo } from '../../../models/svt/ormVeicolo';
+import { ormVeicolo } from '../../../models/vst/ormVeicolo';
 import { daoUtenteImplementation } from './daoUtente';
-import { eVeicolo } from '../../../entity/svt/eVeicolo';
+import { eVeicolo } from '../../../entity/vst/eVeicolo';
 import { ormUtente } from '../../../models/utente/ormUtente';
 import { ormUtenteVeicolo } from '../../../models/utente/ormUtenteVeicolo';
 

@@ -1,5 +1,4 @@
-// enumStato.ts
+// enumPolicyTipo.ts
 export enum enumPolicyTipo {
-  tutor = 'tutor',
-  autovelox = 'autovelox',
+  speed_control = 'speed control',
 }

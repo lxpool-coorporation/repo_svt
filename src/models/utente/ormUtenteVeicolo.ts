@@ -1,7 +1,7 @@
 import database from '../../utils/database';
 import { DataTypes, Sequelize } from 'sequelize';
 import { ormUtente } from './ormUtente';
-import { ormVeicolo } from '../svt/ormVeicolo';
+import { ormVeicolo } from '../vst/ormVeicolo';
 
 /**
  * Instanziazione della connessione verso il RDBMS

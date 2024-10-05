@@ -46,12 +46,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     t: eUtente,
     options?: { transaction?: Transaction },
   ): Promise<eUtente | null> {
-    const existingUtente = await ormUtente.findByPk(t.get_id(), {
-      transaction: options?.transaction,
-    });
-    if (existingUtente) {
-      throw new Error('A User with the specified id already exists');
-    }
+
     const ormObj = await ormUtente.create(
       {
         id: t.get_id(),

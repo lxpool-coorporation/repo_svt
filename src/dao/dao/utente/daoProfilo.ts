@@ -33,12 +33,6 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
     t: eProfilo,
     options?: { transaction?: Transaction },
   ): Promise<eProfilo | null> {
-    const existingProfilo = await ormProfilo.findByPk(t.get_id(), {
-      transaction: options?.transaction,
-    });
-    if (existingProfilo) {
-      throw new Error('A User with the specified id already exists');
-    }
     const ormObj = await ormProfilo.create(
       {
         id: t.get_id(),

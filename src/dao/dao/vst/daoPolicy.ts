@@ -1,86 +1,80 @@
-import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
-import { ePermesso } from '../../../entity/utente/ePermesso';
-import { ormPermesso } from '../../../models/utente/ormPermesso';
+import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
+import { ePolicy } from '../../../entity/vst/ePolicy';
+import { ormPolicy } from '../../../models/vst/ormPolicy';
 import { Transaction } from 'sequelize';
 
-// Implementazione del DAO per l'entità `Permesso`
-export class daoPermessoImplementation
-  implements DaoInterfaceGeneric<ePermesso>
-{
-  // Trova un Permesso per ID usando Sequelize
-  async get(id: number): Promise<ePermesso | null> {
-    const ormObj = await ormPermesso.findByPk(id);
+// Implementazione del DAO per l'entità `Policy`
+export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
+  // Trova un Policy per ID usando Sequelize
+  async get(id: number): Promise<ePolicy | null> {
+    const ormObj = await ormPolicy.findByPk(id);
     if (!ormObj) {
-      throw new Error(`Permesso non trovato per l'id ${id}`);
+      throw new Error(`Policy non trovato per l'id ${id}`);
     }
-    return new ePermesso(
+    return new ePolicy(
       ormObj.id,
-      ormObj.categoria,
-      ormObj.tipo,
       ormObj.cod,
       ormObj.descrizione,
+      ormObj.tipo,
       ormObj.stato,
     );
   }
 
   // Trova tutti gli utenti usando Sequelize
-  async getAll(options?: object): Promise<ePermesso[]> {
-    const objs = await ormPermesso.findAll(options);
+  async getAll(options?: object): Promise<ePolicy[]> {
+    const objs = await ormPolicy.findAll(options);
     return objs.map(
       (ormObj) =>
-        new ePermesso(
+        new ePolicy(
           ormObj.id,
-          ormObj.categoria,
-          ormObj.tipo,
           ormObj.cod,
           ormObj.descrizione,
+          ormObj.tipo,
           ormObj.stato,
         ),
     );
   }
 
-  // Salva un nuovo Permesso nel database usando Sequelize
+  // Salva un nuovo Policy nel database usando Sequelize
   async save(
-    t: ePermesso,
+    t: ePolicy,
     options?: { transaction?: Transaction },
-  ): Promise<ePermesso | null> {
-    const ormObj = await ormPermesso.create(
+  ): Promise<ePolicy | null> {
+    const ormObj = await ormPolicy.create(
       {
         id: t.get_id(),
-        categoria: t.get_categoria(),
-        tipo: t.get_tipo(),
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
+        tipo: t.get_tipo(),
         stato: t.get_stato(),
       },
       { transaction: options?.transaction },
     );
-    return new ePermesso(
+    return new ePolicy(
       ormObj.id,
-      ormObj.categoria,
-      ormObj.tipo,
       ormObj.cod,
       ormObj.descrizione,
+      ormObj.tipo,
       ormObj.stato,
     );
   }
 
   // Aggiorna un utente esistente nel database
   async update(
-    t: ePermesso,
+    t: ePolicy,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormPermesso.findByPk(t.get_id(), {
+    const ormObj = await ormPolicy.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
-      throw new Error('Permesso not found');
+      throw new Error('Policy not found');
     }
 
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['cod', 'descrizione', 'stato'], // Campi aggiornabili di default
+      fields: ['cod', 'descrizione', 'tipo', 'stato'], // Campi aggiornabili di default
       returning: true,
       individualHooks: true,
       validate: true,
@@ -93,6 +87,7 @@ export class daoPermessoImplementation
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
+        tipo: t.get_tipo(),
         stato: t.get_stato(),
         // Aggiungi altri campi che devono essere aggiornati
       },
@@ -100,20 +95,20 @@ export class daoPermessoImplementation
     );
   }
 
-  // Elimina un Permesso dal database usando Sequelize
+  // Elimina un Policy dal database usando Sequelize
   async delete(
-    t: ePermesso,
+    t: ePolicy,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormPermesso.findByPk(t.get_id(), {
+    const ormObj = await ormPolicy.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
-      throw new Error('Permesso not found');
+      throw new Error('Policy not found');
     }
     await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
-export const daoPermesso = new daoPermessoImplementation();
+export const daoPolicy = new daoPolicyImplementation();

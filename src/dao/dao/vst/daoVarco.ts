@@ -1,86 +1,84 @@
-import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
-import { ePermesso } from '../../../entity/utente/ePermesso';
-import { ormPermesso } from '../../../models/utente/ormPermesso';
+import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
+import { ormVarco } from '../../../models/vst/ormVarco';
+import { eVarco } from '../../../entity/vst/eVarco';
 import { Transaction } from 'sequelize';
 
-// Implementazione del DAO per l'entità `Permesso`
-export class daoPermessoImplementation
-  implements DaoInterfaceGeneric<ePermesso>
-{
-  // Trova un Permesso per ID usando Sequelize
-  async get(id: number): Promise<ePermesso | null> {
-    const ormObj = await ormPermesso.findByPk(id);
+// Implementazione del DAO per l'entità `Varco`
+export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
+  // Trova un Varco per ID usando Sequelize
+  async get(id: number): Promise<eVarco | null> {
+    const ormObj = await ormVarco.findByPk(id);
     if (!ormObj) {
-      throw new Error(`Permesso non trovato per l'id ${id}`);
+      throw new Error(`Varco non trovato per l'id ${id}`);
     }
-    return new ePermesso(
+    return new eVarco(
       ormObj.id,
-      ormObj.categoria,
-      ormObj.tipo,
       ormObj.cod,
       ormObj.descrizione,
+      ormObj.latitudine,
+      ormObj.longitudine,
       ormObj.stato,
     );
   }
 
   // Trova tutti gli utenti usando Sequelize
-  async getAll(options?: object): Promise<ePermesso[]> {
-    const objs = await ormPermesso.findAll(options);
+  async getAll(options?: object): Promise<eVarco[]> {
+    const objs = await ormVarco.findAll(options);
     return objs.map(
       (ormObj) =>
-        new ePermesso(
+        new eVarco(
           ormObj.id,
-          ormObj.categoria,
-          ormObj.tipo,
           ormObj.cod,
           ormObj.descrizione,
+          ormObj.latitudine,
+          ormObj.longitudine,
           ormObj.stato,
         ),
     );
   }
 
-  // Salva un nuovo Permesso nel database usando Sequelize
+  // Salva un nuovo Varco nel database usando Sequelize
   async save(
-    t: ePermesso,
+    t: eVarco,
     options?: { transaction?: Transaction },
-  ): Promise<ePermesso | null> {
-    const ormObj = await ormPermesso.create(
+  ): Promise<eVarco | null> {
+    const ormObj = await ormVarco.create(
       {
         id: t.get_id(),
-        categoria: t.get_categoria(),
-        tipo: t.get_tipo(),
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
+        latitudine: t.get_latitudine(),
+        longitudine: t.get_longitudine(),
         stato: t.get_stato(),
       },
       { transaction: options?.transaction },
     );
-    return new ePermesso(
+    return new eVarco(
       ormObj.id,
-      ormObj.categoria,
-      ormObj.tipo,
       ormObj.cod,
       ormObj.descrizione,
+      ormObj.latitudine,
+      ormObj.longitudine,
       ormObj.stato,
     );
   }
 
   // Aggiorna un utente esistente nel database
   async update(
-    t: ePermesso,
+    t: eVarco,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormPermesso.findByPk(t.get_id(), {
+    const ormObj = await ormVarco.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
-      throw new Error('Permesso not found');
+      throw new Error('Varco not found');
     }
 
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['cod', 'descrizione', 'stato'], // Campi aggiornabili di default
+      fields: ['cod', 'descrizione', 'latitudine', 'longitudine', 'stato'], // Campi aggiornabili di default
       returning: true,
       individualHooks: true,
       validate: true,
@@ -93,27 +91,28 @@ export class daoPermessoImplementation
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
+        latitudine: t.get_latitudine(),
+        longitudine: t.get_longitudine(),
         stato: t.get_stato(),
-        // Aggiungi altri campi che devono essere aggiornati
       },
       updateOptions,
     );
   }
 
-  // Elimina un Permesso dal database usando Sequelize
+  // Elimina un Varco dal database usando Sequelize
   async delete(
-    t: ePermesso,
+    t: eVarco,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormPermesso.findByPk(t.get_id(), {
+    const ormObj = await ormVarco.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
-      throw new Error('Permesso not found');
+      throw new Error('Varco not found');
     }
     await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
-export const daoPermesso = new daoPermessoImplementation();
+export const daoVarco = new daoVarcoImplementation();
