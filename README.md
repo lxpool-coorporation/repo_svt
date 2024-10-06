@@ -106,12 +106,12 @@ Gli Enums sono stati creati come elementi stabili del progetto per rappresentare
 
 Nella cartella "documentazione" è presente la parte inerente gli schemi di progetto:
 ### Schema del database:
-  - [DB Schema](./images/DB_schema.png)
+  - [DB Schema](./documentazione/DB_schema.png)
 ### Diagramma dei casi d'uso:
-  - [Diagramma dei Casi d'Uso](./images/UML_UC_useCases.png)
+  - [Diagramma dei Casi d'Uso](./documentazione/UML_UC_useCases.png)
 ### Diagrammi delle sequenze:
-  - [Autenticazione JWT](./images/UML_DS_autenticazione_jwt.png)
-  - [Ricerca multe](./images/UML_DS_ricerca_multe.png)
+  - [Autenticazione JWT](./documentazione/UML_DS_autenticazione_jwt.png)
+  - [Ricerca multe](./documentazione/UML_DS_ricerca_multe.png)
 
 ## Test del Progetto
 
