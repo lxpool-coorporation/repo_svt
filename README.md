@@ -57,9 +57,6 @@ Le multe sono classificate in base all'entità del superamento del limite:
 - **Recidiva**: Aumento della sanzione per infrazioni ripetute.
 - **Orario Notturno**: Maggiorazione delle multe tra le 22:00 e le 7:00.
 
-### Riconoscimento del Tipo di Veicolo
-Il sistema riconosce il tipo di veicolo in base alla targa, applicando limiti di velocità appropriati.
-
 ## Design Pattern Utilizzati
 - **Chain of Responsibility**: Per la gestione modulare delle richieste HTTP.
   - **Implementazione**: Ogni middleware (es. autenticazione, validazione, logging) è strutturato come un "anello" nella catena di responsabilità.
