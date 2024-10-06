@@ -11,7 +11,6 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     if (!ormObj) {
       throw new Error(`Varco non trovato per l'id ${id}`);
     }
-    console.log(ormObj);
     return new eVarco(
       ormObj.dataValues.id,
       ormObj.dataValues.cod,

@@ -63,9 +63,9 @@ const PORT = process.env.SERVER_PORT || 3000;
 app
   .listen(PORT, () => {
     //_readUser2();
-    const o = new ormAssociazioni();
-    o.read_associazioni();
-    clearRedisCache();
+    //const o = new ormAssociazioni();
+    //o.read_associazioni();
+    //clearRedisCache();
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {
