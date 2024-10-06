@@ -1,7 +1,7 @@
 import { Sequelize, QueryTypes } from 'sequelize'; // Importa QueryTypes da Sequelize
 
 import * as fs from 'fs';
-import database from './utils/database';
+import database from '../utils/database';
 
 const sequelize: Sequelize = database.getInstance();
 
