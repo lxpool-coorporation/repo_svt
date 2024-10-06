@@ -18,7 +18,7 @@ export class ormTransito extends Model {
   public id_varco!: number;
   public meteo!: enumMeteoTipo | null;
   public id_veicolo!: number | null;
-  public immagine!: string | null;
+  public path_immagine!: string | null;
   public stato!: enumTransitoStato;
 }
 
@@ -62,7 +62,7 @@ ormTransito.init(
         key: 'id',
       },
     },
-    immagine: {
+    path_immagine: {
       type: DataTypes.STRING,
       allowNull: true,
     },

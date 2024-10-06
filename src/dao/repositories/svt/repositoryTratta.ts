@@ -7,14 +7,21 @@ import {
   daoTrattaVarco,
   daoTrattaVarcoImplementation,
 } from '../../dao/svt/daoTrattaVarco';
+import {
+  daoTrattaPolicy,
+  daoTrattaPolicyImplementation,
+} from '../../../dao/dao/svt/daoTrattaPolicy';
+import { ePolicy } from '../../../entity/svt/ePolicy';
 
 class repositoryTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
   private daoTratta: daoTrattaImplementation;
   private daoTrattaVarco: daoTrattaVarcoImplementation;
+  private daoTrattaPolicy: daoTrattaPolicyImplementation;
 
   constructor() {
     this.daoTratta = daoTratta;
     this.daoTrattaVarco = daoTrattaVarco;
+    this.daoTrattaPolicy = daoTrattaPolicy;
   }
   get(id: number): Promise<eTratta | null> {
     return this.daoTratta.get(id);
@@ -36,6 +43,9 @@ class repositoryTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
   }
   getVarchi(idTratta: number): Promise<eVarco[] | null> {
     return this.daoTrattaVarco.getVarchi(idTratta);
+  }
+  getPolicies(idTratta: number): Promise<ePolicy[] | null> {
+    return this.daoTrattaPolicy.getPolicies(idTratta);
   }
 }
 

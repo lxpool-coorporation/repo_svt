@@ -22,7 +22,7 @@ export class daoTransitoImplementation
         .setIdVarco(ormObj.id_varco)
         .setMeteo(ormObj.meteo)
         .setIdVeicolo(ormObj.id_veicolo)
-        .setImmagine(ormObj.immagine)
+        .setpath_immagine(ormObj.path_immagine)
         .setStato(ormObj.stato),
     );
   }
@@ -41,7 +41,7 @@ export class daoTransitoImplementation
             .setIdVarco(ormObj.id_varco)
             .setMeteo(ormObj.meteo)
             .setIdVeicolo(ormObj.id_veicolo)
-            .setImmagine(ormObj.immagine)
+            .setpath_immagine(ormObj.path_immagine)
             .setStato(ormObj.stato),
         ),
     );
@@ -61,7 +61,7 @@ export class daoTransitoImplementation
         id_varco: t.get_id_varco(),
         meteo: t.get_meteo(),
         id_veicolo: t.get_id_veicolo(),
-        immagine: t.get_immagine(),
+        path_immagine: t.get_path_immagine(),
         stato: t.get_stato(),
       },
       { transaction: options?.transaction },
@@ -75,7 +75,7 @@ export class daoTransitoImplementation
         .setIdVarco(ormObj.id_varco)
         .setMeteo(ormObj.meteo)
         .setIdVeicolo(ormObj.id_veicolo)
-        .setImmagine(ormObj.immagine)
+        .setpath_immagine(ormObj.path_immagine)
         .setStato(ormObj.stato),
     );
   }
@@ -102,7 +102,7 @@ export class daoTransitoImplementation
         'id_varco',
         'meteo',
         'id_veicolo',
-        'immagine',
+        'path_immagine',
         'stato',
       ], // Campi aggiornabili di default
       returning: true,
@@ -121,7 +121,7 @@ export class daoTransitoImplementation
         id_varco: t.get_id_varco(),
         meteo: t.get_meteo(),
         id_veicolo: t.get_id_veicolo(),
-        immagine: t.get_immagine(),
+        path_immagine: t.get_path_immagine(),
         stato: t.get_stato(),
       },
       updateOptions,
