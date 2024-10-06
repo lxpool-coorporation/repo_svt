@@ -1,0 +1,40 @@
+@startuml
+actor Operatore
+actor Varco
+actor Automobilista
+
+usecase "Gestione Varchi\n(CRUD)" as UC_GestioneVarchi
+usecase "Gestione Tratte\n(CRUD)" as UC_GestioneTratte
+usecase "Gestione Veicoli\n(CRUD)" as UC_GestioneVeicoli
+usecase "Inserimento Transiti" as UC_InserimentoTransiti
+usecase "Inserimento Transiti via JSON" as UC_InserimentoTransitiJSON
+usecase "Inserimento Transiti via Immagine" as UC_InserimentoTransitiImg
+usecase "Aggiornamento Transiti" as UC_AggiornamentoTransiti
+usecase "Visualizzazione Transiti Illeggibili" as UC_TransitiIlleggibili
+usecase "Visualizzazione Specifico Varco" as UC_VisualizzaVarco
+usecase "Eliminazione e Aggiornamento Transiti" as UC_EliminaAggiornaTransiti
+usecase "Generazione Multe Automatiche" as UC_GenerazioneMulte
+usecase "Ricerca Multe" as UC_RicercaMulte
+usecase "Download Bollettino PDF" as UC_DownloadPDF
+
+Operatore --> UC_GestioneVarchi
+Operatore --> UC_GestioneTratte
+Operatore --> UC_GestioneVeicoli
+Operatore --> UC_InserimentoTransiti
+Operatore --> UC_AggiornamentoTransiti
+Operatore --> UC_TransitiIlleggibili
+Operatore --> UC_VisualizzaVarco
+Operatore --> UC_EliminaAggiornaTransiti
+Operatore --> UC_RicercaMulte
+Operatore --> UC_DownloadPDF
+
+Varco --> UC_InserimentoTransiti
+
+Automobilista --> UC_RicercaMulte
+Automobilista --> UC_DownloadPDF
+
+UC_InserimentoTransiti <|-- UC_InserimentoTransitiJSON : <<extends>>
+UC_InserimentoTransiti <|-- UC_InserimentoTransitiImg : <<extends>>
+UC_InserimentoTransiti --> UC_GenerazioneMulte : <<include>>
+
+@enduml

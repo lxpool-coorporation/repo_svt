@@ -1,0 +1,37 @@
+@startuml
+actor Operatore as Op
+
+Op -> API_Routes : POST /transiti (immagine)
+API_Routes -> Controller : insertTransit(request)
+Controller -> Service : insertTransit(data)
+Service -> TesseractOCR : recognizeText(image)
+TesseractOCR --> Service : licensePlateText
+Service -> Service : validateLicensePlate(licensePlateText)
+alt "Targa valida"
+    Service -> Repository : saveTransit(data)
+    Repository -> DAO : saveTransit(data)
+    DAO -> ORM : saveToDatabase(data)
+    ORM --> DAO : success
+    DAO --> Repository : success
+    Repository --> Service : success
+    Service -> Service : checkSpeedLimit()
+    alt "Limite superato"
+        Service -> Repository : createFine(data)
+        Repository -> DAO : saveFine(data)
+        DAO -> ORM : saveToDatabase(fineData)
+        ORM --> DAO : success
+        DAO --> Repository : success
+        Repository --> Service : success
+    end
+else "Targa illeggibile"
+    Service -> Repository : saveUnreadableTransit(data)
+    Repository -> DAO : saveTransit(data)
+    DAO -> ORM : saveToDatabase(data)
+    ORM --> DAO : success
+    DAO --> Repository : success
+    Repository --> Service : success
+end
+Service --> Controller : response
+Controller --> API_Routes : response
+API_Routes --> Op : response
+@enduml
