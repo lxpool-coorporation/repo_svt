@@ -102,6 +102,17 @@ Gli Enums sono stati creati come elementi stabili del progetto per rappresentare
 
 - **enumVeicoloTipo**: autoveicoli, motoveicoli, camion.
 
+## Documentazione
+
+Nella cartella "documentazione" è presente la parte inerente gli schemi di progetto:
+### Schema del database:
+![DB Schema](./images/DB_schema.png)
+### Diagramma dei casi d'uso:
+![Diagramma dei Casi d'Uso](./images/UML_UC_useCases.png)
+### Diagrammi delle sequenze:
+![Autenticazione JWT](./images/UML_DS_autenticazione_jwt.png)
+![Ricerca multe](./images/UML_DS_ricerca_multe.png)
+
 ## Test del Progetto
 
 ### Utilizzo di Postman
@@ -125,7 +136,7 @@ Gli Enums sono stati creati come elementi stabili del progetto per rappresentare
 È possibile eseguire i test della collection tramite Newman:
 
 ```bash
-newman run postman/TutorAutostradale.postman_collection.json
+newman run postman/svt-app.postman_collection.json
 ```
 ## Immagini di Esempio
 Nella cartella images sono presenti immagini di esempio per testare l'inserimento di transiti tramite OCR. Queste immagini contengono targhe simulate per consentire la verifica del riconoscimento tramite Tesseract OCR.
