@@ -97,7 +97,6 @@ export class controllerVeicolo {
           veicolo?.targa,
           veicolo?.stato,
         );
-        console.log(veicoloRes);
         if (!!veicoloRes) {
           ret.setResponse(200, veicoloRes);
         } else {
@@ -234,5 +233,33 @@ export class controllerVeicolo {
       ret.setResponse(500, { message: 'errore caricamento veicolo' });
     }
     ret.returnResponseJson(res, next);
+  };
+  public static ricavaTipo = (targa: string): enumVeicoloTipo | null => {
+    let ret: enumVeicoloTipo | null = null;
+    try {
+      let trovato: boolean = false;
+      const motorcycle = /^[A-Z]{2}\d{3}[A-Z]{1}$/;
+      if (motorcycle.test(targa)) {
+        ret = enumVeicoloTipo.motoveicoli;
+        trovato = true;
+      }
+      if (!trovato) {
+        const car = /^[A-Z]{2}\d{3}[A-Z]{2}$/;
+        if (car.test(targa)) {
+          ret = enumVeicoloTipo.autoveicoli;
+          trovato = true;
+        }
+      }
+      if (!trovato) {
+        const truck = /^[A-Z]{1}\d{5}[A-Z]{2}$/;
+        if (truck.test(targa)) {
+          ret = enumVeicoloTipo.camion;
+          trovato = true;
+        }
+      }
+    } catch (error: any) {
+      logger.error('controllerVeicolo.ricavaTipo :' + error?.message);
+    }
+    return ret;
   };
 }

@@ -19,6 +19,9 @@ class repositoryVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   get(id: number): Promise<eVeicolo | null> {
     return this.daoVeicolo.get(id);
   }
+  getByTarga(targa: string): Promise<eVeicolo | null> {
+    return this.daoVeicolo.getByTarga(targa);
+  }
   getAll(options?: object): Promise<eVeicolo[]> {
     return this.daoVeicolo.getAll(options);
   }

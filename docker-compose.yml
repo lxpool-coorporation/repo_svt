@@ -32,6 +32,7 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
     depends_on:
       - svt-db
       - svt-redis_cache

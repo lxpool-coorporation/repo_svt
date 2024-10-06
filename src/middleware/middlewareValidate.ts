@@ -2,9 +2,17 @@ import dotenv from 'dotenv';
 import logger from '../utils/logger-winston';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
-import { body, ValidationChain, validationResult } from 'express-validator';
+import {
+  body,
+  check,
+  ValidationChain,
+  validationResult,
+} from 'express-validator';
 import { enumStato } from '../entity/enum/enumStato';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
+import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
+import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
+import { parseISO } from 'date-fns'; // Opzionale, per gestire meglio la data
 
 dotenv.config();
 
@@ -31,7 +39,31 @@ export class middlewareValidate {
   ): ValidationChain => {
     let ret: ValidationChain = body(campo).custom((value) => {
       if (!Object.values(enumStato).includes(value)) {
-        throw new Error('Stato veicolo non valido');
+        throw new Error('Stato non valido');
+      }
+      return true;
+    });
+    return optional ? ret.optional() : ret;
+  };
+  public static validateStatoTransito = (
+    campo: string,
+    optional: boolean,
+  ): ValidationChain => {
+    let ret: ValidationChain = body(campo).custom((value) => {
+      if (!Object.values(enumTransitoStato).includes(value)) {
+        throw new Error('Stato transito non valido');
+      }
+      return true;
+    });
+    return optional ? ret.optional() : ret;
+  };
+  public static validateMeteo = (
+    campo: string,
+    optional: boolean,
+  ): ValidationChain => {
+    let ret: ValidationChain = body(campo).custom((value) => {
+      if (!Object.values(enumMeteoTipo).includes(value)) {
+        throw new Error('Meteo non valido');
       }
       return true;
     });
@@ -95,5 +127,65 @@ export class middlewareValidate {
       ret.setResponse(400, { message: 'errore handleValidationErrors' });
     }
     ret.returnNext(next);
+  };
+  public static validateNumber = (
+    campo: string,
+    optional: boolean,
+  ): ValidationChain => {
+    let ret: ValidationChain = body(campo)
+      .isNumeric()
+      .withMessage('Il valore deve essere un numero')
+      .custom((value) => {
+        if (value <= 0) {
+          throw new Error('Il valore deve essere maggiore di 0');
+        }
+        return true;
+      });
+    return optional ? ret.optional() : ret;
+  };
+  public static validateImageFromReq = (
+    campo: string,
+    optional: boolean,
+  ): ValidationChain => {
+    let ret: ValidationChain = check(campo).custom((_value, { req }) => {
+      if (!req.file) {
+        throw new Error('Il file è obbligatorio');
+      }
+      return true;
+    });
+    return optional ? ret.optional() : ret;
+  };
+  public static validateDateISO8601 = (
+    campo: string,
+    optional: boolean,
+  ): ValidationChain => {
+    let ret: ValidationChain = body(campo)
+      .isISO8601()
+      .withMessage(
+        'La data deve essere in formato ISO 8601 (es: 2024-10-06T19:09:00).',
+      )
+      .bail() // Ferma ulteriori validazioni se il formato è errato
+      .custom((value) => {
+        const dataTransito = parseISO(value); // Converte la stringa in oggetto Date
+        const now = new Date(); // Ottieni la data corrente
+
+        if (dataTransito > now) {
+          throw new Error('La data non può essere nel futuro.');
+        }
+
+        return true; // La data è valida e non è futura
+      });
+    return optional ? ret.optional() : ret;
+  };
+  public static validateDate = (
+    campo: string,
+    optional: boolean,
+  ): ValidationChain => {
+    let ret: ValidationChain = body(campo)
+      .isDate()
+      .withMessage('La data non è valida')
+      .isAfter(new Date().toISOString()) // Assicura che la data sia nel futuro
+      .withMessage('La data deve essere nel futuro');
+    return optional ? ret.optional() : ret;
   };
 }

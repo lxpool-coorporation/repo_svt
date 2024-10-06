@@ -1,7 +1,8 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eVeicolo } from '../../../entity/svt/eVeicolo';
 import { ormVeicolo } from '../../../models/svt/ormVeicolo';
-import { Transaction } from 'sequelize';
+import sequelize from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 
 // Implementazione del DAO per l'entità `Veicolo`
 export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
@@ -14,6 +15,23 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     return new eVeicolo(ormObj.id, ormObj.tipo, ormObj.targa, ormObj.stato);
   }
 
+  async getByTarga(cf: string): Promise<eVeicolo | null> {
+    let ret: eVeicolo | null = null;
+    const ormObj = await ormVeicolo.findOne({
+      where: {
+        [Op.and]: [
+          sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('targa')),
+            cf.toLowerCase(),
+          ),
+        ],
+      },
+    });
+    if (!!ormObj) {
+      ret = new eVeicolo(ormObj.id, ormObj.tipo, ormObj.targa, ormObj.stato);
+    }
+    return ret;
+  }
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eVeicolo[]> {
     const objs = await ormVeicolo.findAll(options);

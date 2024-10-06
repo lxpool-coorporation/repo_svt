@@ -2,6 +2,7 @@ import { middlewareTratta } from '../middleware/middlewareTratta';
 import { middlewareAuth } from '../middleware/middlewareAuth';
 import { Router } from 'express';
 import { controllerTratta } from '../controllers/controllerTratta';
+import { middlewareValidate } from '../middleware/middlewareValidate';
 
 const routerTratta = Router();
 
@@ -21,6 +22,8 @@ routerTratta.post(
   '/',
   middlewareAuth.verifyToken,
   middlewareTratta.checkPermissionWrite,
+  middlewareTratta.validate,
+  middlewareValidate.handleValidationErrors,
   controllerTratta.saveTratta,
 );
 routerTratta.delete(
@@ -33,12 +36,16 @@ routerTratta.put(
   '/:id',
   middlewareAuth.verifyToken,
   middlewareTratta.checkPermissionWrite,
+  middlewareTratta.validate,
+  middlewareValidate.handleValidationErrors,
   controllerTratta.putTratta,
 );
 routerTratta.patch(
   '/:id',
   middlewareAuth.verifyToken,
   middlewareTratta.checkPermissionWrite,
+  middlewareTratta.validate,
+  middlewareValidate.handleValidationErrors,
   controllerTratta.patchTratta,
 );
 
