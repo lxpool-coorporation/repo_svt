@@ -1,13 +1,16 @@
 import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
 import { eProfilo } from '../../../entity/utente/eProfilo';
-import { ormProfilo } from '../../../models/utente/ormProfilo';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormProfilo } from '../../../models/utente/ormProfilo';
+import { ePermesso } from '../../../entity/utente/ePermesso';
 
 // Implementazione del DAO per l'entità `Profilo`
 export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
   // Trova un profilo per ID usando Sequelize
   async get(id: number): Promise<eProfilo | null> {
-    const ormObj = await ormProfilo.findByPk(id);
+    const ormObj = await dbOrm.ormProfilo.findByPk(id);
     if (!ormObj) {
       throw new Error(`profilo non trovato per l'id ${id}`);
     }
@@ -21,7 +24,7 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eProfilo[]> {
-    const objs = await ormProfilo.findAll(options);
+    const objs: ormProfilo[] = await ormProfilo.findAll(options);
     return objs.map(
       (ormObj) =>
         new eProfilo(ormObj.id, ormObj.cod, ormObj.descrizione, ormObj.stato),
@@ -97,6 +100,47 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
       throw new Error('Profilo not found');
     }
     await ormObj.destroy({ transaction: options?.transaction });
+  }
+
+  public async getPermessiByProfilo(
+    idProfilo: number,
+  ): Promise<ePermesso[] | null> {
+    try {
+      const profilo = await ormProfilo.findByPk(idProfilo, {
+        include: [
+          {
+            model: dbOrm.ormPermesso,
+            as: 'profilo_permessi', // Questo deve corrispondere all'alias definito nell'associazione
+          },
+        ],
+      });
+
+      if (!profilo) {
+        throw new Error('Profilo non trovato');
+      }
+
+      if (profilo.profilo_permessi) {
+        return profilo.profilo_permessi.map((a) => {
+          return new ePermesso(
+            a.id,
+            a.categoria,
+            a.tipo,
+            a.cod,
+            a.descrizione,
+            a.stato,
+          );
+        });
+      }
+
+      //return profilo.profilo_permessi; // Qui Sequelize popola automaticamente i permessi associati
+    } catch (error) {
+      console.error(
+        'Errore durante il recupero dei permessi per il profilo:',
+        error,
+      );
+      throw error;
+    }
+    return null;
   }
 }
 

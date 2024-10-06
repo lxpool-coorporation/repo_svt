@@ -1,13 +1,15 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eMulta } from '../../../entity/svt/eMulta';
-import { ormMulta } from '../../../models/svt/ormMulta';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormMulta } from '../../../models/svt/ormMulta';
 
 // Implementazione del DAO per l'entità `Multa`
 export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   // Trova un Multa per ID usando Sequelize
   async get(id: number): Promise<eMulta | null> {
-    const ormObj = await ormMulta.findByPk(id);
+    const ormObj = await dbOrm.ormMulta.findByPk(id);
     if (!ormObj) {
       throw new Error(`Multa non trovato per l'id ${id}`);
     }
@@ -26,7 +28,7 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eMulta[]> {
-    const objs = await ormMulta.findAll(options);
+    const objs: ormMulta[] = await dbOrm.ormMulta.findAll(options);
     return objs.map(
       (ormObj) =>
         new eMulta(
@@ -48,7 +50,7 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     t: eMulta,
     options?: { transaction?: Transaction },
   ): Promise<eMulta | null> {
-    const ormObj = await ormMulta.create(
+    const ormObj = await dbOrm.ormMulta.create(
       {
         id: t.get_id(),
         id_transito: t.get_id_transito(),
@@ -80,7 +82,7 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     t: eMulta,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormMulta.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormMulta.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -119,7 +121,7 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     t: eMulta,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormMulta.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormMulta.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {

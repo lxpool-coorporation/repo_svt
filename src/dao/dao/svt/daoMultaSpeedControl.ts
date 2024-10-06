@@ -1,15 +1,18 @@
 // daoMultaSpeedControl.ts
-import { ormMultaSpeedControl } from '../../../models/svt/ormMultaSpeedControl';
 import { eMultaSpeedControl } from '../../../entity/svt/eMultaSpeedControl';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormMultaSpeedControl } from '../../../models/svt/ormMultaSpeedControl';
 import { ormMulta } from '../../../models/svt/ormMulta';
 
 export class daoMultaSpeedControlImplementation
   implements DaoInterfaceGeneric<eMultaSpeedControl>
 {
   async get(id: number): Promise<eMultaSpeedControl | null> {
-    const ormObj = await ormMultaSpeedControl.findByPk(id);
+    const ormObj: ormMultaSpeedControl =
+      await dbOrm.ormMultaSpeedControl.findByPk(id);
     if (!ormObj) {
       throw new Error(`Multa non trovato per l'id ${id}`);
     }
@@ -34,16 +37,17 @@ export class daoMultaSpeedControlImplementation
     id_multa: number,
     options?: { transaction?: Transaction },
   ): Promise<eMultaSpeedControl | null> {
-    const ormObj = await ormMultaSpeedControl.findOne({
-      where: { id_multa },
-      include: [
-        {
-          model: ormMulta,
-          as: 'multa',
-        },
-      ],
-      transaction: options?.transaction,
-    });
+    const ormObj: ormMultaSpeedControl =
+      await dbOrm.ormMultaSpeedControl.findOne({
+        where: { id_multa },
+        include: [
+          {
+            model: ormMulta,
+            as: 'multa',
+          },
+        ],
+        transaction: options?.transaction,
+      });
 
     if (!ormObj || !ormObj.multa) {
       return null;
@@ -70,15 +74,16 @@ export class daoMultaSpeedControlImplementation
   async getAllWithMulta(options?: {
     transaction?: Transaction;
   }): Promise<eMultaSpeedControl[]> {
-    const ormObjs = await ormMultaSpeedControl.findAll({
-      include: [
-        {
-          model: ormMulta,
-          as: 'multa',
-        },
-      ],
-      transaction: options?.transaction,
-    });
+    const ormObjs: ormMultaSpeedControl[] =
+      await dbOrm.ormMultaSpeedControl.findAll({
+        include: [
+          {
+            model: ormMulta,
+            as: 'multa',
+          },
+        ],
+        transaction: options?.transaction,
+      });
 
     return ormObjs.map((ormObj) => {
       const multaBase = ormObj.multa!;
@@ -102,7 +107,8 @@ export class daoMultaSpeedControlImplementation
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eMultaSpeedControl[]> {
-    const objs = await ormMultaSpeedControl.findAll(options);
+    const objs: ormMultaSpeedControl[] =
+      await dbOrm.ormMultaSpeedControl.findAll(options);
     return objs.map((item) => {
       return new eMultaSpeedControl(
         item.id_multa,
@@ -129,7 +135,7 @@ export class daoMultaSpeedControlImplementation
   ): Promise<eMultaSpeedControl | null> {
     try {
       // Crea la multa speed control
-      await ormMultaSpeedControl.create(
+      await dbOrm.ormMultaSpeedControl.create(
         {
           id_multa: t.get_id(),
           speed: t.get_speed(),
@@ -153,7 +159,7 @@ export class daoMultaSpeedControlImplementation
   ): Promise<void> {
     try {
       // Aggiorna la multa speed control
-      const [speedControlUpdatedRows] = await ormMultaSpeedControl.update(
+      const [speedControlUpdatedRows] = await dbOrm.ormMultaSpeedControl.update(
         {
           speed: t.get_speed(),
           speed_real: t.get_speed_real(),
@@ -181,7 +187,7 @@ export class daoMultaSpeedControlImplementation
   ): Promise<void> {
     try {
       // Elimina la multa speed control
-      const deletedSpeedControlRows = await ormMultaSpeedControl.destroy({
+      const deletedSpeedControlRows = await dbOrm.ormMultaSpeedControl.destroy({
         where: { id_multa: t.get_id() },
         transaction: options?.transaction,
       });

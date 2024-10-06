@@ -5,7 +5,7 @@ import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumPolicyTipo } from '../entity/enum/enumPolicyTipo';
 import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
-import { enumVeicoloTipo } from '@/entity/enum/enumVeicoloTipo';
+import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 
 // classe che gestisce la logica di business dell'PolicySpeedControl
 class servicePolicySpeedControlImplementation {

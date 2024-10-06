@@ -1,15 +1,17 @@
 // daoPolicySpeedControl.ts
-import { ormPolicySpeedControl } from '../../../models/svt/ormPolicySpeedControl';
 import { ePolicySpeedControl } from '../../../entity/svt/ePolicySpeedControl';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormPolicy } from '../../../models/svt/ormPolicy';
+import { ormPolicySpeedControl } from '../../../models/svt/ormPolicySpeedControl';
 
 export class daoPolicySpeedControlImplementation
   implements DaoInterfaceGeneric<ePolicySpeedControl>
 {
   async get(id: number): Promise<ePolicySpeedControl | null> {
-    const ormObj = await ormPolicySpeedControl.findByPk(id);
+    const ormObj = await dbOrm.ormPolicySpeedControl.findByPk(id);
     if (!ormObj) {
       throw new Error(`Policy non trovato per l'id ${id}`);
     }
@@ -29,7 +31,7 @@ export class daoPolicySpeedControlImplementation
     id_policy: number,
     options?: { transaction?: Transaction },
   ): Promise<ePolicySpeedControl | null> {
-    const ormObj = await ormPolicySpeedControl.findOne({
+    const ormObj = await dbOrm.ormPolicySpeedControl.findOne({
       where: { id_policy },
       include: [
         {
@@ -60,15 +62,16 @@ export class daoPolicySpeedControlImplementation
   async getAllWithPolicy(options?: {
     transaction?: Transaction;
   }): Promise<ePolicySpeedControl[]> {
-    const ormObjs = await ormPolicySpeedControl.findAll({
-      include: [
-        {
-          model: ormPolicy,
-          as: 'policy',
-        },
-      ],
-      transaction: options?.transaction,
-    });
+    const ormObjs: ormPolicySpeedControl[] =
+      await dbOrm.ormPolicySpeedControl.findAll({
+        include: [
+          {
+            model: ormPolicy,
+            as: 'policy',
+          },
+        ],
+        transaction: options?.transaction,
+      });
 
     return ormObjs.map((ormObj) => {
       const policyBase = ormObj.policy!;
@@ -87,7 +90,8 @@ export class daoPolicySpeedControlImplementation
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<ePolicySpeedControl[]> {
-    const objs = await ormPolicySpeedControl.findAll(options);
+    const objs: ormPolicySpeedControl[] =
+      await dbOrm.ormPolicySpeedControl.findAll(options);
     return objs.map((item) => {
       return new ePolicySpeedControl(
         item.id_policy,
@@ -109,7 +113,7 @@ export class daoPolicySpeedControlImplementation
   ): Promise<ePolicySpeedControl | null> {
     try {
       // Crea la policy speed control
-      await ormPolicySpeedControl.create(
+      await dbOrm.ormPolicySpeedControl.create(
         {
           id_policy: t.get_id(),
           meteo: t.get_meteo(),
@@ -132,17 +136,18 @@ export class daoPolicySpeedControlImplementation
   ): Promise<void> {
     try {
       // Aggiorna la policy speed control
-      const [speedControlUpdatedRows] = await ormPolicySpeedControl.update(
-        {
-          meteo: t.get_meteo(),
-          veicolo: t.get_veicolo(),
-          speed_limit: t.get_speed_limit(),
-        },
-        {
-          where: { id_policy: t.get_id() },
-          transaction: options?.transaction,
-        },
-      );
+      const [speedControlUpdatedRows] =
+        await dbOrm.ormPolicySpeedControl.update(
+          {
+            meteo: t.get_meteo(),
+            veicolo: t.get_veicolo(),
+            speed_limit: t.get_speed_limit(),
+          },
+          {
+            where: { id_policy: t.get_id() },
+            transaction: options?.transaction,
+          },
+        );
 
       if (speedControlUpdatedRows === 0) {
         throw new Error(`PolicySpeedControl con ID ${t.get_id()} non trovata.`);
@@ -159,10 +164,12 @@ export class daoPolicySpeedControlImplementation
   ): Promise<void> {
     try {
       // Elimina la policy speed control
-      const deletedSpeedControlRows = await ormPolicySpeedControl.destroy({
-        where: { id_policy: t.get_id() },
-        transaction: options?.transaction,
-      });
+      const deletedSpeedControlRows = await dbOrm.ormPolicySpeedControl.destroy(
+        {
+          where: { id_policy: t.get_id() },
+          transaction: options?.transaction,
+        },
+      );
 
       if (deletedSpeedControlRows === 0) {
         throw new Error(`PolicySpeedControl con ID ${t.get_id()} non trovata.`);

@@ -1,13 +1,15 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { ormVarco } from '../../../models/svt/ormVarco';
 import { eVarco } from '../../../entity/svt/eVarco';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormVarco } from '../../../models/svt/ormVarco';
 
 // Implementazione del DAO per l'entità `Varco`
 export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   // Trova un Varco per ID usando Sequelize
   async get(id: number): Promise<eVarco | null> {
-    const ormObj = await ormVarco.findByPk(id);
+    const ormObj = await dbOrm.ormVarco.findByPk(id);
     if (!ormObj) {
       throw new Error(`Varco non trovato per l'id ${id}`);
     }
@@ -23,7 +25,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eVarco[]> {
-    const objs = await ormVarco.findAll(options);
+    const objs: ormVarco[] = await dbOrm.ormVarco.findAll(options);
     return objs.map(
       (ormObj) =>
         new eVarco(
@@ -42,7 +44,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     t: eVarco,
     options?: { transaction?: Transaction },
   ): Promise<eVarco | null> {
-    const ormObj = await ormVarco.create(
+    const ormObj = await dbOrm.ormVarco.create(
       {
         id: t.get_id(),
         cod: t.get_cod(),
@@ -68,7 +70,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     t: eVarco,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormVarco.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormVarco.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -87,7 +89,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormObj.update(
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
@@ -104,13 +106,13 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     t: eVarco,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormVarco.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormVarco.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
       throw new Error('Varco not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

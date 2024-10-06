@@ -1,19 +1,18 @@
-import { ormVarco } from '../../../models/svt/ormVarco';
 import { eTransito, eTransitoBuilder } from '../../../entity/svt/eTransito';
-import { ormTransito } from '../../../models/svt/ormTransito';
-import { ormVarcoTransito } from '../../../models/svt/ormVarcoTransito';
 import { daoVarcoImplementation } from './daoVarco';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormTransito } from '../../..//models/svt/ormTransito';
 
 export class daoVarcoTransitoImplementation extends daoVarcoImplementation {
   // Metodo per ottenere gli Transiti associati ad un Varco
   async getTransiti(idVarco: number): Promise<eTransito[]> {
-    const obj = await ormVarco.findByPk(idVarco);
+    const obj = await dbOrm.ormVarco.findByPk(idVarco);
     if (!obj) {
       throw new Error('Varco non trovato');
     } else {
-      const objOrmVarcoTransito = obj as ormVarcoTransito;
       const objTransiti: ormTransito[] =
-        await objOrmVarcoTransito.getTransiti(); // Metodo Sequelize
+        await dbOrm.objOrmVarcoTransito.getTransiti(); // Metodo Sequelize
 
       return objTransiti.map((a) => {
         return new eTransito(

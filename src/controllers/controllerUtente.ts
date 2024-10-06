@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { daoUtente } from '../dao/dao/utente/daoUtente'; // Il DAO
 import { eUtente } from '../entity/utente/eUtente';
-import { enumStato } from '@/entity/enum/enumStato';
+import { enumStato } from '../entity/enum/enumStato';
 
 // Controller per gestire le operazioni su `Utente`
 

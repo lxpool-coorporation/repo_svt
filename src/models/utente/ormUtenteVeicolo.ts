@@ -1,5 +1,5 @@
 import database from '../../utils/database';
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ormUtente } from './ormUtente';
 import { ormVeicolo } from '../svt/ormVeicolo';
 
@@ -8,7 +8,7 @@ import { ormVeicolo } from '../svt/ormVeicolo';
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormUtenteVeicolo extends ormUtente {
+export class ormUtenteVeicolo extends Model {
   // Metodi di associazione utente -> Veicoli
   public addVeicolo!: (
     Veicolo: ormVeicolo | ormVeicolo[],

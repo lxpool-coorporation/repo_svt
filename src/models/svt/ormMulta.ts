@@ -1,9 +1,8 @@
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { ormPolicy } from './ormPolicy';
 import { ormTransito } from './ormTransito';
-import { enumPolicyTipo } from '@/entity/enum/enumPolicyTipo';
-import { enumMultaStato } from '@/entity/enum/enumMultaStato';
+import { enumPolicyTipo } from '../../entity/enum/enumPolicyTipo';
+import { enumMultaStato } from '../../entity/enum/enumMultaStato';
 
 /**
  * Instanziazione della connessione verso il RDBMS

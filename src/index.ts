@@ -11,7 +11,6 @@ import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
 import routerVarco from './routes/varco';
 import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
-import { ormAssociazioni } from './models/ormAssociazioni';
 import databaseCache from './utils/database-cache';
 import startTaskConsumer from './consumers/consumerMain';
 
@@ -64,8 +63,8 @@ const PORT = process.env.SERVER_PORT || 3000;
 app
   .listen(PORT, () => {
     //_readUser2();
-    const o = new ormAssociazioni();
-    o.read_associazioni();
+    //const o = new ormAssociazioni();
+    //o.read_associazioni();
     clearRedisCache();
     // Avvio di RabbitMQ
     startTaskConsumer();

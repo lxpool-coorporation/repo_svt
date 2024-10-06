@@ -16,6 +16,15 @@ export class ormPermesso extends Model {
   public cod!: string;
   public descrizione!: string;
   public stato!: enumStato;
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    ormPermesso.belongsToMany(models.ormProfilo, {
+      through: models.ormProfiloPermesso,
+      foreignKey: 'id_permesso',
+      as: 'permesso_profili',
+    });
+  }
 }
 
 // Definizione del modello

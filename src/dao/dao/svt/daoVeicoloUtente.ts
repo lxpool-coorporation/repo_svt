@@ -1,8 +1,9 @@
 import { ormVeicolo } from '../../../models/svt/ormVeicolo';
 import { eUtente } from '../../../entity/utente/eUtente';
 import { ormUtente } from '../../../models/utente/ormUtente';
-import { ormVeicoloUtente } from '../../../models/svt/ormVeicoloUtente';
 import { daoVeicoloImplementation } from './daoVeicolo';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 
 export class daoVeicoloUtenteImplementation extends daoVeicoloImplementation {
   // Metodo per ottenere gli utenti associati ad un Veicolo
@@ -11,8 +12,8 @@ export class daoVeicoloUtenteImplementation extends daoVeicoloImplementation {
     if (!obj) {
       throw new Error('Veicolo non trovato');
     } else {
-      const objOrmVeicoloUtente = obj as ormVeicoloUtente;
-      const objUtenti: ormUtente[] = await objOrmVeicoloUtente.getUtenti(); // Metodo Sequelize
+      const objUtenti: ormUtente[] =
+        await dbOrm.objOrmVeicoloUtente.getUtenti(); // Metodo Sequelize
 
       return objUtenti.map((a) => {
         return new eUtente(a.id, a.identificativo, a.stato);

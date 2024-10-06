@@ -1,13 +1,15 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eVeicolo } from '../../../entity/svt/eVeicolo';
-import { ormVeicolo } from '../../../models/svt/ormVeicolo';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormVeicolo } from '../../../models/svt/ormVeicolo';
 
 // Implementazione del DAO per l'entità `Veicolo`
 export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   // Trova un Veicolo per ID usando Sequelize
   async get(id: number): Promise<eVeicolo | null> {
-    const ormObj = await ormVeicolo.findByPk(id);
+    const ormObj = await dbOrm.ormVeicolo.findByPk(id);
     if (!ormObj) {
       throw new Error(`Veicolo non trovato per l'id ${id}`);
     }
@@ -16,9 +18,9 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eVeicolo[]> {
-    const objs = await ormVeicolo.findAll(options);
+    const objs = await dbOrm.ormVeicolo.findAll(options);
     return objs.map(
-      (ormObj) =>
+      (ormObj: ormVeicolo) =>
         new eVeicolo(ormObj.id, ormObj.tipo, ormObj.targa, ormObj.stato),
     );
   }
@@ -28,7 +30,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     t: eVeicolo,
     options?: { transaction?: Transaction },
   ): Promise<eVeicolo | null> {
-    const ormObj = await ormVeicolo.create(
+    const ormObj = await dbOrm.ormVeicolo.create(
       {
         id: t.get_id(),
         tipo: t.get_tipo(),
@@ -45,7 +47,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     t: eVeicolo,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormVeicolo.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormVeicolo.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -64,7 +66,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormObj.update(
       {
         tipo: t.get_tipo(),
         targa: t.get_targa(),
@@ -79,13 +81,13 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     t: eVeicolo,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormVeicolo.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormVeicolo.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
       throw new Error('Veicolo not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

@@ -1,13 +1,15 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { ormTratta } from '../../../models/svt/ormTratta';
 import { eTratta } from '../../../entity/svt/eTratta';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormTratta } from '../../../models/svt/ormTratta';
 
 // Implementazione del DAO per l'entità `Tratta`
 export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
   // Trova un Tratta per ID usando Sequelize
   async get(id: number): Promise<eTratta | null> {
-    const ormObj = await ormTratta.findByPk(id);
+    const ormObj = await dbOrm.ormTratta.findByPk(id);
     if (!ormObj) {
       throw new Error(`Tratta non trovato per l'id ${id}`);
     }
@@ -24,7 +26,7 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eTratta[]> {
-    const objs = await ormTratta.findAll(options);
+    const objs: ormTratta[] = await dbOrm.ormTratta.findAll(options);
     return objs.map(
       (ormObj) =>
         new eTratta(
@@ -44,7 +46,7 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     t: eTratta,
     options?: { transaction?: Transaction },
   ): Promise<eTratta | null> {
-    const ormObj = await ormTratta.create(
+    const ormObj = await dbOrm.ormTratta.create(
       {
         id: t.get_id(),
         cod: t.get_cod(),
@@ -72,7 +74,7 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     t: eTratta,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormTratta.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormTratta.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -97,7 +99,7 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormObj.update(
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
@@ -115,13 +117,13 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     t: eTratta,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormTratta.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormTratta.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
       throw new Error('Tratta not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
   }
 }
 
