@@ -137,3 +137,6 @@ Dockerfile_local*
 
 # server key
 .keys/
+
+# documentazione
+_documentazione/
