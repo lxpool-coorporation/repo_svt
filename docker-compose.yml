@@ -35,6 +35,7 @@ services:
     depends_on:
       - svt-db
       - svt-redis_cache
+      - svt-rabbitmq
     networks:
       - app_network
      # Optionally, add restart policy
@@ -69,6 +70,15 @@ services:
       - '6379'
     networks:
       - app_network
+
+  svt-rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"   # Porta per il protocollo AMQP
+      - "15672:15672" # Porta per la RabbitMQ Management UI
+    expose:
+      # Opens port 3306 on the container
+      - '15672'
 
   svt-test:
     build:

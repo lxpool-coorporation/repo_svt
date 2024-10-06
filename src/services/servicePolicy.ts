@@ -75,6 +75,7 @@ class servicePolicySpeedControlImplementation {
 
   // Aggiorna un PolicySpeedControl esistente
   async updatePolicySpeedControl(
+    id: number,
     cod: string,
     descrizione: string,
     tipo: enumPolicyTipo,
@@ -86,7 +87,7 @@ class servicePolicySpeedControlImplementation {
     const redisClient = await databaseCache.getInstance();
 
     const PolicySpeedControl = new ePolicySpeedControl(
-      0,
+      id,
       cod,
       descrizione,
       tipo,

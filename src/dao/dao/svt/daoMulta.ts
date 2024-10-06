@@ -15,8 +15,12 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       ormObj.id,
       ormObj.id_transito,
       ormObj.id_policy,
-      ormObj.speed_delta,
+      ormObj.tipo_policy,
+      ormObj.id_automobilista,
+      ormObj.is_notturno,
+      ormObj.is_recidivo,
       ormObj.path_bollettino,
+      ormObj.stato,
     );
   }
 
@@ -29,8 +33,12 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
           ormObj.id,
           ormObj.id_transito,
           ormObj.id_policy,
-          ormObj.speed_delta,
+          ormObj.tipo_policy,
+          ormObj.id_automobilista,
+          ormObj.is_notturno,
+          ormObj.is_recidivo,
           ormObj.path_bollettino,
+          ormObj.stato,
         ),
     );
   }
@@ -45,8 +53,12 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
         id: t.get_id(),
         id_transito: t.get_id_transito(),
         id_policy: t.get_id_policy(),
-        speed_delta: t.get_speed_delta(),
+        tipo_policy: t.get_tipo_policy(),
+        id_automobilista: t.get_id_automobilista(),
+        is_notturno: t.get_is_notturno(),
+        is_recidivo: t.get_is_recidivo(),
         path_bollettino: t.get_path_bollettino(),
+        stato: t.get_stato(),
       },
       { transaction: options?.transaction },
     );
@@ -54,8 +66,12 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       ormObj.id,
       ormObj.id_transito,
       ormObj.id_policy,
-      ormObj.speed_delta,
+      ormObj.tipo_policy,
+      ormObj.id_automobilista,
+      ormObj.is_notturno,
+      ormObj.is_recidivo,
       ormObj.path_bollettino,
+      ormObj.stato,
     );
   }
 
@@ -87,9 +103,12 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       {
         id_transito: t.get_id_transito(),
         id_policy: t.get_id_policy(),
-        speed_delta: t.get_speed_delta(),
+        tipo_policy: t.get_tipo_policy(),
+        id_automobilista: t.get_id_automobilista(),
+        is_notturno: t.get_is_notturno(),
+        is_recidivo: t.get_is_recidivo(),
         path_bollettino: t.get_path_bollettino(),
-        // Aggiungi altri campi che devono essere aggiornati
+        stato: t.get_stato(),
       },
       updateOptions,
     );
