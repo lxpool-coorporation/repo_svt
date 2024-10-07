@@ -15,15 +15,13 @@ export class ormMultaSpeedControl extends Model {
   // Associazione per accedere ai dati della policy base
   public multa?: ormMulta;
 
-
-    // Definisci le associazioni
+  // Definisci le associazioni
   static associate(models: any) {
     ormMultaSpeedControl.belongsTo(models.ormMulta, {
       foreignKey: 'id_multa',
       as: 'multa',
     });
   }
-
 }
 
 ormMultaSpeedControl.init(

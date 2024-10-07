@@ -85,7 +85,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await dbOrm.ormObj.update(
+    await ormObj.update(
       {
         identificativo: t.get_identificativo(),
         id_stato: t.get_stato(),
@@ -106,7 +106,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     if (!ormObj) {
       throw new Error('Utente not found');
     }
-    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 
   public async getProfiliByIdUtente(

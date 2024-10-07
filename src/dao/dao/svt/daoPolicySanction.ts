@@ -109,7 +109,7 @@ export class daoPolicySanctionImplementation
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await dbOrm.ormObj.update(
+    await ormObj.update(
       {
         id: t.get_id(),
         tipo_policy: t.get_tipo_policy(),
@@ -135,7 +135,7 @@ export class daoPolicySanctionImplementation
     if (!ormObj) {
       throw new Error('PolicySanction not found');
     }
-    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

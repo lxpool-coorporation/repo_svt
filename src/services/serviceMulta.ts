@@ -148,5 +148,4 @@ class serviceMultaSpeedControlImplementation {
   }
 }
 
-export const serviceMulta =
-  new serviceMultaSpeedControlImplementation();
+export const serviceMulta = new serviceMultaSpeedControlImplementation();

@@ -39,7 +39,6 @@ export class ormMulta extends Model {
       as: 'multa',
     });
   }
-
 }
 
 // Definizione del modello

@@ -34,7 +34,6 @@ export class ormTratta extends Model {
       as: 'tratta_policies',
     });
   }
-
 }
 
 // Definizione del modello

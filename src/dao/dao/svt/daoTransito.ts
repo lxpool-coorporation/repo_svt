@@ -115,7 +115,7 @@ export class daoTransitoImplementation
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await dbOrm.ormObj.update(
+    await ormObj.update(
       {
         data_transito: t.get_data_transito(),
         speed: t.get_speed(),
@@ -141,7 +141,7 @@ export class daoTransitoImplementation
     if (!ormObj) {
       throw new Error('Transito not found');
     }
-    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

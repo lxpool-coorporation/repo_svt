@@ -66,7 +66,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await dbOrm.ormObj.update(
+    await ormObj.update(
       {
         tipo: t.get_tipo(),
         targa: t.get_targa(),
@@ -87,7 +87,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     if (!ormObj) {
       throw new Error('Veicolo not found');
     }
-    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

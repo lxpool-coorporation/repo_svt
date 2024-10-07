@@ -89,7 +89,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await dbOrm.ormObj.update(
+    await ormObj.update(
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
@@ -112,7 +112,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     if (!ormObj) {
       throw new Error('Varco not found');
     }
-    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

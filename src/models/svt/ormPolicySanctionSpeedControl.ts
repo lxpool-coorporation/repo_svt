@@ -15,7 +15,7 @@ export class ormPolicySanctionSpeedControl extends Model {
   // Associazione per accedere ai dati della policy base
   public policySanction?: ormPolicySanction;
 
-    // Definisci le associazioni
+  // Definisci le associazioni
   static associate(models: any) {
     ormPolicySanctionSpeedControl.belongsTo(models.ormPolicySanction, {
       foreignKey: 'id_policy_sanction',

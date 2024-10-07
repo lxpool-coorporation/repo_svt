@@ -5,22 +5,11 @@ import createError from 'http-errors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import routerLogin from './routes/login';
-import { serviceUtente } from './services/serviceUtente';
-import { enumPermessoTipo } from './entity/enum/enumPermessoTipo';
-import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
 import routerVarco from './routes/varco';
 import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
 import databaseCache from './utils/database-cache';
 import startTaskConsumer from './consumers/consumerMain';
-import { serviceTransito } from './services/serviceTransito';
-import { serviceTratta } from './services/serviceTratta';
-import { serviceMulta } from './services/serviceMulta';
-import { servicePolicySanction } from './services/servicePolicySanction';
-import { servicePolicy } from './services/servicePolicy';
-import { serviceVarco } from './services/serviceVarco';
-import { serviceVeicolo } from './services/serviceVeicolo';
-
 dotenv.config();
 logger.info('app started');
 
@@ -88,12 +77,10 @@ async function _readUser2() {
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
   //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)
   // const utenteConProfili1 = await ormUtente.findByPk(2)
-
   //const obj = await serviceVeicolo.getVeicoloById(1);
   //if(obj){
   //  console.log(obj);
   //}
-
   /*
   const utente = await serviceUtente.getUtenteById(1);
   if (utente) {

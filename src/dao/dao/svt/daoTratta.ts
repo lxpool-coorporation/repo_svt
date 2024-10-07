@@ -99,7 +99,7 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await dbOrm.ormObj.update(
+    await ormObj.update(
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
@@ -123,7 +123,7 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     if (!ormObj) {
       throw new Error('Tratta not found');
     }
-    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

@@ -36,7 +36,6 @@ export class ormTransito extends Model {
       as: 'transito_multe',
     });
   }
-
 }
 
 // Definizione del modello
