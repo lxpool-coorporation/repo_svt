@@ -102,7 +102,7 @@ class serviceSvtImplementation {
 
     const VeicoloDaEliminare = new eVeicolo(
       id,
-      enumVeicoloTipo.autobus,
+      enumVeicoloTipo.autoveicoli,
       '',
       enumStato.attivo,
     );

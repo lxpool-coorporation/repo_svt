@@ -1,13 +1,15 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { ePolicy } from '../../../entity/svt/ePolicy';
-import { ormPolicy } from '../../../models/svt/ormPolicy';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormPolicy } from '../../../models/svt/ormPolicy';
 
 // Implementazione del DAO per l'entità `Policy`
 export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
   // Trova un Policy per ID usando Sequelize
   async get(id: number): Promise<ePolicy | null> {
-    const ormObj = await ormPolicy.findByPk(id);
+    const ormObj = await dbOrm.ormPolicy.findByPk(id);
     if (!ormObj) {
       throw new Error(`Policy non trovato per l'id ${id}`);
     }
@@ -22,7 +24,7 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<ePolicy[]> {
-    const objs = await ormPolicy.findAll(options);
+    const objs: ormPolicy[] = await dbOrm.ormPolicy.findAll(options);
     return objs.map(
       (ormObj) =>
         new ePolicy(
@@ -40,7 +42,7 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     t: ePolicy,
     options?: { transaction?: Transaction },
   ): Promise<ePolicy | null> {
-    const ormObj = await ormPolicy.create(
+    const ormObj = await dbOrm.ormPolicy.create(
       {
         id: t.get_id(),
         cod: t.get_cod(),
@@ -64,7 +66,7 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     t: ePolicy,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormPolicy.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormPolicy.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -83,7 +85,7 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormObj.update(
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
@@ -100,13 +102,13 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     t: ePolicy,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormPolicy.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormPolicy.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
       throw new Error('Policy not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

@@ -3,7 +3,7 @@ import { repositoryTransito } from '../dao/repositories/svt/repositoryTransito';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
-import { enumMeteoTipo } from '@/entity/enum/enumMeteoTipo';
+import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
 
 // classe che gestisce la logica di business dell'Transito
 class serviceTransitoImplementation {

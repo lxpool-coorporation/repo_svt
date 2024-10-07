@@ -1,7 +1,9 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { ePolicySanction } from '../../../entity/svt/ePolicySanction';
-import { ormPolicySanction } from '../../../models/svt/ormPolicySanction';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormPolicySanction } from '../../../models/svt/ormPolicySanction';
 
 // Implementazione del DAO per l'entità `PolicySanction`
 export class daoPolicySanctionImplementation
@@ -9,7 +11,7 @@ export class daoPolicySanctionImplementation
 {
   // Trova un PolicySanction per ID usando Sequelize
   async get(id: number): Promise<ePolicySanction | null> {
-    const ormObj = await ormPolicySanction.findByPk(id);
+    const ormObj = await dbOrm.ormPolicySanction.findByPk(id);
     if (!ormObj) {
       throw new Error(`PolicySanction non trovato per l'id ${id}`);
     }
@@ -27,7 +29,8 @@ export class daoPolicySanctionImplementation
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<ePolicySanction[]> {
-    const objs = await ormPolicySanction.findAll(options);
+    const objs: ormPolicySanction[] =
+      await dbOrm.ormPolicySanction.findAll(options);
     return objs.map(
       (ormObj) =>
         new ePolicySanction(
@@ -48,7 +51,7 @@ export class daoPolicySanctionImplementation
     t: ePolicySanction,
     options?: { transaction?: Transaction },
   ): Promise<ePolicySanction | null> {
-    const ormObj = await ormPolicySanction.create(
+    const ormObj = await dbOrm.ormPolicySanction.create(
       {
         id: t.get_id(),
         tipo: t.get_tipo_policy(),
@@ -78,7 +81,7 @@ export class daoPolicySanctionImplementation
     t: ePolicySanction,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormPolicySanction.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormPolicySanction.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -106,7 +109,7 @@ export class daoPolicySanctionImplementation
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormObj.update(
       {
         id: t.get_id(),
         tipo_policy: t.get_tipo_policy(),
@@ -126,13 +129,13 @@ export class daoPolicySanctionImplementation
     t: ePolicySanction,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormPolicySanction.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormPolicySanction.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
       throw new Error('PolicySanction not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

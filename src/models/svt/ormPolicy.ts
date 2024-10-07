@@ -14,6 +14,14 @@ export class ormPolicy extends Model {
   public descrizione!: string;
   public tipo!: enumPolicyTipo;
   public stato!: enumStato;
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    ormPolicy.hasOne(models.ormPolicySpeedControl, {
+      foreignKey: 'id_policy',
+      as: 'policy_policyspeedcontrol',
+    });
+  }
 }
 
 // Definizione del modello

@@ -1,6 +1,8 @@
 import database from '../../utils/database';
-import { DataTypes, Sequelize, Model } from 'sequelize';
+import { DataTypes, Sequelize, Model, NonAttribute } from 'sequelize';
 import { enumStato } from '../../entity/enum/enumStato';
+import { ormVeicolo } from '../svt/ormVeicolo';
+import { ormProfilo } from './ormProfilo';
 
 /**
  * Instanziazione della connessione verso il RDBMS
@@ -11,6 +13,24 @@ export class ormUtente extends Model {
   public id!: number;
   public identificativo!: string;
   public stato!: enumStato;
+
+  // Definisci una proprietà per i permessi associati
+  public utente_profili?: NonAttribute<ormProfilo[]>; // Sequelize riempirà questo campo dinamicamente
+  public utente_veicoli?: NonAttribute<ormVeicolo[]>; // Sequelize riempirà questo campo dinamicamente
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    ormUtente.belongsToMany(models.ormProfilo, {
+      through: models.ormUtenteProfilo,
+      foreignKey: 'id_utente',
+      as: 'utente_profili',
+    });
+    ormUtente.belongsToMany(models.ormVeicolo, {
+      through: models.ormUtenteVeicolo,
+      foreignKey: 'id_utente',
+      as: 'utente_veicoli',
+    });
+  }
 }
 
 // Definizione del modello

@@ -1,98 +1,152 @@
-import { eMulta } from '../entity/svt/eMulta';
+import { eMultaSpeedControl } from '../entity/svt/eMultaSpeedControl';
 import { repositoryMulta } from '../dao/repositories/svt/repositoryMulta';
 import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
+import { enumPolicyTipo } from '../entity/enum/enumPolicyTipo';
+import { enumMultaStato } from '../entity/enum/enumMultaStato';
 
-// classe che gestisce la logica di business dell'Multa
-class serviceMultaImplementation {
-  // Recupera un Multa per ID
-  async getMultaById(id: number): Promise<eMulta | null> {
+// classe che gestisce la logica di business dell'MultaSpeedControl
+class serviceMultaSpeedControlImplementation {
+  // Recupera un MultaSpeedControl per ID
+  async getMultaSpeedControlById(
+    id: number,
+  ): Promise<eMultaSpeedControl | null> {
     try {
       const redisClient = await databaseCache.getInstance();
 
-      const cacheKey = `Multa_${id}`;
+      const cacheKey = `MultaSpeedControl_${id}`;
 
-      // Controlla se l'Multa è in cache
+      // Controlla se l'MultaSpeedControl è in cache
       const jsonData = await redisClient.get(cacheKey);
       if (jsonData) {
-        const data = JSON.parse(jsonData); // Restituisce l'Multa dalla cache
-        const cacheObject = eMulta.fromJSON(data); // Assumendo che tu abbia una classe Multa
+        const data = JSON.parse(jsonData); // Restituisce l'MultaSpeedControl dalla cache
+        const cacheObject = eMultaSpeedControl.fromJSON(data); // Assumendo che tu abbia una classe MultaSpeedControl
         return cacheObject;
       }
 
       // Se non è in cache, recupera dal repository
-      const Multa = await repositoryMulta.get(id);
-      if (Multa) {
-        // Memorizza l'Multa in cache per 1 ora
-        await redisClient.set(cacheKey, JSON.stringify(Multa), {
+      const MultaSpeedControl = await repositoryMulta.getMultaSpeedControl(id);
+      if (MultaSpeedControl) {
+        // Memorizza l'MultaSpeedControl in cache per 1 ora
+        await redisClient.set(cacheKey, JSON.stringify(MultaSpeedControl), {
           EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
         });
       }
 
-      return Multa;
+      return MultaSpeedControl;
     } catch (err) {
       logger.error('serviceSvt - err:', err);
       return null;
     }
   }
 
-  // Crea un nuovo Multa
-  async createMulta(
-    id_transito: number,
-    id_policy: number,
+  // Crea un nuovo MultaSpeedControl
+  async createMultaSpeedControl(
+    id_transito: number | null,
+    id_policy: number | null,
+    id_policy_type: enumPolicyTipo | null,
+    id_automobilista: number | null,
+    is_notturno: boolean | null,
+    is_recidivo: boolean | null,
+    path_bollettino: string | null,
+    stato: enumMultaStato | null,
+    speed: number,
+    speed_real: number,
+    speed_limit: number,
     speed_delta: number,
-    path_bollettino: string,
-  ): Promise<eMulta | null> {
+  ): Promise<eMultaSpeedControl | null> {
     const redisClient = await databaseCache.getInstance();
 
-    const nuovoMulta = new eMulta(
+    const nuovoMultaSpeedControl = new eMultaSpeedControl(
       0,
       id_transito,
       id_policy,
-      speed_delta,
+      id_policy_type,
+      id_automobilista,
+      is_notturno,
+      is_recidivo,
       path_bollettino,
+      stato,
+      speed,
+      speed_real,
+      speed_limit,
+      speed_delta,
     );
-    const savedMulta = await repositoryMulta.save(nuovoMulta);
+    const savedMultaSpeedControl = await repositoryMulta.saveMultaSpeedControl(
+      nuovoMultaSpeedControl,
+    );
 
     // Invalida la cache degli Varchi
-    await redisClient.del(`Multa_tutti`);
-    return savedMulta;
+    await redisClient.del(`MultaSpeedControl_tutti`);
+    return savedMultaSpeedControl;
   }
 
-  // Aggiorna un Multa esistente
-  async updateMulta(
-    id_transito: number,
-    id_policy: number,
+  // Aggiorna un MultaSpeedControl esistente
+  async updateMultaSpeedControl(
+    id: number,
+    id_transito: number | null,
+    id_policy: number | null,
+    id_policy_type: enumPolicyTipo | null,
+    id_automobilista: number | null,
+    is_notturno: boolean | null,
+    is_recidivo: boolean | null,
+    path_bollettino: string | null,
+    stato: enumMultaStato | null,
+    speed: number,
+    speed_real: number,
+    speed_limit: number,
     speed_delta: number,
-    path_bollettino: string,
   ): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const Multa = new eMulta(
-      0,
+    const MultaSpeedControl = new eMultaSpeedControl(
+      id,
       id_transito,
       id_policy,
-      speed_delta,
+      id_policy_type,
+      id_automobilista,
+      is_notturno,
+      is_recidivo,
       path_bollettino,
+      stato,
+      speed,
+      speed_real,
+      speed_limit,
+      speed_delta,
     );
-    await repositoryMulta.update(Multa);
+    await repositoryMulta.updateMultaSpeedControl(MultaSpeedControl);
 
-    // Invalida la cache dell'Multa aggiornato e la cache generale
-    await redisClient.del(`Multa_${Multa.get_id()}`);
-    await redisClient.del('Multa_tutti');
+    // Invalida la cache dell'MultaSpeedControl aggiornato e la cache generale
+    await redisClient.del(`MultaSpeedControl_${MultaSpeedControl.get_id()}`);
+    await redisClient.del('MultaSpeedControl_tutti');
   }
 
-  // Elimina un Multa
-  async deleteMulta(id: number): Promise<void> {
+  // Elimina un MultaSpeedControl
+  async deleteMultaSpeedControl(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const MultaDaEliminare = new eMulta(id, null, null, null, null);
-    await repositoryMulta.delete(MultaDaEliminare);
+    const MultaSpeedControlDaEliminare = new eMultaSpeedControl(
+      id,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      0,
+      0,
+      0,
+      0,
+    );
+    await repositoryMulta.deleteMultaSpeedControl(MultaSpeedControlDaEliminare);
 
-    // Invalida la cache dell'Multa eliminato e la cache generale
-    await redisClient.del(`Multa_${id}`);
-    await redisClient.del('Multa_tutti');
+    // Invalida la cache dell'MultaSpeedControl eliminato e la cache generale
+    await redisClient.del(`MultaSpeedControl_${id}`);
+    await redisClient.del('MultaSpeedControl_tutti');
   }
 }
 
-export const serviceMulta = new serviceMultaImplementation();
+export const serviceMultaSpeedControl =
+  new serviceMultaSpeedControlImplementation();

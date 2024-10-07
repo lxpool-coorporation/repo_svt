@@ -1,34 +1,21 @@
-import {
-  daoUtenteProfilo,
-  daoUtenteProfiloImplementation,
-} from '../../dao/utente/daoUtenteProfilo';
 import { daoUtente, daoUtenteImplementation } from '../../dao/utente/daoUtente';
 import { eUtente } from '../../../entity/utente/eUtente';
 import { Transaction } from 'sequelize';
 import { eProfilo } from '../../../entity/utente/eProfilo';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { ePermesso } from '../../../entity/utente/ePermesso';
-import {
-  daoProfiloPermesso,
-  daoProfiloPermessoImplementation,
-} from '../../dao/utente/daoProfiloPermesso';
 import { eVeicolo } from '../../../entity/svt/eVeicolo';
 import {
-  daoUtenteVeicolo,
-  daoUtenteVeicoloImplementation,
-} from '../../dao/utente/daoUtenteVeicolo';
+  daoProfilo,
+  daoProfiloImplementation,
+} from '../../../dao/dao/utente/daoProfilo';
 
 class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   private daoUtente: daoUtenteImplementation;
-  private daoUtenteProfilo: daoUtenteProfiloImplementation;
-  private daoUtenteVeicolo: daoUtenteVeicoloImplementation;
-  private daoProfiloPermesso: daoProfiloPermessoImplementation;
-
+  private daoProfilo: daoProfiloImplementation;
   constructor() {
     this.daoUtente = daoUtente;
-    this.daoUtenteProfilo = daoUtenteProfilo;
-    this.daoUtenteVeicolo = daoUtenteVeicolo;
-    this.daoProfiloPermesso = daoProfiloPermesso;
+    this.daoProfilo = daoProfilo;
   }
 
   get(id: number): Promise<eUtente | null> {
@@ -53,21 +40,23 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     return this.daoUtente.delete(t, options);
   }
   getProfili(idUtente: number): Promise<eProfilo[] | null> {
-    return this.daoUtenteProfilo.getProfili(idUtente);
+    return this.daoUtente.getProfiliByIdUtente(idUtente);
   }
   getVeicoli(idUtente: number): Promise<eVeicolo[] | null> {
-    return this.daoUtenteVeicolo.getVeicoli(idUtente);
+    return this.daoUtente.getVeicoliByIdUtente(idUtente);
   }
   async getPermessi(id: number): Promise<ePermesso[] | null> {
-    const objProfili = await this.daoUtenteProfilo.getProfili(id);
+    const objProfili = await this.daoUtente.getProfiliByIdUtente(id);
     if (objProfili && objProfili.length > 0) {
       const objPermessi = await Promise.all(
         objProfili.map(async (profilo) => {
-          return this.daoProfiloPermesso.getPermessi(profilo.get_id());
+          return this.daoProfilo.getPermessiByProfilo(profilo.get_id());
         }),
       );
       // Appiattisce l'array, se `getPermessi` restituisce array di permessi per ogni profilo
-      return objPermessi.flat();
+      return objPermessi
+        .flat()
+        .filter((permesso): permesso is ePermesso => permesso !== null);
     }
 
     return null;

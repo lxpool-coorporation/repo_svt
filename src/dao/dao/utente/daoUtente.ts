@@ -1,14 +1,18 @@
 import sequelize from 'sequelize';
 import { DaoInterfaceGeneric } from '../../../dao/interfaces/generic/daoInterfaceGeneric';
 import { eUtente } from '../../../entity/utente/eUtente';
-import { ormUtente } from '../../../models/utente/ormUtente';
 import { Op, Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormUtente } from '../../../models/utente/ormUtente';
+import { eVeicolo } from '../../../entity/svt/eVeicolo';
+import { eProfilo } from '../../../entity/utente/eProfilo';
 
 // Implementazione del DAO per l'entità `Utente`
 export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   // Trova un utente per ID usando Sequelize
   async get(id: number): Promise<eUtente | null> {
-    const ormObj = await ormUtente.findByPk(id);
+    const ormObj = await dbOrm.ormUtente.findByPk(id);
     if (!ormObj) {
       throw new Error(`utente non trovato per l'id ${id}`);
     }
@@ -17,7 +21,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
 
   async getByIdentificativo(cf: string): Promise<eUtente | null> {
     let ret: eUtente | null = null;
-    const ormObj = await ormUtente.findOne({
+    const ormObj = await dbOrm.ormUtente.findOne({
       where: {
         [Op.and]: [
           sequelize.where(
@@ -35,7 +39,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eUtente[]> {
-    const objs = await ormUtente.findAll(options);
+    const objs: ormUtente[] = await dbOrm.ormUtente.findAll(options);
     return objs.map(
       (ormObj) => new eUtente(ormObj.id, ormObj.identificativo, ormObj.stato),
     );
@@ -46,7 +50,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     t: eUtente,
     options?: { transaction?: Transaction },
   ): Promise<eUtente | null> {
-    const ormObj = await ormUtente.create(
+    const ormObj = await dbOrm.ormUtente.create(
       {
         id: t.get_id(),
         identificativo: t.get_identificativo(),
@@ -62,7 +66,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     t: eUtente,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormUtente.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormUtente.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -81,7 +85,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormObj.update(
       {
         identificativo: t.get_identificativo(),
         id_stato: t.get_stato(),
@@ -96,13 +100,83 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     t: eUtente,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormUtente.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormUtente.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
       throw new Error('Utente not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+  }
+
+  public async getProfiliByIdUtente(
+    idUtente: number,
+  ): Promise<eProfilo[] | null> {
+    try {
+      const Utente = await ormUtente.findByPk(idUtente, {
+        include: [
+          {
+            model: dbOrm.ormProfilo,
+            as: 'utente_profili', // Questo deve corrispondere all'alias definito nell'associazione
+          },
+        ],
+      });
+
+      if (!Utente) {
+        throw new Error('Utente non trovato');
+      }
+
+      if (Utente.utente_profili) {
+        return Utente.utente_profili.map((a) => {
+          return new eProfilo(a.id, a.cod, a.descrizione, a.stato);
+        });
+      }
+
+      //return Utente.Utente_permessi; // Qui Sequelize popola automaticamente i permessi associati
+    } catch (error) {
+      console.error(
+        'Errore durante il recupero dei profili per Utente:',
+        error,
+      );
+      throw error;
+    }
+
+    return null;
+  }
+
+  public async getVeicoliByIdUtente(
+    idUtente: number,
+  ): Promise<eVeicolo[] | null> {
+    try {
+      const Utente = await ormUtente.findByPk(idUtente, {
+        include: [
+          {
+            model: dbOrm.ormVeicolo,
+            as: 'utente_veicoli', // Questo deve corrispondere all'alias definito nell'associazione
+          },
+        ],
+      });
+
+      if (!Utente) {
+        throw new Error('Utente non trovato');
+      }
+
+      if (Utente.utente_veicoli) {
+        return Utente.utente_veicoli.map((a) => {
+          return new eVeicolo(a.id, a.tipo, a.targa, a.stato);
+        });
+      }
+
+      //return Utente.Utente_permessi; // Qui Sequelize popola automaticamente i permessi associati
+    } catch (error) {
+      console.error(
+        'Errore durante il recupero dei permessi per il Utente:',
+        error,
+      );
+      throw error;
+    }
+
+    return null;
   }
 }
 

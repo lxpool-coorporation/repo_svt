@@ -1,4 +1,6 @@
 import { QueryInterface, Sequelize } from 'sequelize';
+import { enumPolicyTipo } from '../src/entity/enum/enumPolicyTipo';
+import { enumMultaStato } from '../src/entity/enum/enumMultaStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -7,8 +9,12 @@ export default {
         id: 1,
         id_transito: 1,
         id_policy: 1,
-        speed_delta: 17,
-        path_bollettino: "/data/bollettino_1.pdf",
+        tipo_policy: enumPolicyTipo.speed_control,
+        id_automobilista: 1,
+        is_notturno: false,
+        is_recidivo: false,
+        path_bollettino: null,
+        stato: enumMultaStato.in_attesa,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -16,8 +22,12 @@ export default {
         id: 2,
         id_transito: 2,
         id_policy: 1,
-        speed_delta: 10,
-        path_bollettino: 'bollettino_2.pdf',
+        tipo_policy: enumPolicyTipo.speed_control,
+        id_automobilista: 1,
+        is_notturno: false,
+        is_recidivo: false,
+        path_bollettino: null,
+        stato: enumMultaStato.in_attesa,
         createdAt: new Date(),
         updatedAt: new Date()
       },

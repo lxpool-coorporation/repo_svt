@@ -1,7 +1,9 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { ormTransito } from '../../../models/svt/ormTransito';
 import { eTransito, eTransitoBuilder } from '../../../entity/svt/eTransito';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormTransito } from '../../../models/svt/ormTransito';
 
 // Implementazione del DAO per l'entità `Transito`
 export class daoTransitoImplementation
@@ -9,7 +11,7 @@ export class daoTransitoImplementation
 {
   // Trova un Transito per ID usando Sequelize
   async get(id: number): Promise<eTransito | null> {
-    const ormObj = await ormTransito.findByPk(id);
+    const ormObj = await dbOrm.ormTransito.findByPk(id);
     if (!ormObj) {
       throw new Error(`Transito non trovato per l'id ${id}`);
     }
@@ -29,7 +31,7 @@ export class daoTransitoImplementation
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eTransito[]> {
-    const objs = await ormTransito.findAll(options);
+    const objs: ormTransito[] = await dbOrm.ormTransito.findAll(options);
     return objs.map(
       (ormObj) =>
         new eTransito(
@@ -52,7 +54,7 @@ export class daoTransitoImplementation
     t: eTransito,
     options?: { transaction?: Transaction },
   ): Promise<eTransito | null> {
-    const ormObj = await ormTransito.create(
+    const ormObj = await dbOrm.ormTransito.create(
       {
         id: t.get_id(),
         data_transito: t.get_data_transito(),
@@ -85,7 +87,7 @@ export class daoTransitoImplementation
     t: eTransito,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormTransito.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormTransito.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -113,7 +115,7 @@ export class daoTransitoImplementation
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormObj.update(
       {
         data_transito: t.get_data_transito(),
         speed: t.get_speed(),
@@ -133,13 +135,13 @@ export class daoTransitoImplementation
     t: eTransito,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormTransito.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormTransito.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
       throw new Error('Transito not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

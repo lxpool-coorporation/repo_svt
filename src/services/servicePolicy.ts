@@ -5,7 +5,7 @@ import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumPolicyTipo } from '../entity/enum/enumPolicyTipo';
 import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
-import { enumVeicoloTipo } from '@/entity/enum/enumVeicoloTipo';
+import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 
 // classe che gestisce la logica di business dell'PolicySpeedControl
 class servicePolicySpeedControlImplementation {
@@ -75,6 +75,7 @@ class servicePolicySpeedControlImplementation {
 
   // Aggiorna un PolicySpeedControl esistente
   async updatePolicySpeedControl(
+    id: number,
     cod: string,
     descrizione: string,
     tipo: enumPolicyTipo,
@@ -86,7 +87,7 @@ class servicePolicySpeedControlImplementation {
     const redisClient = await databaseCache.getInstance();
 
     const PolicySpeedControl = new ePolicySpeedControl(
-      0,
+      id,
       cod,
       descrizione,
       tipo,

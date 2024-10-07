@@ -17,6 +17,15 @@ export class ormPolicySpeedControl extends Model {
 
   // Associazione per accedere ai dati della policy base
   public policy?: ormPolicy;
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    // Definizione dell'associazione one-to-one
+    ormPolicySpeedControl.belongsTo(models.ormPolicy, {
+      foreignKey: 'id_policy',
+      as: 'policyspeedcontrol_policy',
+    });
+  }
 }
 
 ormPolicySpeedControl.init(

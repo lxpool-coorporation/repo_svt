@@ -1,13 +1,15 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eMulta } from '../../../entity/svt/eMulta';
-import { ormMulta } from '../../../models/svt/ormMulta';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { ormMulta } from '../../../models/svt/ormMulta';
 
 // Implementazione del DAO per l'entità `Multa`
 export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   // Trova un Multa per ID usando Sequelize
   async get(id: number): Promise<eMulta | null> {
-    const ormObj = await ormMulta.findByPk(id);
+    const ormObj = await dbOrm.ormMulta.findByPk(id);
     if (!ormObj) {
       throw new Error(`Multa non trovato per l'id ${id}`);
     }
@@ -15,22 +17,30 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       ormObj.id,
       ormObj.id_transito,
       ormObj.id_policy,
-      ormObj.speed_delta,
+      ormObj.tipo_policy,
+      ormObj.id_automobilista,
+      ormObj.is_notturno,
+      ormObj.is_recidivo,
       ormObj.path_bollettino,
+      ormObj.stato,
     );
   }
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eMulta[]> {
-    const objs = await ormMulta.findAll(options);
+    const objs: ormMulta[] = await dbOrm.ormMulta.findAll(options);
     return objs.map(
       (ormObj) =>
         new eMulta(
           ormObj.id,
           ormObj.id_transito,
           ormObj.id_policy,
-          ormObj.speed_delta,
+          ormObj.tipo_policy,
+          ormObj.id_automobilista,
+          ormObj.is_notturno,
+          ormObj.is_recidivo,
           ormObj.path_bollettino,
+          ormObj.stato,
         ),
     );
   }
@@ -40,13 +50,17 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     t: eMulta,
     options?: { transaction?: Transaction },
   ): Promise<eMulta | null> {
-    const ormObj = await ormMulta.create(
+    const ormObj = await dbOrm.ormMulta.create(
       {
         id: t.get_id(),
         id_transito: t.get_id_transito(),
         id_policy: t.get_id_policy(),
-        speed_delta: t.get_speed_delta(),
+        tipo_policy: t.get_tipo_policy(),
+        id_automobilista: t.get_id_automobilista(),
+        is_notturno: t.get_is_notturno(),
+        is_recidivo: t.get_is_recidivo(),
         path_bollettino: t.get_path_bollettino(),
+        stato: t.get_stato(),
       },
       { transaction: options?.transaction },
     );
@@ -54,8 +68,12 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       ormObj.id,
       ormObj.id_transito,
       ormObj.id_policy,
-      ormObj.speed_delta,
+      ormObj.tipo_policy,
+      ormObj.id_automobilista,
+      ormObj.is_notturno,
+      ormObj.is_recidivo,
       ormObj.path_bollettino,
+      ormObj.stato,
     );
   }
 
@@ -64,7 +82,7 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     t: eMulta,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormMulta.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormMulta.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {
@@ -87,9 +105,12 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       {
         id_transito: t.get_id_transito(),
         id_policy: t.get_id_policy(),
-        speed_delta: t.get_speed_delta(),
+        tipo_policy: t.get_tipo_policy(),
+        id_automobilista: t.get_id_automobilista(),
+        is_notturno: t.get_is_notturno(),
+        is_recidivo: t.get_is_recidivo(),
         path_bollettino: t.get_path_bollettino(),
-        // Aggiungi altri campi che devono essere aggiornati
+        stato: t.get_stato(),
       },
       updateOptions,
     );
@@ -100,7 +121,7 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     t: eMulta,
     options?: { transaction?: Transaction },
   ): Promise<void> {
-    const ormObj = await ormMulta.findByPk(t.get_id(), {
+    const ormObj = await dbOrm.ormMulta.findByPk(t.get_id(), {
       transaction: options?.transaction,
     });
     if (!ormObj) {

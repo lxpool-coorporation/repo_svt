@@ -141,3 +141,5 @@ Dockerfile_local*
 # cartella test upload immagini
 uploads/
 .img
+# documentazione
+_documentazione/

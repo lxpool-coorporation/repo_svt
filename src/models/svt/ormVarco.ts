@@ -1,7 +1,6 @@
 import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-
 /**
  * Instanziazione della connessione verso il RDBMS
  */
@@ -14,6 +13,16 @@ export class ormVarco extends Model {
   public latitudine!: number;
   public longitudine!: number;
   public stato!: enumStato;
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    // Associazioni Many-to-Many
+    ormVarco.belongsToMany(models.ormTransito, {
+      through: models.ormTransito,
+      foreignKey: 'id_varco',
+      as: 'varco_transiti',
+    });
+  }
 }
 
 // Definizione del modello

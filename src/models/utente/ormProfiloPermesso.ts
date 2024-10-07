@@ -1,5 +1,5 @@
 import database from '../../utils/database';
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ormProfilo } from './ormProfilo';
 import { ormPermesso } from './ormPermesso';
 
@@ -8,7 +8,7 @@ import { ormPermesso } from './ormPermesso';
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormProfiloPermesso extends ormProfilo {
+export class ormProfiloPermesso extends Model {
   // Metodi di associazione profili -> permessi
   public addPermesso!: (
     utente: ormPermesso | ormPermesso[],

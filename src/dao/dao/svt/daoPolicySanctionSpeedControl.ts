@@ -1,15 +1,17 @@
 // daoPolicySanctionSpeedControl.ts
-import { ormPolicySanctionSpeedControl } from '../../../models/svt/ormPolicySanctionSpeedControl';
 import { ePolicySanctionSpeedControl } from '../../../entity/svt/ePolicySanctionSpeedControl';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { Transaction } from 'sequelize';
+
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormPolicySanction } from '../../../models/svt/ormPolicySanction';
+import { ormPolicySanctionSpeedControl } from '../../../models/svt/ormPolicySanctionSpeedControl';
 
 export class daoPolicySanctionSpeedControlImplementation
   implements DaoInterfaceGeneric<ePolicySanctionSpeedControl>
 {
   async get(id: number): Promise<ePolicySanctionSpeedControl | null> {
-    const ormObj = await ormPolicySanctionSpeedControl.findByPk(id);
+    const ormObj = await dbOrm.ormPolicySanctionSpeedControl.findByPk(id);
     if (!ormObj) {
       throw new Error(`PolicySanction non trovato per l'id ${id}`);
     }
@@ -31,7 +33,7 @@ export class daoPolicySanctionSpeedControlImplementation
     id_policy_sanction: number,
     options?: { transaction?: Transaction },
   ): Promise<ePolicySanctionSpeedControl | null> {
-    const ormObj = await ormPolicySanctionSpeedControl.findOne({
+    const ormObj = await dbOrm.ormPolicySanctionSpeedControl.findOne({
       where: { id_policy_sanction },
       include: [
         {
@@ -64,15 +66,16 @@ export class daoPolicySanctionSpeedControlImplementation
   async getAllWithPolicySanction(options?: {
     transaction?: Transaction;
   }): Promise<ePolicySanctionSpeedControl[]> {
-    const ormObjs = await ormPolicySanctionSpeedControl.findAll({
-      include: [
-        {
-          model: ormPolicySanction,
-          as: 'policy',
-        },
-      ],
-      transaction: options?.transaction,
-    });
+    const ormObjs: ormPolicySanctionSpeedControl[] =
+      await dbOrm.ormPolicySanctionSpeedControl.findAll({
+        include: [
+          {
+            model: ormPolicySanction,
+            as: 'policy',
+          },
+        ],
+        transaction: options?.transaction,
+      });
 
     return ormObjs.map((ormObj) => {
       const policyBase = ormObj.policySanction!;
@@ -93,7 +96,8 @@ export class daoPolicySanctionSpeedControlImplementation
 
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<ePolicySanctionSpeedControl[]> {
-    const objs = await ormPolicySanctionSpeedControl.findAll(options);
+    const objs: ormPolicySanctionSpeedControl[] =
+      await dbOrm.ormPolicySanctionSpeedControl.findAll(options);
     return objs.map((item) => {
       return new ePolicySanctionSpeedControl(
         item.id_policy_sanction,
@@ -117,7 +121,7 @@ export class daoPolicySanctionSpeedControlImplementation
   ): Promise<ePolicySanctionSpeedControl | null> {
     try {
       // Crea la policy speed control
-      await ormPolicySanctionSpeedControl.create(
+      await dbOrm.ormPolicySanctionSpeedControl.create(
         {
           id: t.get_id(),
           tipo: t.get_tipo_policy(),
@@ -147,7 +151,7 @@ export class daoPolicySanctionSpeedControlImplementation
     try {
       // Aggiorna la policy speed control
       const [speedControlUpdatedRows] =
-        await ormPolicySanctionSpeedControl.update(
+        await dbOrm.ormPolicySanctionSpeedControl.update(
           {
             speed_min: t.get_speed_min(),
             speed_max: t.get_speed_max(),
@@ -176,7 +180,7 @@ export class daoPolicySanctionSpeedControlImplementation
     try {
       // Elimina la policy speed control
       const deletedSpeedControlRows =
-        await ormPolicySanctionSpeedControl.destroy({
+        await dbOrm.ormPolicySanctionSpeedControl.destroy({
           where: { id_policy_sanction: t.get_id() },
           transaction: options?.transaction,
         });

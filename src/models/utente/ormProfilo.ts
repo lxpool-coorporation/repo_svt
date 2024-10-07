@@ -1,6 +1,7 @@
 import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, NonAttribute, Sequelize } from 'sequelize';
+import { ormPermesso } from './ormPermesso';
 
 /**
  * Instanziazione della connessione verso il RDBMS
@@ -12,6 +13,23 @@ export class ormProfilo extends Model {
   public cod!: string;
   public descrizione!: string;
   public stato!: enumStato;
+
+  // Definisci una proprietà per i permessi associati
+  public profilo_permessi?: NonAttribute<ormPermesso[]>; // Sequelize riempirà questo campo dinamicamente
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    ormProfilo.belongsToMany(models.ormUtente, {
+      through: models.ormUtenteProfilo,
+      foreignKey: 'id_profilo',
+      as: 'profilo_utenti',
+    });
+    ormProfilo.belongsToMany(models.ormPermesso, {
+      through: models.ormProfiloPermesso,
+      foreignKey: 'id_profilo',
+      as: 'profilo_permessi',
+    });
+  }
 }
 
 // Definizione del modello

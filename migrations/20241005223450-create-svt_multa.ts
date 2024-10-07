@@ -1,4 +1,6 @@
 import { QueryInterface, DataTypes } from 'sequelize';
+import {enumMultaStato} from '../src/entity/enum/enumMultaStato';
+import { enumPolicyTipo } from '../src/entity/enum/enumPolicyTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -7,13 +9,12 @@ export default {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
       },
       id_transito: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'svt_transito', // Nome della tabella a cui si riferisce
+          model: 'svt_transito',
           key: 'id',
         },
       },
@@ -21,16 +22,36 @@ export default {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'svt_plc_policy', // Nome della tabella a cui si riferisce
+          model: 'svt_plc_policy',
           key: 'id',
         },
       },
-      speed_delta: {
+      tipo_policy: {
+        type: DataTypes.ENUM(...Object.values(enumPolicyTipo)),
+        allowNull: false,
+      },
+      id_automobilista: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'utn_utente',
+          key: 'id',
+        },
+      },
+      is_notturno: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      is_recidivo: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
       },
       path_bollettino: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      stato: {
+        type: DataTypes.ENUM(...Object.values(enumMultaStato)),
         allowNull: false,
       },
       createdAt: {

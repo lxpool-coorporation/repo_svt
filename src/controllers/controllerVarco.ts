@@ -70,6 +70,12 @@ export class controllerVarco {
           parseInt(req.params.id),
         );
         if (!!varco) {
+          //const rabbitMQ = messenger.getInstance();
+          // Assicurati di aver creato una connessione prima di inviare un messaggio
+          //await rabbitMQ.connect();
+          // Invia il messaggio alla coda
+          //await rabbitMQ.sendToQueue('tasks_queue', JSON.stringify(varco));
+
           ret.setResponse(200, varco);
         } else {
           ret.setResponse(404, { message: 'varco non presente' });
