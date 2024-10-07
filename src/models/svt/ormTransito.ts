@@ -20,6 +20,23 @@ export class ormTransito extends Model {
   public id_veicolo!: number | null;
   public path_immagine!: string | null;
   public stato!: enumTransitoStato;
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    ormTransito.belongsTo(models.ormVarco, {
+      foreignKey: 'id_varco',
+      as: 'varco',
+    });
+    ormTransito.belongsTo(models.ormVeicolo, {
+      foreignKey: 'id_veicolo',
+      as: 'veicolo',
+    });
+    ormTransito.hasMany(models.ormMulta, {
+      foreignKey: 'id_transito',
+      as: 'transito_multe',
+    });
+  }
+
 }
 
 // Definizione del modello

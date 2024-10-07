@@ -16,6 +16,25 @@ export class ormTratta extends Model {
   public id_varco_uscita!: number;
   public distanza!: number;
   public stato!: enumStato;
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    // Associazioni Many-to-Many
+    ormTratta.belongsTo(models.ormVarco, {
+      foreignKey: 'id_varco_ingresso',
+      as: 'varco_ingresso',
+    });
+    ormTratta.belongsTo(models.ormVarco, {
+      foreignKey: 'id_varco_uscita',
+      as: 'varco_uscita',
+    });
+    ormTratta.belongsToMany(models.ormPolicy, {
+      through: models.ormTrattaPolicy,
+      foreignKey: 'id_tratta',
+      as: 'tratta_policies',
+    });
+  }
+
 }
 
 // Definizione del modello

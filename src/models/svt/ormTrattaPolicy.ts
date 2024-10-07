@@ -1,5 +1,5 @@
 import database from '../../utils/database';
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ormTratta } from './ormTratta';
 import { ormPolicy } from './ormPolicy';
 
@@ -8,7 +8,7 @@ import { ormPolicy } from './ormPolicy';
  */
 const sequelize: Sequelize = database.getInstance();
 
-export class ormTrattaPolicy extends ormTratta {
+export class ormTrattaPolicy extends Model {
   // Metodi di associazione utente -> profili
   public addPolicy!: (
     profilo: ormPolicy | ormPolicy[],

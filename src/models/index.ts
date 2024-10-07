@@ -33,10 +33,10 @@ const dbOrm: { [key: string]: any } = {
   ormPolicySanctionSpeedControl,
   ormPolicySpeedControl,
   ormTransito,
-  ormTratta,
-  ormTrattaPolicy,
   ormVarco,
   ormVarcoPolicy,
+  ormTratta,
+  ormTrattaPolicy,
   ormVeicolo,
 };
 

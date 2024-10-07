@@ -17,9 +17,13 @@ export class ormPolicySanction extends Model {
   public costo_punti_patente!: number;
   public stato!: enumStato;
 
-  public getPolicySanctionSpeedControls!: (
-    options?: any,
-  ) => Promise<ormPolicySanctionSpeedControl[]>;
+    // Definisci le associazioni
+  static associate(models: any) {
+    ormPolicySanction.hasOne(models.ormPolicySanctionSpeedControl, {
+      foreignKey: 'id_policy_sanction',
+      as: 'multa',
+    });
+  }
 }
 
 ormPolicySanction.init(

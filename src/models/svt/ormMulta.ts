@@ -19,6 +19,27 @@ export class ormMulta extends Model {
   public is_recidivo!: boolean;
   public path_bollettino!: string;
   public stato!: enumMultaStato;
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    ormMulta.belongsTo(models.ormTransito, {
+      foreignKey: 'id_transito',
+      as: 'multa_transiti',
+    });
+    ormMulta.belongsTo(models.ormPolicy, {
+      foreignKey: 'id_policy',
+      as: 'multa_policies',
+    });
+    ormMulta.belongsTo(models.ormUtente, {
+      foreignKey: 'id_automobilista',
+      as: 'multa_utenti',
+    });
+    ormMulta.hasOne(models.ormMultaSpeedControl, {
+      foreignKey: 'id_multa',
+      as: 'multa',
+    });
+  }
+
 }
 
 // Definizione del modello

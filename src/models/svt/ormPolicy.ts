@@ -19,7 +19,16 @@ export class ormPolicy extends Model {
   static associate(models: any) {
     ormPolicy.hasOne(models.ormPolicySpeedControl, {
       foreignKey: 'id_policy',
-      as: 'policy_policyspeedcontrol',
+      as: 'policy',
+    });
+    ormPolicy.belongsToMany(models.ormTratta, {
+      through: models.ormTrattaPolicy,
+      foreignKey: 'id_policy',
+      as: 'policy_tratte',
+    });
+    ormPolicy.hasMany(models.ormMulta, {
+      foreignKey: 'id_policy',
+      as: 'policy_multe',
     });
   }
 }
