@@ -188,4 +188,16 @@ export class middlewareValidate {
       .withMessage('La data deve essere nel futuro');
     return optional ? ret.optional() : ret;
   };
+  public static validateVeicoloTipo = (
+    campo: string,
+    optional: boolean,
+  ): ValidationChain => {
+    let ret: ValidationChain = body(campo).custom((value) => {
+      if (!Object.values(enumVeicoloTipo).includes(value)) {
+        throw new Error('Tipo veicolo non valido');
+      }
+      return true;
+    });
+    return optional ? ret.optional() : ret;
+  };
 }

@@ -5,4 +5,5 @@ export enum enumVeicoloTipo {
   rimorchi = 'rimorchi',
   autobus = 'autobus',
   camion = 'camion',
+  indefinito = 'indefinito',
 }

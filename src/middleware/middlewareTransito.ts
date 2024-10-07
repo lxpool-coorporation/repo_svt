@@ -11,7 +11,6 @@ import { eProfilo } from '../entity/utente/eProfilo';
 import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
 import { repositoryVeicolo } from '../dao/repositories/svt/repositoryVeicolo';
 import { eVeicolo } from '../entity/svt/eVeicolo';
-import { controllerVeicolo } from '../controllers/controllerVeicolo';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 import { serviceVeicolo } from '../services/serviceVeicolo';
 import { enumStato } from '../entity/enum/enumStato';
@@ -108,22 +107,44 @@ export class middlewareTransito {
     }
     ret.returnNext(next);
   };
-  public static validate = async (
+  public static rebuildBody = async (
     req: Request,
     _res: Response,
     next: NextFunction,
   ): Promise<void> => {
     let ret: retMiddleware = new retMiddleware();
 
+    try {
+      // con l'uso di multer il body potrebbe essere vuoto, unisco i dati del body se aggiunti dal middleware con i metadati
+      req.body = Object.assign(
+        req.body,
+        typeof req.body.metadata === 'string'
+          ? JSON.parse(req.body.metadata)
+          : req.body.metadata,
+      );
+      // imposto lo stato
+      req.body.stato = enumTransitoStato.in_attesa;
+      // se il tipo veicolo non mi arriva nella request lo imposto indefinito
+      if (!req.body.veicolo_tipo) {
+        req.body.veicolo_tipo = enumVeicoloTipo.indefinito;
+      }
+    } catch (error: any) {
+      logger.error('middlewareTransito.rebuildBody :' + error?.message);
+      ret.setResponse(400, { message: 'errore lettura body' });
+    }
+    ret.returnNext(next);
+  };
+  public static validate = async (
+    req: Request,
+    _res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    let ret: retMiddleware = new retMiddleware();
+    // per il metodo patch i controlli devono essere effettuati solo se il campo esiste
     let optional: boolean = req.method.toLowerCase() === 'patch';
     let optionalTarga: boolean = optional;
-    req.body = Object.assign(
-      req.body,
-      typeof req.body.metadata === 'string'
-        ? JSON.parse(req.body.metadata)
-        : req.body.metadata,
-    );
-    req.body.stato = enumTransitoStato.in_attesa;
+
+    // verifico se l'utente ha ruolo varco, in questo caso imposto la data con l'ora del server e rendo opzionale la targa prima dei controlli
     if (optionalTarga === false) {
       if (isNumeric(req.userId)) {
         const arrayProfili: eProfilo[] | null =
@@ -157,6 +178,7 @@ export class middlewareTransito {
       //middlewareValidate.validateImageFromReq('immagine', optional),
       middlewareValidate.validateDateISO8601('data_transito', optional),
       middlewareValidate.validateTarga('targa', optionalTarga),
+      middlewareValidate.validateVeicoloTipo('veicolo_tipo', optional),
     ];
 
     // Esegui le validazioni
@@ -175,25 +197,21 @@ export class middlewareTransito {
     try {
       //non blocco l'esecuzione se non riesce a inserire la targa tanto l'ocr verificherà anche questa
       const targa: string | null = req.body?.targa;
+      const veicolo_tipo: enumVeicoloTipo = req.body.veicolo_tipo;
       if (!!targa) {
-        logger.warn('middlewareTransito.insertTarga : 1');
         const veicolo: eVeicolo | null =
           await repositoryVeicolo.getByTarga(targa);
         if (!!veicolo) {
-          logger.warn('middlewareTransito.insertTarga : 2');
           req.body.id_veicolo = veicolo.get_id();
         } else {
-          logger.warn('middlewareTransito.insertTarga : 3');
-          const tipo: enumVeicoloTipo | null =
-            controllerVeicolo.ricavaTipo(targa);
-          if (!!tipo) {
-            logger.warn('middlewareTransito.insertTarga : 4');
-            const veicoloRes: eVeicolo | null =
-              await serviceVeicolo.createVeicolo(tipo, targa, enumStato.attivo);
-            if (!!veicoloRes) {
-              logger.warn('middlewareTransito.insertTarga : 5');
-              req.body.id_veicolo = veicoloRes.get_id();
-            }
+          const veicoloRes: eVeicolo | null =
+            await serviceVeicolo.createVeicolo(
+              veicolo_tipo,
+              targa,
+              enumStato.attivo,
+            );
+          if (!!veicoloRes) {
+            req.body.id_veicolo = veicoloRes.get_id();
           }
         }
       }

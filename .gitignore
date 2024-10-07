@@ -137,3 +137,7 @@ Dockerfile_local*
 
 # server key
 .keys/
+
+# cartella test upload immagini
+uploads/
+.img

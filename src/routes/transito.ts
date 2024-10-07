@@ -27,6 +27,7 @@ routerTransito.post(
     { name: 'immagine', maxCount: 1 }, // Campo per il file
     { name: 'metadata', maxCount: 1 }, // Campo per i dati form
   ]),
+  middlewareTransito.rebuildBody,
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
   middlewareTransito.insertTarga,
@@ -49,6 +50,7 @@ routerTransito.put(
     { name: 'immagine', maxCount: 1 }, // Campo per il file
     { name: 'metadata', maxCount: 1 }, // Campo per i dati form
   ]),
+  middlewareTransito.rebuildBody,
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
   middlewareTransito.insertTarga,
@@ -64,6 +66,7 @@ routerTransito.patch(
     { name: 'immagine', maxCount: 1 }, // Campo per il file
     { name: 'metadata', maxCount: 1 }, // Campo per i dati form
   ]),
+  middlewareTransito.rebuildBody,
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
   middlewareTransito.insertTarga,
