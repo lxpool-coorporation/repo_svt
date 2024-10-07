@@ -76,14 +76,14 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
       where: { id: t.get_id() },
       fields: ['tipo', 'targa', 'stato'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await dbOrm.ormObj.update(
+    await dbOrm.ormVeicolo.update(
       {
         tipo: t.get_tipo(),
         targa: t.get_targa(),
@@ -104,7 +104,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     if (!ormObj) {
       throw new Error('Veicolo not found');
     }
-    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormVeicolo.destroy({ transaction: options?.transaction });
   }
 }
 

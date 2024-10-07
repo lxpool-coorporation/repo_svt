@@ -1,6 +1,6 @@
 import { QueryInterface, Sequelize } from 'sequelize';
 import { enumMeteoTipo } from '../src/entity/enum/enumMeteoTipo';
-import { enumStato } from '../src/entity/enum/enumStato';
+import { enumTransitoStato } from '../src/entity/enum/enumTransitoStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -14,7 +14,7 @@ export default {
         meteo: enumMeteoTipo.sereno,
         id_veicolo: 1,
         path_immagine: 'data/immagine_1.jpg',
-        stato: enumStato.attivo,
+        stato: enumTransitoStato.acquisito,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -27,7 +27,7 @@ export default {
         meteo: enumMeteoTipo.pioggia,
         id_veicolo: 2,
         path_immagine: 'data/immagine_2.jpg',
-        stato: enumStato.attivo,
+        stato: enumTransitoStato.acquisito,
         createdAt: new Date(),
         updatedAt: new Date()
       },

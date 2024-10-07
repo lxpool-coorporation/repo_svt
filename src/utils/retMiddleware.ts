@@ -21,16 +21,19 @@ export class retMiddleware {
     this.setBody(body);
     this.setCode(code);
   }
+  public returnError(next: NextFunction) {
+    next(createError(this.code, this.body));
+  }
   public returnNext(next: NextFunction) {
     if (this.code >= 400) {
-      next(createError(this.code, this.body));
+      this.returnError(next);
     } else {
       next();
     }
   }
   public returnResponseJson(res: Response, next: NextFunction) {
     if (this.code >= 400) {
-      next(createError(this.code, this.body));
+      this.returnError(next);
     } else {
       res.status(this.code).json(this.body);
     }

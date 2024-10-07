@@ -94,14 +94,14 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
       where: { id: t.get_id() },
       fields: ['cod', 'descrizione', 'latitudine', 'longitudine', 'stato'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await dbOrm.ormObj.update(
+    await dbOrm.ormVarco.update(
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
@@ -124,7 +124,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     if (!ormObj) {
       throw new Error('Varco not found');
     }
-    await dbOrm.ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormVarco.destroy({ transaction: options?.transaction });
   }
 }
 

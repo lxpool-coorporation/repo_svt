@@ -73,5 +73,11 @@ routerTransito.patch(
   middlewareTransito.calculateSpeedReal,
   controllerTransito.patchTransito,
 );
+routerTransito.get(
+  '/download/:id',
+  middlewareAuth.verifyToken,
+  middlewareTransito.checkPermissionRead,
+  controllerTransito.download,
+);
 
 export default routerTransito;

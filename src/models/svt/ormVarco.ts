@@ -17,10 +17,9 @@ export class ormVarco extends Model {
   // Definisci le associazioni
   static associate(models: any) {
     // Associazioni Many-to-Many
-    ormVarco.belongsToMany(models.ormTransito, {
-      through: models.ormTransito,
-      foreignKey: 'id_varco',
-      as: 'varco_transiti',
+    ormVarco.hasMany(models.ormTransito, {
+      foreignKey: 'id_varco', // 'id_varco' è la chiave esterna nella tabella ormTransito
+      as: 'transiti_varco', // alias per i transiti associati al varco
     });
   }
 }

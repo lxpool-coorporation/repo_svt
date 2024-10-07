@@ -44,11 +44,12 @@ class serviceTransitoImplementation {
 
     const cacheKey = 'Transiti_tutti';
 
+    //VALUTARE SE USARE QUESTO METODO
     // Controlla se gli Transiti sono in cache
-    const cachedTransiti = await redisClient.get(cacheKey);
-    if (cachedTransiti) {
-      return JSON.parse(cachedTransiti); // Restituisce gli Transiti dalla cache
-    }
+    //const cachedTransiti = await redisClient.get(cacheKey);
+    //if (cachedTransiti) {
+    //  return JSON.parse(cachedTransiti); // Restituisce gli Transiti dalla cache
+    //}
 
     // Se non sono in cache, recupera dal repository
     const Transiti = await repositoryTransito.getAll(options);

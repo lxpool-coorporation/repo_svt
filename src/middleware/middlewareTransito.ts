@@ -16,7 +16,7 @@ import { serviceVeicolo } from '../services/serviceVeicolo';
 import { enumStato } from '../entity/enum/enumStato';
 
 dotenv.config();
-const SPEED_TOLLERANCE = process.env.SPEED_TOLLERANCE || 0;
+let SPEED_TOLLERANCE = process.env.SPEED_TOLLERANCE || 0;
 
 export class middlewareTransito {
   private constructor() {}
@@ -122,8 +122,11 @@ export class middlewareTransito {
           ? JSON.parse(req.body.metadata)
           : req.body.metadata,
       );
-      // imposto lo stato
-      req.body.stato = enumTransitoStato.in_attesa;
+      // imposto lo stato se si tratta di una insert
+      if (req.method.toLowerCase() === 'post') {
+        req.body.stato = enumTransitoStato.in_attesa;
+      }
+
       // se il tipo veicolo non mi arriva nella request lo imposto indefinito
       if (!req.body.veicolo_tipo) {
         req.body.veicolo_tipo = enumVeicoloTipo.indefinito;

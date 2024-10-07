@@ -10,8 +10,12 @@ import { StringisNumeric } from '../utils/utils';
 import { eTransito } from '../entity/svt/eTransito';
 import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
 import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
+import sequelize, { Op, col, where } from 'sequelize';
+import path from 'path';
+import fs from 'fs';
 
 dotenv.config();
+const IMAGE_PATH = process.env.IMAGE_PATH || '.img';
 
 interface iETransito {
   data_transito: Date;
@@ -44,13 +48,49 @@ export class controllerTransito {
     return ret;
   };
   public static getAll = async (
-    _req: Request,
+    req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
     let ret: retMiddleware = new retMiddleware();
     try {
-      const varchi: eTransito[] = await serviceTransito.getAllTransiti();
+      const idVarco: string | undefined = req.query.id_varco as string;
+      // Se il parametro 'id_varco' esiste, splitto per ottenere l'array
+      const idsArray: string[] = idVarco ? idVarco.split(',') : [];
+
+      const statoTansito: string | undefined = req.query.stato as string;
+      // Se il parametro 'stato' esiste, splitto per ottenere l'array
+      const statoTansitosArray: string[] = statoTansito
+        ? statoTansito.split(',')
+        : [];
+
+      let varchi: eTransito[] = [];
+      if (idsArray.length > 0 || statoTansitosArray.length > 0) {
+        let ricerca: sequelize.Utils.Where[] = [];
+        if (idsArray.length > 0) {
+          ricerca.push(
+            where(
+              col('id_varco'), // Funzione LOWER su identificativo
+              { [Op.in]: idsArray }, // Usare Op.in con valori in lowercase
+            ),
+          );
+        }
+        if (statoTansitosArray.length > 0) {
+          ricerca.push(
+            where(
+              col('stato'), // Funzione LOWER su identificativo
+              { [Op.in]: statoTansitosArray }, // Usare Op.in con valori in lowercase
+            ),
+          );
+        }
+        varchi = await serviceTransito.getAllTransiti({
+          where: {
+            [Op.and]: ricerca,
+          },
+        });
+      } else {
+        varchi = await serviceTransito.getAllTransiti();
+      }
       if (!!varchi) {
         ret.setResponse(200, varchi);
       } else {
@@ -273,5 +313,52 @@ export class controllerTransito {
       ret.setResponse(500, { message: 'errore caricamento transito' });
     }
     ret.returnResponseJson(res, next);
+  };
+  public static download = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    let ret: retMiddleware = new retMiddleware();
+    let transferComplete: boolean = false;
+    try {
+      if (StringisNumeric(req.params.id)) {
+        const transito: eTransito | null =
+          await serviceTransito.getTransitoById(parseInt(req.params.id));
+        if (!!transito) {
+          // Percorso assoluto del file da scaricare
+          const filePath = path.join(
+            IMAGE_PATH,
+            transito.get_path_immagine() || '',
+          );
+
+          // Verifica se il file esiste
+          if (fs.existsSync(filePath)) {
+            // Invia il file al client
+            transferComplete = true;
+            res.sendFile(filePath, (err) => {
+              if (err) {
+                transferComplete = false;
+                ret.setResponse(500, {
+                  message: 'Errore durante il download del file.',
+                });
+              }
+            });
+          } else {
+            ret.setResponse(404, { message: 'File non trovato.' });
+          }
+        } else {
+          ret.setResponse(404, { message: 'transito non presente' });
+        }
+      } else {
+        ret.setResponse(400, { message: 'chiave non presente' });
+      }
+    } catch (error: any) {
+      logger.error('controllerTransito.download :' + error?.message);
+      ret.setResponse(500, { message: 'errore caricamento transito' });
+    }
+    if (transferComplete === false) {
+      ret.returnResponseJson(res, next);
+    }
   };
 }
