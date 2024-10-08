@@ -92,7 +92,7 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
         'stato',
       ], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 

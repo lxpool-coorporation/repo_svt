@@ -102,7 +102,7 @@ export class daoPolicySanctionImplementation
         'stato',
       ], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 

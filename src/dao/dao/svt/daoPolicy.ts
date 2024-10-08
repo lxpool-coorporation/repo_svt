@@ -78,7 +78,7 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
       where: { id: t.get_id() },
       fields: ['cod', 'descrizione', 'tipo', 'stato'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 

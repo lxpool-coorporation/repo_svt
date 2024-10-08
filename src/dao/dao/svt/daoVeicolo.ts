@@ -76,7 +76,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
       where: { id: t.get_id() },
       fields: ['tipo', 'targa', 'stato'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 
