@@ -2,6 +2,7 @@ import { enumStato } from '../../entity/enum/enumStato';
 import { enumVeicoloTipo } from '../../entity/enum/enumVeicoloTipo';
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { ormUtenteVeicolo } from '../utente/ormUtenteVeicolo';
 
 /**
  * Instanziazione della connessione verso il RDBMS
@@ -13,6 +14,19 @@ export class ormVeicolo extends Model {
   public tipo!: enumVeicoloTipo;
   public targa!: string;
   public stato!: enumStato;
+
+  // Definisci le associazioni
+  static associate(models: any) {
+    ormVeicolo.hasMany(models.ormTransito, {
+      foreignKey: 'id_veicolo',
+      as: 'transiti',
+    });
+    ormVeicolo.belongsToMany(models.ormUtente, {
+      through: ormUtenteVeicolo,
+      foreignKey: 'id_veicolo',
+      as: 'veicolo_utenti',
+    });
+  }
 }
 
 // Definizione del modello

@@ -23,7 +23,7 @@ export class ormPolicySpeedControl extends Model {
     // Definizione dell'associazione one-to-one
     ormPolicySpeedControl.belongsTo(models.ormPolicy, {
       foreignKey: 'id_policy',
-      as: 'policyspeedcontrol_policy',
+      as: 'policy',
     });
   }
 }

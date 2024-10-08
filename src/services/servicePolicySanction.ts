@@ -146,5 +146,5 @@ class servicePolicySanctionSpeedControlImplementation {
   }
 }
 
-export const servicePolicySanctionSpeedControl =
+export const servicePolicySanction =
   new servicePolicySanctionSpeedControlImplementation();

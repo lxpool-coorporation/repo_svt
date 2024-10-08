@@ -23,10 +23,17 @@ export class ormTransito extends Model {
 
   // Definisci le associazioni
   static associate(models: any) {
-    // Associazioni Many-to-Many
     ormTransito.belongsTo(models.ormVarco, {
-      foreignKey: 'id_varco', // 'id_varco' fa riferimento al varco
-      as: 'varco_transito', // alias per l'accesso al varco associato
+      foreignKey: 'id_varco',
+      as: 'varco',
+    });
+    ormTransito.belongsTo(models.ormVeicolo, {
+      foreignKey: 'id_veicolo',
+      as: 'veicolo',
+    });
+    ormTransito.hasMany(models.ormMulta, {
+      foreignKey: 'id_transito',
+      as: 'transito_multe',
     });
   }
 }

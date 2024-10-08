@@ -5,16 +5,12 @@ import createError from 'http-errors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import routerLogin from './routes/login';
-import { serviceUtente } from './services/serviceUtente';
-import { enumPermessoTipo } from './entity/enum/enumPermessoTipo';
-import { enumPermessoCategoria } from './entity/enum/enumPermessoCategoria';
 import routerVarco from './routes/varco';
 import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
 import routerTransito from './routes/transito';
 import databaseCache from './utils/database-cache';
 import startTaskConsumer from './consumers/consumerMain';
-
 dotenv.config();
 logger.info('app started');
 
@@ -64,9 +60,8 @@ const PORT = process.env.SERVER_PORT || 3000;
 
 app
   .listen(PORT, () => {
-    //_readUser2();
-    //const o = new ormAssociazioni();
-    //o.read_associazioni();
+    _readUser2();
+
     clearRedisCache();
     // Avvio di RabbitMQ
     startTaskConsumer();
@@ -84,7 +79,11 @@ async function _readUser2() {
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
   //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)
   // const utenteConProfili1 = await ormUtente.findByPk(2)
-
+  //const obj = await serviceVeicolo.getVeicoloById(1);
+  //if(obj){
+  //  console.log(obj);
+  //}
+  /*
   const utente = await serviceUtente.getUtenteById(1);
   if (utente) {
     console.log('TROVATO UTENTE : ' + utente.get_identificativo());
@@ -119,6 +118,7 @@ async function _readUser2() {
     if (checkPermessoUtente) console.log('UTENTE HA PERMESSO DI LETTURA SU');
     else console.log('UTENTE NON HA IL PERMESSO');
   }
+    */
 }
 
 // Funzione per pulire la cache di Redis

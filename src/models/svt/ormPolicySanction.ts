@@ -2,7 +2,6 @@
 import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { ormPolicySanctionSpeedControl } from './ormPolicySanctionSpeedControl';
 import { enumPolicyTipo } from '../../entity/enum/enumPolicyTipo';
 
 const sequelize: Sequelize = database.getInstance();
@@ -17,9 +16,13 @@ export class ormPolicySanction extends Model {
   public costo_punti_patente!: number;
   public stato!: enumStato;
 
-  public getPolicySanctionSpeedControls!: (
-    options?: any,
-  ) => Promise<ormPolicySanctionSpeedControl[]>;
+  // Definisci le associazioni
+  static associate(models: any) {
+    ormPolicySanction.hasOne(models.ormPolicySanctionSpeedControl, {
+      foreignKey: 'id_policy_sanction',
+      as: 'multa',
+    });
+  }
 }
 
 ormPolicySanction.init(
