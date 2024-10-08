@@ -5,6 +5,7 @@ import { retMiddleware } from '../utils/retMiddleware';
 import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
 import { controllerVarco } from '../controllers/controllerVarco';
 import { isNumeric } from '../utils/utils';
+import { middlewareValidate } from './middlewareValidate';
 
 dotenv.config();
 
@@ -59,5 +60,28 @@ export class middlewareVarco {
       ret.setResponse(403, { message: 'errore verifica permessi SCRITTURA' });
     }
     ret.returnNext(next);
+  };
+  public static validate = (
+    req: Request,
+    _res: Response,
+    next: NextFunction,
+  ): void => {
+    let ret: retMiddleware = new retMiddleware();
+    let optional: boolean = req.method.toLowerCase() === 'patch';
+    // Aggiungi le varie validazioni
+    const validations = [
+      middlewareValidate.validateString('cod', optional),
+      middlewareValidate.validateString('descrizione', optional),
+      middlewareValidate.validateLatitudine('latitudine', optional),
+      middlewareValidate.validateLongitudine('longitudine', optional),
+      middlewareValidate.validateStato('stato', optional),
+    ];
+
+    // Esegui le validazioni
+    Promise.all(validations.map((validation) => validation.run(req))).then(
+      () => {
+        ret.returnNext(next);
+      },
+    );
   };
 }

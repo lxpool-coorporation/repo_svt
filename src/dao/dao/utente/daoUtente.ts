@@ -78,7 +78,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
       where: { id: t.get_id() },
       fields: ['identificativo', 'id_stato'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      ////individualHooks: true,
       validate: true,
     };
 

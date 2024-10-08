@@ -1,5 +1,5 @@
 import { QueryInterface, DataTypes } from 'sequelize';
-import {enumStato} from '../src/entity/enum/enumStato';
+import {enumTransitoStato} from '../src/entity/enum/enumTransitoStato';
 import {enumMeteoTipo} from '../src/entity/enum/enumMeteoTipo';
 
 export default {
@@ -49,9 +49,9 @@ export default {
         type: DataTypes.STRING,
       },
       stato: {
-        type: DataTypes.ENUM(...Object.values(enumStato)), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumTransitoStato)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: enumStato.attivo,
+        defaultValue: enumTransitoStato.acquisito,
       },
       createdAt: {
         allowNull: false,

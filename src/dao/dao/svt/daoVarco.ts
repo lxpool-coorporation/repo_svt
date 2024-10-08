@@ -14,12 +14,16 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
       throw new Error(`Varco non trovato per l'id ${id}`);
     }
     return new eVarco(
-      ormObj.id,
-      ormObj.cod,
-      ormObj.descrizione,
-      ormObj.latitudine,
-      ormObj.longitudine,
-      ormObj.stato,
+      ormObj.dataValues.id,
+      ormObj.dataValues.cod,
+      ormObj.dataValues.descrizione,
+      ormObj.dataValues.latitudine
+        ? parseFloat(ormObj.dataValues.latitudine)
+        : 0,
+      ormObj.dataValues.longitudine
+        ? parseFloat(ormObj.dataValues.longitudine)
+        : 0,
+      ormObj.dataValues.stato,
     );
   }
 
@@ -29,12 +33,16 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     return objs.map(
       (ormObj) =>
         new eVarco(
-          ormObj.id,
-          ormObj.cod,
-          ormObj.descrizione,
-          ormObj.latitudine,
-          ormObj.longitudine,
-          ormObj.stato,
+          ormObj.dataValues.id,
+          ormObj.dataValues.cod,
+          ormObj.dataValues.descrizione,
+          ormObj.dataValues.latitudine
+            ? parseFloat(ormObj.dataValues.latitudine)
+            : 0,
+          ormObj.dataValues.longitudine
+            ? parseFloat(ormObj.dataValues.longitudine)
+            : 0,
+          ormObj.dataValues.stato,
         ),
     );
   }
@@ -56,12 +64,16 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
       { transaction: options?.transaction },
     );
     return new eVarco(
-      ormObj.id,
-      ormObj.cod,
-      ormObj.descrizione,
-      ormObj.latitudine,
-      ormObj.longitudine,
-      ormObj.stato,
+      ormObj.dataValues.id,
+      ormObj.dataValues.cod,
+      ormObj.dataValues.descrizione,
+      ormObj.dataValues.latitudine
+        ? parseFloat(ormObj.dataValues.latitudine)
+        : 0,
+      ormObj.dataValues.longitudine
+        ? parseFloat(ormObj.dataValues.longitudine)
+        : 0,
+      ormObj.dataValues.stato,
     );
   }
 
@@ -82,14 +94,14 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
       where: { id: t.get_id() },
       fields: ['cod', 'descrizione', 'latitudine', 'longitudine', 'stato'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormVarco.update(
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
@@ -112,7 +124,7 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
     if (!ormObj) {
       throw new Error('Varco not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormVarco.destroy({ transaction: options?.transaction });
   }
 }
 

@@ -44,11 +44,12 @@ class serviceTransitoImplementation {
 
     const cacheKey = 'Transiti_tutti';
 
+    //VALUTARE SE USARE QUESTO METODO
     // Controlla se gli Transiti sono in cache
-    const cachedTransiti = await redisClient.get(cacheKey);
-    if (cachedTransiti) {
-      return JSON.parse(cachedTransiti); // Restituisce gli Transiti dalla cache
-    }
+    //const cachedTransiti = await redisClient.get(cacheKey);
+    //if (cachedTransiti) {
+    //  return JSON.parse(cachedTransiti); // Restituisce gli Transiti dalla cache
+    //}
 
     // Se non sono in cache, recupera dal repository
     const Transiti = await repositoryTransito.getAll(options);
@@ -64,15 +65,25 @@ class serviceTransitoImplementation {
 
   // Crea un nuovo Transito
   async createTransito(
+    data_transito: Date,
     id_varco: number,
     stato: enumTransitoStato,
+    speed?: number | null,
+    speed_real?: number | null,
+    meteo?: enumMeteoTipo | null,
+    id_veicolo?: number | null,
+    path_immagine?: string | null,
   ): Promise<eTransito | null> {
     const redisClient = await databaseCache.getInstance();
-    const data_transito = new Date();
     const nuovoTransito = new eTransito(
       new eTransitoBuilder()
-        .setIdVarco(id_varco)
         .setDataTransito(data_transito)
+        .setSpeed(speed)
+        .setSpeedReal(speed_real)
+        .setIdVarco(id_varco)
+        .setMeteo(meteo)
+        .setIdVeicolo(id_veicolo)
+        .setpath_immagine(path_immagine)
         .setStato(stato),
     );
     const savedTransito = await repositoryTransito.save(nuovoTransito);

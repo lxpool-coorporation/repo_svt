@@ -94,14 +94,14 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       where: { id: t.get_id() },
       fields: ['id_transito', 'id_policy', 'speed_delta', 'path_bollettino'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      ////individualHooks: true,
       validate: true,
     };
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await ormObj.ormMulta.update(
       {
         id_transito: t.get_id_transito(),
         id_policy: t.get_id_policy(),
@@ -127,7 +127,7 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     if (!ormObj) {
       throw new Error('Multa not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await ormObj.ormMulta.destroy({ transaction: options?.transaction });
   }
 }
 

@@ -1,7 +1,6 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eTransito, eTransitoBuilder } from '../../../entity/svt/eTransito';
 import { Transaction } from 'sequelize';
-
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormTransito } from '../../../models/svt/ormTransito';
 
@@ -108,14 +107,14 @@ export class daoTransitoImplementation
         'stato',
       ], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormTransito.update(
       {
         data_transito: t.get_data_transito(),
         speed: t.get_speed(),
@@ -141,7 +140,7 @@ export class daoTransitoImplementation
     if (!ormObj) {
       throw new Error('Transito not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormTransito.destroy({ transaction: options?.transaction });
   }
 }
 

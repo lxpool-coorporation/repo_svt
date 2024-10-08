@@ -1,9 +1,9 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eVeicolo } from '../../../entity/svt/eVeicolo';
-import { Transaction } from 'sequelize';
-
-import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormVeicolo } from '../../../models/svt/ormVeicolo';
+import sequelize from 'sequelize';
+import { Op, Transaction } from 'sequelize';
+import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 
 // Implementazione del DAO per l'entità `Veicolo`
 export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
@@ -16,6 +16,23 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     return new eVeicolo(ormObj.id, ormObj.tipo, ormObj.targa, ormObj.stato);
   }
 
+  async getByTarga(cf: string): Promise<eVeicolo | null> {
+    let ret: eVeicolo | null = null;
+    const ormObj = await ormVeicolo.findOne({
+      where: {
+        [Op.and]: [
+          sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('targa')),
+            cf.toLowerCase(),
+          ),
+        ],
+      },
+    });
+    if (!!ormObj) {
+      ret = new eVeicolo(ormObj.id, ormObj.tipo, ormObj.targa, ormObj.stato);
+    }
+    return ret;
+  }
   // Trova tutti gli utenti usando Sequelize
   async getAll(options?: object): Promise<eVeicolo[]> {
     const objs = await dbOrm.ormVeicolo.findAll(options);
@@ -59,14 +76,14 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
       where: { id: t.get_id() },
       fields: ['tipo', 'targa', 'stato'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormVeicolo.update(
       {
         tipo: t.get_tipo(),
         targa: t.get_targa(),
@@ -87,7 +104,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     if (!ormObj) {
       throw new Error('Veicolo not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormVeicolo.destroy({ transaction: options?.transaction });
   }
 }
 

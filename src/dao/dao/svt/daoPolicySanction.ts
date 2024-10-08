@@ -102,14 +102,14 @@ export class daoPolicySanctionImplementation
         'stato',
       ], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormPolicySanction.update(
       {
         id: t.get_id(),
         tipo_policy: t.get_tipo_policy(),
@@ -135,7 +135,9 @@ export class daoPolicySanctionImplementation
     if (!ormObj) {
       throw new Error('PolicySanction not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormPolicySanction.destroy({
+      transaction: options?.transaction,
+    });
   }
 }
 

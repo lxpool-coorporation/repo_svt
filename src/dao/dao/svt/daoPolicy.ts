@@ -78,14 +78,14 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
       where: { id: t.get_id() },
       fields: ['cod', 'descrizione', 'tipo', 'stato'], // Campi aggiornabili di default
       returning: true,
-      individualHooks: true,
+      //individualHooks: true,
       validate: true,
     };
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
 
-    await ormObj.update(
+    await dbOrm.ormPolicy.update(
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
@@ -108,7 +108,7 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     if (!ormObj) {
       throw new Error('Policy not found');
     }
-    await ormObj.destroy({ transaction: options?.transaction });
+    await dbOrm.ormPolicy.destroy({ transaction: options?.transaction });
   }
 }
 
