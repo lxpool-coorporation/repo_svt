@@ -354,6 +354,10 @@ class serviceMultaSpeedControlImplementation {
   deleteBollettino(t: eBollettino): Promise<void> {
     return repositoryMulta.deleteBollettino(t);
   }
+
+  richiediBollettino(idMulta: number) {
+    return repositoryMulta.richiediBollettino(idMulta);
+  }
 }
 
 export const serviceMulta = new serviceMultaSpeedControlImplementation();

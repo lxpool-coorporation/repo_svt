@@ -1,11 +1,15 @@
 // daoMultaSpeedControl.ts
 import { eMultaSpeedControl } from '../../../entity/svt/eMultaSpeedControl';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { Transaction } from 'sequelize';
+import { QueryTypes, Transaction } from 'sequelize';
 
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormMultaSpeedControl } from '../../../models/svt/ormMultaSpeedControl';
 import { ormMulta } from '../../../models/svt/ormMulta';
+import models from '../../../models';
+import database from '../../../utils/database';
+
+const db = database.getInstance();
 
 export class daoMultaSpeedControlImplementation
   implements DaoInterfaceGeneric<eMultaSpeedControl>
@@ -41,7 +45,7 @@ export class daoMultaSpeedControlImplementation
         where: { id_multa },
         include: [
           {
-            model: ormMulta,
+            model: models.ormMulta,
             as: 'multa',
           },
         ],
@@ -70,10 +74,12 @@ export class daoMultaSpeedControlImplementation
   }
 
   async getAllWithMulta(options?: {
+    where?: any;
     transaction?: Transaction;
   }): Promise<eMultaSpeedControl[]> {
     const ormObjs: ormMultaSpeedControl[] =
       await dbOrm.ormMultaSpeedControl.findAll({
+        where: options?.where, // Applica il filtro passato in options
         include: [
           {
             model: ormMulta,
@@ -194,6 +200,41 @@ export class daoMultaSpeedControlImplementation
     } catch (error) {
       throw error;
     }
+  }
+
+  async getImportoMulta(id_multa: number): Promise<number | null> {
+    const query = `
+      SELECT
+        (CASE WHEN m.is_notturno THEN
+            s.costo_min * 1.3
+          ELSE
+            s.costo_min
+          END) * 
+        (CASE WHEN m.is_recidivo THEN 
+            2 ELSE 1
+        END) AS importo_calcolato
+      FROM  svt_multa m
+      LEFT JOIN svt_multa_speed_control ms ON m.id = ms.id_multa
+      LEFT JOIN svt_plc_policy spp ON m.id_policy =spp.id 
+      LEFT JOIN svt_plc_speed_control spssc ON spp.id = spssc.id_policy 
+      LEFT JOIN svt_transito t ON m.id_transito = t.id
+      LEFT JOIN svt_plc_sanction_speed_control spc ON 
+      ms.speed_delta > spc.speed_min AND ms.speed_delta <= spc.speed_max
+      AND t.meteo = spssc.meteo 
+      LEFT JOIN svt_plc_sanction s ON s.id = spc.id_policy_sanction
+      WHERE m.tipo_policy = 'speed control' AND m.id=:id_multa;
+    `;
+
+    const rawResults = await db.query(query, {
+      replacements: { id_multa },
+      type: QueryTypes.SELECT,
+    });
+
+    // Mappiamo ogni risultato su ePolicySanctionSpeedControl
+    const results = rawResults.map((data: any) => data.importo_calcolato);
+
+    // Verifica se c'è un risultato e ritorna il valore
+    return results[0];
   }
 }
 

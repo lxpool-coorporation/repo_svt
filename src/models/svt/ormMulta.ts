@@ -35,11 +35,11 @@ export class ormMulta extends Model {
     });
     ormMulta.hasOne(models.ormMultaSpeedControl, {
       foreignKey: 'id_multa',
-      as: 'multa',
+      as: 'multa_speedcontrol',
     });
     ormMulta.hasMany(models.ormBollettino, {
       foreignKey: 'id_multa',
-      as: 'bollettino',
+      as: 'multa_bollettino',
     });
   }
 }

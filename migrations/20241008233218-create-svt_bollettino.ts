@@ -27,7 +27,7 @@ export default {
     },
     path_bollettino: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     stato: {
         type: DataTypes.ENUM(...Object.values(enumBollettinoStato)),

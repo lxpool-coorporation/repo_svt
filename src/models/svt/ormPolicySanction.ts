@@ -20,7 +20,7 @@ export class ormPolicySanction extends Model {
   static associate(models: any) {
     ormPolicySanction.hasOne(models.ormPolicySanctionSpeedControl, {
       foreignKey: 'id_policy_sanction',
-      as: 'multa',
+      as: 'policy',
     });
   }
 }

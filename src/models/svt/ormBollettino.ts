@@ -19,9 +19,10 @@ export class ormBollettino extends Model {
 
   // Definisci le associazioni
   static associate(models: any) {
-    ormBollettino.hasOne(models.ormMulta, {
+    ormBollettino.belongsTo(models.ormMulta, {
       foreignKey: 'id_multa',
-      as: 'multa',
+      as: 'multa_bollettino',
+      targetKey: 'id',
     });
   }
 }
@@ -51,7 +52,7 @@ ormBollettino.init(
     },
     path_bollettino: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     stato: {
       type: DataTypes.ENUM(...Object.values(enumBollettinoStato)),

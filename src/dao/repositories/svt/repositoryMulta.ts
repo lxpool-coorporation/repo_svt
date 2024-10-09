@@ -13,6 +13,10 @@ import {
   daoBollettinoImplementation,
 } from '../../../dao/dao/svt/daoBollettino';
 import { eBollettino } from '../../../entity/svt/eBollettino';
+import { enumBollettinoStato } from '../../../entity/enum/enumBollettinoStato';
+import { v4 as uuidv4 } from 'uuid';
+import messenger from '../../../utils/messenger';
+import { enumMessengerCoda } from '../../../entity/enum/enumMessengerCoda';
 
 const db = database.getInstance();
 
@@ -143,10 +147,12 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   ): Promise<boolean> {
     const result = await this.getAllMultaSpeedControl({
       where: {
-        id_automobilista: idAutomobilista,
         createdAt: {
           [Op.gte]: new Date(new Date().setMonth(new Date().getMonth() - 6)), // Ultimi 6 mesi
         },
+      },
+      includeWhere: {
+        id_automobilista: idAutomobilista, // Filtro sul modello associato
       },
     });
     return result.length > 0;
@@ -168,6 +174,64 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   }
   deleteBollettino(t: eBollettino): Promise<void> {
     return this.daoBollettino.delete(t);
+  }
+
+  async getImportoMulta(idMulta: number): Promise<number | null> {
+    return daoMultaSpeedControl.getImportoMulta(idMulta);
+  }
+
+  async richiediBollettino(idMulta: number): Promise<eBollettino | null> {
+    let result: eBollettino | null = null;
+
+    try {
+      const multa: eMultaSpeedControl | null =
+        await this.getMultaSpeedControl(idMulta);
+      if (!multa) {
+        throw new Error(
+          `errore in richiesta bollettino: multa con id ${idMulta}`,
+        );
+      } else {
+        const uuidPagamento: string = uuidv4(); // Genera UUID univoco per il pagamento
+        const importo: number | null = await this.getImportoMulta(
+          multa.get_id(),
+        );
+        if (!importo) {
+          throw new Error(
+            `errore in richiesta bollettino: importo non calcolato per multa: ${multa.get_id()}`,
+          );
+        }
+
+        const bollettino = new eBollettino(
+          0,
+          multa.get_id(),
+          uuidPagamento,
+          importo,
+          null,
+          enumBollettinoStato.richiesto,
+        );
+        result = await this.saveBellettino(bollettino);
+        if (!result) {
+          throw new Error(
+            `errore in richiesta bollettino: errore in generazione per multa: ${multa.get_id()}`,
+          );
+        } else {
+          const rabbitMQ = messenger.getInstance();
+
+          // Connessione a RabbitMQ
+          await rabbitMQ.connect();
+
+          // Invia un messaggio alla coda 'tasks_queue'
+          await rabbitMQ.sendToQueue(
+            enumMessengerCoda.queueBollettino,
+            JSON.stringify(result),
+          );
+        }
+      }
+    } catch (err) {
+      throw new Error('errore in richiesta bollettino:' + err);
+    }
+
+    return result;
   }
 }
 

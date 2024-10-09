@@ -1,4 +1,4 @@
-import { enumMessengerCoda } from '@/entity/enum/enumMessengerCoda';
+import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
 import { eTransito } from '../entity/svt/eTransito';
 
