@@ -17,6 +17,7 @@ import { ormUtente } from './utente/ormUtente';
 import { ormUtenteProfilo } from './utente/ormUtenteProfilo';
 import { ormUtenteVeicolo } from './utente/ormUtenteVeicolo';
 import { ormPolicySanctionSpeedControl } from './svt/ormPolicySanctionSpeedControl';
+import { ormBollettino } from './svt/ormBollettino';
 
 // Aggiungi i modelli al dborm
 const dbOrm: { [key: string]: any } = {
@@ -24,6 +25,7 @@ const dbOrm: { [key: string]: any } = {
   ormProfilo,
   ormProfiloPermesso,
   ormUtente,
+  ormVeicolo,
   ormUtenteProfilo,
   ormUtenteVeicolo,
   ormMulta,
@@ -37,7 +39,7 @@ const dbOrm: { [key: string]: any } = {
   ormVarcoPolicy,
   ormTratta,
   ormTrattaPolicy,
-  ormVeicolo,
+  ormBollettino,
 };
 
 // Gestisci le associazioni tra i modelli

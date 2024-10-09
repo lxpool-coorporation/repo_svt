@@ -25,7 +25,6 @@ export class daoMultaSpeedControlImplementation
       null,
       null,
       null,
-      null,
       ormObj.speed,
       ormObj.speed_real,
       ormObj.speed_limit,
@@ -62,7 +61,6 @@ export class daoMultaSpeedControlImplementation
       multaBase.id_automobilista,
       multaBase.is_notturno,
       multaBase.is_recidivo,
-      multaBase.path_bollettino,
       multaBase.stato,
       ormObj.speed,
       ormObj.speed_real,
@@ -95,7 +93,6 @@ export class daoMultaSpeedControlImplementation
         multaBase.id_automobilista,
         multaBase.is_notturno,
         multaBase.is_recidivo,
-        multaBase.path_bollettino,
         multaBase.stato,
         ormObj.speed,
         ormObj.speed_real,
@@ -112,7 +109,6 @@ export class daoMultaSpeedControlImplementation
     return objs.map((item) => {
       return new eMultaSpeedControl(
         item.id_multa,
-        null,
         null,
         null,
         null,

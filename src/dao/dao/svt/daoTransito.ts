@@ -1,8 +1,11 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eTransito, eTransitoBuilder } from '../../../entity/svt/eTransito';
-import { Transaction } from 'sequelize';
+import { QueryTypes, Transaction } from 'sequelize';
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormTransito } from '../../../models/svt/ormTransito';
+import database from '../../../utils/database';
+
+const db = database.getInstance();
 
 // Implementazione del DAO per l'entità `Transito`
 export class daoTransitoImplementation
@@ -141,6 +144,36 @@ export class daoTransitoImplementation
       throw new Error('Transito not found');
     }
     await dbOrm.ormTransito.destroy({ transaction: options?.transaction });
+  }
+
+  async getTransitoIngressoByTransitoUscita(
+    idTransitoUscita: number,
+  ): Promise<eTransito | null> {
+    let result = null;
+
+    try {
+      const rawTransitoIngresso = await db.query(
+        `SELECT t_ing.*
+        FROM svt_transito t_usc
+        JOIN svt_tratta tr ON (tr.id_varco_uscita = t_usc.id_varco)
+        JOIN svt_transito t_ing ON (t_ing.id_varco = tr.id_varco_ingresso)
+        WHERE t_usc.id = :idTransitoUscita
+        ORDER BY t_ing.data_transito ASC
+        LIMIT 1;`,
+        {
+          replacements: { idTransitoUscita: idTransitoUscita },
+          type: QueryTypes.SELECT,
+        },
+      );
+      //console.log(rawTransitoIngresso)
+      // Mappiamo ogni risultato su ePolicySanctionSpeedControl
+      const objTransitoIngresso = eTransito.fromJSON(rawTransitoIngresso[0]);
+
+      result = objTransitoIngresso;
+    } catch (error) {
+      throw new Error('getTransitoIngressoByTransitoUscita error: ' + error);
+    }
+    return result;
   }
 }
 

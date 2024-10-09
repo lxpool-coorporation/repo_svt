@@ -21,7 +21,6 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       ormObj.id_automobilista,
       ormObj.is_notturno,
       ormObj.is_recidivo,
-      ormObj.path_bollettino,
       ormObj.stato,
     );
   }
@@ -39,7 +38,6 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
           ormObj.id_automobilista,
           ormObj.is_notturno,
           ormObj.is_recidivo,
-          ormObj.path_bollettino,
           ormObj.stato,
         ),
     );
@@ -52,14 +50,12 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   ): Promise<eMulta | null> {
     const ormObj = await dbOrm.ormMulta.create(
       {
-        id: t.get_id(),
         id_transito: t.get_id_transito(),
         id_policy: t.get_id_policy(),
         tipo_policy: t.get_tipo_policy(),
         id_automobilista: t.get_id_automobilista(),
         is_notturno: t.get_is_notturno(),
         is_recidivo: t.get_is_recidivo(),
-        path_bollettino: t.get_path_bollettino(),
         stato: t.get_stato(),
       },
       { transaction: options?.transaction },
@@ -72,7 +68,6 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       ormObj.id_automobilista,
       ormObj.is_notturno,
       ormObj.is_recidivo,
-      ormObj.path_bollettino,
       ormObj.stato,
     );
   }
@@ -92,7 +87,15 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['id_transito', 'id_policy', 'speed_delta', 'path_bollettino'], // Campi aggiornabili di default
+      fields: [
+        'id_transito',
+        'id_policy',
+        'tipo_policy',
+        'id_automobilista',
+        'is_notturno',
+        'is_recidivo',
+        'stato',
+      ], // Campi aggiornabili di default
       returning: true,
       ////individualHooks: true,
       validate: true,
@@ -109,7 +112,6 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
         id_automobilista: t.get_id_automobilista(),
         is_notturno: t.get_is_notturno(),
         is_recidivo: t.get_is_recidivo(),
-        path_bollettino: t.get_path_bollettino(),
         stato: t.get_stato(),
       },
       updateOptions,

@@ -1,8 +1,9 @@
 import { enumStato } from '../../entity/enum/enumStato';
 import { enumVeicoloTipo } from '../../entity/enum/enumVeicoloTipo';
 import database from '../../utils/database';
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, NonAttribute, Sequelize } from 'sequelize';
 import { ormUtenteVeicolo } from '../utente/ormUtenteVeicolo';
+import { ormUtente } from '../utente/ormUtente';
 
 /**
  * Instanziazione della connessione verso il RDBMS
@@ -14,6 +15,8 @@ export class ormVeicolo extends Model {
   public tipo!: enumVeicoloTipo;
   public targa!: string;
   public stato!: enumStato;
+
+  public veicolo_utenti?: NonAttribute<ormUtente[]>; // Sequelize riempirà questo campo dinamicamente
 
   // Definisci le associazioni
   static associate(models: any) {

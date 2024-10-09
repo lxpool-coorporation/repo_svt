@@ -17,6 +17,9 @@ export class ormTratta extends Model {
   public distanza!: number;
   public stato!: enumStato;
 
+  public varco_ingresso?: ormVarco;
+  public varco_uscita?: ormVarco;
+
   // Definisci le associazioni
   static associate(models: any) {
     // Associazioni Many-to-Many

@@ -4,6 +4,7 @@ import { ormVeicolo } from '../../../models/svt/ormVeicolo';
 import sequelize from 'sequelize';
 import { Op, Transaction } from 'sequelize';
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
+import { eUtente } from '../../../entity/utente/eUtente';
 
 // Implementazione del DAO per l'entità `Veicolo`
 export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
@@ -105,6 +106,42 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
       throw new Error('Veicolo not found');
     }
     await dbOrm.ormVeicolo.destroy({ transaction: options?.transaction });
+  }
+
+  public async getUtentiByIdVeicolo(
+    idVeicolo: number,
+  ): Promise<eUtente[] | null> {
+    try {
+      const ormVeicolo = await dbOrm.ormVeicolo.findByPk(idVeicolo, {
+        include: [
+          {
+            model: dbOrm.ormUtente,
+            as: 'veicolo_utenti', // Assicurati che questo sia l'alias corretto definito nell'associazione
+          },
+        ],
+      });
+
+      if (!ormVeicolo) {
+        throw new Error('Veicolo non trovato');
+      }
+
+      // Se ci sono utenti associati, restituiscili
+      if (ormVeicolo.veicolo_utenti && ormVeicolo.veicolo_utenti.length > 0) {
+        // Mappiamo ogni risultato su ePolicySanctionSpeedControl
+        const utenti = ormVeicolo.veicolo_utenti.map((data: any) =>
+          eUtente.fromJSON(data),
+        );
+        return utenti;
+      }
+
+      return null; // Nessun utente associato
+    } catch (error) {
+      console.error(
+        'Errore durante il recupero degli utenti per il veicolo:',
+        error,
+      );
+      throw error;
+    }
   }
 }
 

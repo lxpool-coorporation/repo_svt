@@ -90,6 +90,7 @@ class serviceTransitoImplementation {
 
     // Invalida la cache degli Transiti
     await redisClient.del(`Transiti_tutti`);
+
     return savedTransito;
   }
 
@@ -137,6 +138,57 @@ class serviceTransitoImplementation {
     await redisClient.del(`Transito_${id}`);
     await redisClient.del('Transiti_tutti');
   }
-}
 
+  public getStato = (transito: eTransito): enumTransitoStato => {
+    let result = enumTransitoStato.indefinito;
+
+    try {
+      // Definizione delle regole come array di funzioni
+      const rules: Array<() => enumTransitoStato | null> = [
+        () => {
+          // "non processabile" se manca id_veicolo e path_immagine è null
+          if (!transito.get_id_veicolo() && !transito.get_path_immagine()) {
+            return enumTransitoStato.non_processabile;
+          } else {
+            return null;
+          }
+        },
+        () => {
+          // "acquisito" se entrambi id_veicolo e meteo sono valorizzati
+          if (transito.get_id_veicolo() && transito.get_meteo()) {
+            return enumTransitoStato.acquisito;
+          } else {
+            return null;
+          }
+        },
+        () => {
+          // "in attesa" se manca uno dei due campi (id_veicolo o meteo)
+          if (!transito.get_id_veicolo() || !transito.get_meteo()) {
+            return enumTransitoStato.in_attesa;
+          } else {
+            return null;
+          }
+        },
+      ];
+
+      // Trova la prima regola che soddisfa la condizione
+      let sub_result = rules
+        .map((rule) => rule())
+        .find((stato) => stato !== null);
+
+      if (sub_result) {
+        result = sub_result;
+      }
+
+      // Se uno stato è stato determinato, aggiorna il transito
+      //if (nuovoStato) {
+      //transito.set_stato(nuovoStato);
+      //}
+    } catch (err) {
+      logger.error('serviceSvt - err:', err);
+    }
+
+    return result;
+  };
+}
 export const serviceTransito = new serviceTransitoImplementation();

@@ -125,6 +125,43 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     }
     await dbOrm.ormTratta.destroy({ transaction: options?.transaction });
   }
+
+  public async getTrattaByIdVarcoUscita(
+    idVarcoUscita: number,
+  ): Promise<eTratta | null> {
+    try {
+      const ormObj = await ormTratta.findOne({
+        where: {
+          id_varco_uscita: idVarcoUscita,
+        },
+      });
+
+      if (!ormObj) {
+        throw new Error(
+          'Tratta non trovata per id varco uscita: ' + idVarcoUscita,
+        );
+      }
+
+      return new eTratta(
+        ormObj.id,
+        ormObj.cod,
+        ormObj.descrizione,
+        ormObj.id_varco_ingresso,
+        ormObj.id_varco_uscita,
+        ormObj.distanza,
+        ormObj.stato,
+      );
+    } catch (error) {
+      console.error(
+        'Errore durante il recupero della Tratta per id varco uscita: ' +
+          idVarcoUscita,
+        error,
+      );
+      throw error;
+    }
+
+    return null;
+  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
