@@ -127,7 +127,7 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     if (!ormObj) {
       throw new Error('Multa not found');
     }
-    await ormObj.ormMulta.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

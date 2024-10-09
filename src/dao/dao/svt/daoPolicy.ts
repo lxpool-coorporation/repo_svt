@@ -108,7 +108,7 @@ export class daoPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
     if (!ormObj) {
       throw new Error('Policy not found');
     }
-    await dbOrm.ormPolicy.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

@@ -1,0 +1,41 @@
+services:
+  app:
+    build: 
+      dockerfile: .docker/Dockerfile_dev
+      context: ../
+    command: ["sh", "-c", "npm run dev"]
+    network_mode: "host"
+    volumes:
+      - ../src:/app/src/
+      - ../.keys/:/app/.keys/
+      - ../.env:/app/.env
+      - ../.img:${IMAGE_PATH}
+    ports:
+      - "3000:3000"
+    expose:
+      # Opens port 3306 on the container
+      - "3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - LOG_DIRECTORY=${LOG_DIRECTORY}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_OUTPUT_MODE=${LOG_OUTPUT_MODE}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}  
+      - REDIS_CACHE_TIMEOUT=${REDIS_CACHE_TIMEOUT}
+      - SERVER_PORT=${SERVER_PORT}
+      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
+      - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
+      - JWT_TOKEN_EXPIRED=${JWT_TOKEN_EXPIRED}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
+      - IMAGE_PATH=${IMAGE_PATH}
+      - IMAGE_TYPE=${IMAGE_TYPE}

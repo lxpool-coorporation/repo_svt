@@ -123,7 +123,7 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
     if (!ormObj) {
       throw new Error('Tratta not found');
     }
-    await dbOrm.ormTratta.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

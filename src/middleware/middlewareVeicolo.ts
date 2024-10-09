@@ -6,6 +6,11 @@ import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
 import { controllerVeicolo } from '../controllers/controllerVeicolo';
 import { isNumeric } from '../utils/utils';
 import { middlewareValidate } from './middlewareValidate';
+import { serviceVeicolo } from '../services/serviceVeicolo';
+import { enumStato } from '../entity/enum/enumStato';
+import { repositoryVeicolo } from '../dao/repositories/svt/repositoryVeicolo';
+import { eVeicolo } from '../entity/svt/eVeicolo';
+import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 
 dotenv.config();
 
@@ -81,5 +86,39 @@ export class middlewareVeicolo {
         ret.returnNext(next);
       },
     );
+  };
+
+  public static insertTarga = async (
+    req: Request,
+    _res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    let ret: retMiddleware = new retMiddleware();
+    try {
+      //non blocco l'esecuzione se non riesce a inserire la targa tanto l'ocr verificherà anche questa
+      const targa: string | null = req.body?.targa;
+      const veicolo_tipo: enumVeicoloTipo = req.body.veicolo_tipo;
+      if (!!targa) {
+        const veicolo: eVeicolo | null =
+          await repositoryVeicolo.getByTarga(targa);
+        if (!!veicolo) {
+          req.body.id_veicolo = veicolo.get_id();
+        } else {
+          const veicoloRes: eVeicolo | null =
+            await serviceVeicolo.createVeicolo(
+              veicolo_tipo,
+              targa,
+              enumStato.attivo,
+            );
+          if (!!veicoloRes) {
+            req.body.id_veicolo = veicoloRes.get_id();
+          }
+        }
+      }
+    } catch (error: any) {
+      logger.warn('middlewareVeicolo.insertTarga :' + error?.message);
+    }
+
+    ret.returnNext(next);
   };
 }

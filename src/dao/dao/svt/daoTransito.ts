@@ -140,7 +140,7 @@ export class daoTransitoImplementation
     if (!ormObj) {
       throw new Error('Transito not found');
     }
-    await dbOrm.ormTransito.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 

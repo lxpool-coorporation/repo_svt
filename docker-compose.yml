@@ -33,6 +33,8 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
+      - IMAGE_PATH=${IMAGE_PATH}
+      - IMAGE_TYPE=${IMAGE_TYPE}
     depends_on:
       - svt-db
       - svt-redis_cache
@@ -114,6 +116,9 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
+      - IMAGE_PATH=${IMAGE_PATH}
+      - IMAGE_TYPE=${IMAGE_TYPE}
     depends_on:
       - svt-db
       - svt-redis_cache

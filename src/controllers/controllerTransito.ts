@@ -10,7 +10,6 @@ import { StringisNumeric } from '../utils/utils';
 import { eTransito } from '../entity/svt/eTransito';
 import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
 import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
-import sequelize, { Op, col, where } from 'sequelize';
 import path from 'path';
 import fs from 'fs';
 
@@ -66,27 +65,9 @@ export class controllerTransito {
 
       let varchi: eTransito[] = [];
       if (idsArray.length > 0 || statoTansitosArray.length > 0) {
-        let ricerca: sequelize.Utils.Where[] = [];
-        if (idsArray.length > 0) {
-          ricerca.push(
-            where(
-              col('id_varco'), // Funzione LOWER su identificativo
-              { [Op.in]: idsArray }, // Usare Op.in con valori in lowercase
-            ),
-          );
-        }
-        if (statoTansitosArray.length > 0) {
-          ricerca.push(
-            where(
-              col('stato'), // Funzione LOWER su identificativo
-              { [Op.in]: statoTansitosArray }, // Usare Op.in con valori in lowercase
-            ),
-          );
-        }
-        varchi = await serviceTransito.getAllTransiti({
-          where: {
-            [Op.and]: ricerca,
-          },
+        varchi = await serviceTransito.getTransitiFromQuery({
+          arrayVarchi: idsArray,
+          arrayStatoTransiti: statoTansitosArray,
         });
       } else {
         varchi = await serviceTransito.getAllTransiti();
@@ -328,10 +309,11 @@ export class controllerTransito {
         if (!!transito) {
           // Percorso assoluto del file da scaricare
           const filePath = path.join(
+            '/',
             IMAGE_PATH,
             transito.get_path_immagine() || '',
           );
-
+          console.log(filePath);
           // Verifica se il file esiste
           if (fs.existsSync(filePath)) {
             // Invia il file al client
