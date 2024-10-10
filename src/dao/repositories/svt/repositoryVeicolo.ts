@@ -3,18 +3,12 @@ import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneri
 import { eUtente } from '../../../entity/utente/eUtente';
 import { eVeicolo } from '../../../entity/svt/eVeicolo';
 import { daoVeicolo, daoVeicoloImplementation } from '../../dao/svt/daoVeicolo';
-import {
-  daoVeicoloUtente,
-  daoVeicoloUtenteImplementation,
-} from '../../dao/svt/daoVeicoloUtente';
 
 class repositoryVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   private daoVeicolo: daoVeicoloImplementation;
-  private daoVeicoloUtente: daoVeicoloUtenteImplementation;
 
   constructor() {
     this.daoVeicolo = daoVeicolo;
-    this.daoVeicoloUtente = daoVeicoloUtente;
   }
   get(id: number): Promise<eVeicolo | null> {
     return this.daoVeicolo.get(id);
@@ -37,8 +31,8 @@ class repositoryVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   delete(t: eVeicolo, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoVeicolo.delete(t, options);
   }
-  getUtenti(idVeicolo: number): Promise<eUtente[] | null> {
-    return this.daoVeicoloUtente.getUtenti(idVeicolo);
+  getUtentiByIdVeicolo(idVeicolo: number): Promise<eUtente[] | null> {
+    return this.daoVeicolo.getUtentiByIdVeicolo(idVeicolo);
   }
 }
 

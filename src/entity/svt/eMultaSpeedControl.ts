@@ -16,7 +16,6 @@ class eMultaSpeedControl extends eMulta {
     id_automobilista: number | null,
     is_notturno: boolean | null,
     is_recidivo: boolean | null,
-    path_bollettino: string | null,
     stato: enumMultaStato | null,
     speed: number,
     speed_real: number,
@@ -31,7 +30,6 @@ class eMultaSpeedControl extends eMulta {
       id_automobilista,
       is_notturno,
       is_recidivo,
-      path_bollettino,
       stato,
     );
     this.speed = speed;
@@ -53,7 +51,6 @@ class eMultaSpeedControl extends eMulta {
       data.speed_delta,
       data.is_notturno,
       data.is_recidivo,
-      data.path_bollettino,
       data.stato,
     );
   }

@@ -130,7 +130,7 @@ class serviceSvtImplementation {
     }
 
     // Se non sono in cache, recupera dal repository
-    const Utenti = await repositoryVeicolo.getUtenti(idVeicolo);
+    const Utenti = await repositoryVeicolo.getUtentiByIdVeicolo(idVeicolo);
     if (Utenti) {
       // Memorizza i Utenti in cache per 1 ora
       await redisClient.set(cacheKey, JSON.stringify(Utenti), {

@@ -47,6 +47,9 @@ class repositoryTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
   getPolicies(idTratta: number): Promise<ePolicy[] | null> {
     return this.daoTrattaPolicy.getPolicies(idTratta);
   }
+  getTrattaByIdVarcoUscita(idVarcoUscita: number): Promise<eTratta | null> {
+    return this.daoTrattaPolicy.getTrattaByIdVarcoUscita(idVarcoUscita);
+  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

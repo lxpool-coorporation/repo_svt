@@ -8,6 +8,8 @@ import { Transaction } from 'sequelize';
 import database from '../../../utils/database';
 import { daoPolicy, daoPolicyImplementation } from '../../dao/svt/daoPolicy';
 import { ePolicy } from '../../../entity/svt/ePolicy';
+import { daoVarcoPolicy } from '../../../dao/dao/svt/daoVarcoPolicy';
+import { enumMeteoTipo } from '../../../entity/enum/enumMeteoTipo';
 
 const db = database.getInstance();
 
@@ -119,6 +121,22 @@ class repositoryPolicyImplementation implements DaoInterfaceGeneric<ePolicy> {
       await transaction.rollback();
       throw error;
     }
+  }
+
+  async findPolicyVarco(idVarco: number): Promise<ePolicy[] | null> {
+    return await daoVarcoPolicy.getPolicies(idVarco);
+  }
+
+  async getPoliciesByVarcoMeteoVeicolo(
+    id_varco: number,
+    meteo: enumMeteoTipo,
+    id_veicolo: number,
+  ): Promise<ePolicySpeedControl[] | null> {
+    return await daoPolicySpeedControl.getPoliciesByVarcoMeteoVeicolo(
+      id_varco,
+      meteo,
+      id_veicolo,
+    );
   }
 }
 

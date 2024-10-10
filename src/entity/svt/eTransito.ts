@@ -160,12 +160,23 @@ class eTransitoBuilder {
   build(): eTransito {
     if (
       this.id === undefined ||
+      this.id === null ||
       this.data_transito === undefined ||
+      this.data_transito === null ||
       this.id_varco === undefined ||
-      this.stato === undefined
+      this.id_varco === null ||
+      this.stato === undefined ||
+      this.stato === null
     ) {
       throw new Error(
-        'I campi obbligatori (id, data_transito, id_varco, stato) non sono stati impostati.',
+        'I campi obbligatori (id, data_transito, id_varco, stato) non sono stati impostati. ' +
+          this.id +
+          ' - ' +
+          this.data_transito +
+          ' - ' +
+          this.id_varco +
+          ' - ' +
+          this.stato,
       );
     }
     return new eTransito(this);

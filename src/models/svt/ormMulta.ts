@@ -17,7 +17,6 @@ export class ormMulta extends Model {
   public id_automobilista!: number;
   public is_notturno!: boolean;
   public is_recidivo!: boolean;
-  public path_bollettino!: string;
   public stato!: enumMultaStato;
 
   // Definisci le associazioni
@@ -36,7 +35,11 @@ export class ormMulta extends Model {
     });
     ormMulta.hasOne(models.ormMultaSpeedControl, {
       foreignKey: 'id_multa',
-      as: 'multa',
+      as: 'multa_speedcontrol',
+    });
+    ormMulta.hasMany(models.ormBollettino, {
+      foreignKey: 'id_multa',
+      as: 'multa_bollettino',
     });
   }
 }
@@ -84,10 +87,6 @@ ormMulta.init(
     is_recidivo: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-    },
-    path_bollettino: {
-      type: DataTypes.STRING,
-      allowNull: true,
     },
     stato: {
       type: DataTypes.ENUM(...Object.values(enumMultaStato)),

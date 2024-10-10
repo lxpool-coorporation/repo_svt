@@ -13,7 +13,6 @@ export default {
         id_automobilista: 1,
         is_notturno: false,
         is_recidivo: false,
-        path_bollettino: null,
         stato: enumMultaStato.in_attesa,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -26,7 +25,6 @@ export default {
         id_automobilista: 1,
         is_notturno: false,
         is_recidivo: false,
-        path_bollettino: null,
         stato: enumMultaStato.in_attesa,
         createdAt: new Date(),
         updatedAt: new Date()

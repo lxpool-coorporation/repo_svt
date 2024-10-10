@@ -1,11 +1,15 @@
 // daoPolicySpeedControl.ts
 import { ePolicySpeedControl } from '../../../entity/svt/ePolicySpeedControl';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
-import { Transaction } from 'sequelize';
+import { QueryTypes, Transaction } from 'sequelize';
 
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormPolicy } from '../../../models/svt/ormPolicy';
 import { ormPolicySpeedControl } from '../../../models/svt/ormPolicySpeedControl';
+import { enumMeteoTipo } from '../../../entity/enum/enumMeteoTipo';
+import database from '../../../utils/database';
+
+const db = database.getInstance();
 
 export class daoPolicySpeedControlImplementation
   implements DaoInterfaceGeneric<ePolicySpeedControl>
@@ -177,6 +181,35 @@ export class daoPolicySpeedControlImplementation
     } catch (error) {
       throw error;
     }
+  }
+
+  async getPoliciesByVarcoMeteoVeicolo(
+    id_varco: number,
+    meteo: enumMeteoTipo,
+    id_veicolo: number,
+  ): Promise<ePolicySpeedControl[] | null> {
+    const query = `
+      SELECT plc.*,psc.*
+      FROM svt_varco_policy vp
+      LEFT JOIN svt_plc_policy plc ON vp.id_policy = plc.id
+      LEFT JOIN svt_plc_speed_control psc ON plc.id = psc.id_policy
+      LEFT JOIN  svt_veicolo vcl ON psc.veicolo =vcl.tipo
+      WHERE vp.id_varco = :id_varco
+      AND psc.meteo = :meteo
+      AND vcl.id = :id_veicolo
+    `;
+
+    const rawPolicies = await db.query(query, {
+      replacements: { id_varco, meteo, id_veicolo },
+      type: QueryTypes.SELECT,
+    });
+
+    // Mappiamo ogni risultato su ePolicySanctionSpeedControl
+    const policies = rawPolicies.map((data: any) =>
+      ePolicySpeedControl.fromJSON(data),
+    );
+
+    return policies;
   }
 }
 

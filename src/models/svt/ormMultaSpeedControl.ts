@@ -20,6 +20,7 @@ export class ormMultaSpeedControl extends Model {
     ormMultaSpeedControl.belongsTo(models.ormMulta, {
       foreignKey: 'id_multa',
       as: 'multa',
+      targetKey: 'id',
     });
   }
 }
@@ -29,7 +30,12 @@ ormMultaSpeedControl.init(
     id_multa: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      allowNull: false,
+      references: {
+        model: 'svt_multa',
+        key: 'id',
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     },
     speed: {
       type: DataTypes.INTEGER,

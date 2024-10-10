@@ -46,10 +46,6 @@ export default {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      path_bollettino: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
       stato: {
         type: DataTypes.ENUM(...Object.values(enumMultaStato)),
         allowNull: false,

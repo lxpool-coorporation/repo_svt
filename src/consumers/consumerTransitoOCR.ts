@@ -1,6 +1,8 @@
+import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
+import { eTransito } from '../entity/svt/eTransito';
 
-async function startTaskConsumer(): Promise<void> {
+async function startTaskTransitoOCRConsumer(): Promise<void> {
   try {
     // Connessione a RabbitMQ con gestione degli errori
     const connection: Connection = await amqp.connect(
@@ -8,7 +10,7 @@ async function startTaskConsumer(): Promise<void> {
     );
     const channel: Channel = await connection.createChannel();
 
-    const queue: string = 'tasks_queue';
+    const queue: string = enumMessengerCoda.queueTransitoOCR;
 
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });
@@ -18,15 +20,19 @@ async function startTaskConsumer(): Promise<void> {
     // Consuma i messaggi dalla coda
     channel.consume(
       queue,
-      (msg: Message | null) => {
+      async (msg: Message | null) => {
         if (msg) {
           const content: string = msg.content.toString();
-          console.log(`[x] Ricevuto: ${content}`);
+          console.log(
+            enumMessengerCoda.queueTransitoOCR + ': Ricevuto: ${content}',
+          );
 
-          // Logica per elaborare il messaggio
+          const objTransitoOCR: eTransito = eTransito.fromJSON(content);
+          if (objTransitoOCR) {
+            // ...
 
-          // Conferma che il messaggio è stato elaborato
-          channel.ack(msg);
+            channel.ack(msg);
+          }
         }
       },
       {
@@ -38,4 +44,4 @@ async function startTaskConsumer(): Promise<void> {
   }
 }
 
-export default startTaskConsumer;
+export default startTaskTransitoOCRConsumer;

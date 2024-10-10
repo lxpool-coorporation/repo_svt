@@ -10,7 +10,11 @@ import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
 import routerTransito from './routes/transito';
 import databaseCache from './utils/database-cache';
-import startTaskConsumer from './consumers/consumerMain';
+import { serviceMulta } from './services/serviceMulta';
+import database from './utils/database';
+import messenger from './utils/messenger';
+import { eBollettino } from './entity/svt/eBollettino';
+import startTaskBollettinoConsumer from './consumers/consumerBollettino';
 dotenv.config();
 logger.info('app started');
 
@@ -64,16 +68,56 @@ app
 
     clearRedisCache();
     // Avvio di RabbitMQ
-    startTaskConsumer();
+    startTaskBollettinoConsumer();
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {
     logger.error(err.message);
   });
 
+// Gestione della chiusura dell'applicazione
+process.on('SIGINT', async () => {
+  logger.info("Interruzione dell'applicazione...");
+
+  // Chiude la connessione RabbitMQ
+  const rabbitMQ = messenger.getInstance(); // Ottiene l'istanza del singleton RabbitMQ
+  await rabbitMQ.close();
+  // Chiudi la connessione al database
+  const sequelize = database.getInstance(); // Assumendo che `database.getInstance()` restituisca l'istanza Sequelize
+  await sequelize.close(); // Chiude le connessioni al database
+
+  // Chiudi la connessione a Redis
+  const redisClient = await databaseCache.getInstance();
+  await redisClient.disconnect(); // Chiude la connessione Redis
+
+  process.exit(0); // Chiude il processo Node.js in sicurezza
+});
+
 export default app;
 
 async function _readUser2() {
+  // CHECK MULTA
+  //const objMulta = await serviceMulta.getMultaSpeedControlById(1);
+  //console.log(objMulta)
+  /*
+
+  const objTransito = await serviceTransito.getTransitoById(2);
+  if (objTransito) {
+    const multa = await serviceMulta.verificaSanzione(objTransito);
+    if (!multa) console.log('multa da non generare!');
+    else console.log('multa da generare');
+  }
+  */
+
+  // CHECK BOLLETTINO
+
+  const objBollettino: eBollettino | null =
+    await serviceMulta.richiediBollettino(1);
+  if (objBollettino) {
+    console.log('bollettino emesso con id: ' + objBollettino.get_id());
+  } else {
+    console.log('bollettino non generato');
+  }
   //await serviceUtente.initStruttura({alter:true })
   //await serviceTransito.initStruttura({alter:true })
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)

@@ -10,7 +10,6 @@ class eMulta {
   private id_automobilista: number | null;
   private is_notturno: boolean | null;
   private is_recidivo: boolean | null;
-  private path_bollettino: string | null;
   private stato: enumMultaStato | null;
 
   constructor(
@@ -21,7 +20,6 @@ class eMulta {
     id_automobilista: number | null,
     is_notturno: boolean | null,
     is_recidivo: boolean | null,
-    path_bollettino: string | null,
     stato: enumMultaStato | null,
   ) {
     this.id = id;
@@ -31,7 +29,6 @@ class eMulta {
       (this.id_automobilista = id_automobilista);
     this.is_notturno = is_notturno;
     this.is_recidivo = is_recidivo;
-    this.path_bollettino = path_bollettino;
     this.stato = stato;
   }
 
@@ -44,7 +41,6 @@ class eMulta {
       data.id_automobilista,
       data.is_notturno,
       data.is_recidivo,
-      data.path_bollettino,
       data.stato,
     );
   }
@@ -71,9 +67,6 @@ class eMulta {
   get_is_recidivo(): boolean | null {
     return this.is_recidivo;
   }
-  get_path_bollettino(): string | null {
-    return this.path_bollettino;
-  }
   get_stato(): enumMultaStato | null {
     return this.stato;
   }
@@ -99,9 +92,6 @@ class eMulta {
   }
   set_is_recidivo(is_recidivo: boolean): void {
     this.is_recidivo = is_recidivo;
-  }
-  set_path_bollettino(path_bollettino: string): void {
-    this.path_bollettino = path_bollettino;
   }
   set_stato(stato: enumMultaStato): void {
     this.stato = stato;

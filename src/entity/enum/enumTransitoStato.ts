@@ -1,8 +1,8 @@
-// enumStato.ts
+// enumTransitoStato.ts
 export enum enumTransitoStato {
   in_attesa = 'in attesa',
   acquisito = 'acquisito',
   elaborato = 'elaborato',
-  dubbia = 'dubbia',
-  illegibile = 'illegibile',
+  non_processabile = 'non processabile',
+  indefinito = 'indefinito',
 }

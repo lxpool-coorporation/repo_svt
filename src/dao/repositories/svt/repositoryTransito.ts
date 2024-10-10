@@ -57,6 +57,12 @@ class repositoryTransitoImplementation
   delete(t: eTransito, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoTransito.delete(t, options);
   }
+
+  getTransitoIngressoByTransitoUscita(
+    idTransitoUscita: number,
+  ): Promise<eTransito | null> {
+    return daoTransito.getTransitoIngressoByTransitoUscita(idTransitoUscita);
+  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller
