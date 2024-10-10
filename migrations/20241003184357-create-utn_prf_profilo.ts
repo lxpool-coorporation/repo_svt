@@ -1,6 +1,7 @@
 
 import { QueryInterface, DataTypes } from 'sequelize';
 import {enumStato} from '../src/entity/enum/enumStato';
+import {enumProfiloTipo} from '../src/entity/enum/enumProfiloTipo';
 
 
 export default {
@@ -20,6 +21,10 @@ export default {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+      },
+      enum_profilo: {
+        type: DataTypes.ENUM(...Object.values(enumProfiloTipo)),
+        allowNull: false,
       },
       stato: {
         type: DataTypes.ENUM(...Object.values(enumStato)), // Definizione dell'ENUM nel database

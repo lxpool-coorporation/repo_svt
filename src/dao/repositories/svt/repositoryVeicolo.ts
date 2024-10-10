@@ -31,8 +31,8 @@ class repositoryVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   delete(t: eVeicolo, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoVeicolo.delete(t, options);
   }
-  getUtentiByIdVeicolo(idVeicolo: number): Promise<eUtente[] | null> {
-    return this.daoVeicolo.getUtentiByIdVeicolo(idVeicolo);
+  getUtenteByIdVeicolo(idVeicolo: number): Promise<eUtente | null> {
+    return this.daoVeicolo.getUtenteByIdVeicolo(idVeicolo);
   }
 }
 

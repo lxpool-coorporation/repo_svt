@@ -2,6 +2,7 @@ import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
 import { DataTypes, Model, NonAttribute, Sequelize } from 'sequelize';
 import { ormPermesso } from './ormPermesso';
+import { enumProfiloTipo } from '@/entity/enum/enumProfiloTipo';
 
 /**
  * Instanziazione della connessione verso il RDBMS
@@ -12,6 +13,7 @@ export class ormProfilo extends Model {
   public id!: number;
   public cod!: string;
   public descrizione!: string;
+  public enum_profilo!: enumProfiloTipo;
   public stato!: enumStato;
 
   // Definisci una proprietà per i permessi associati
@@ -49,6 +51,10 @@ ormProfilo.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    enum_profilo: {
+      type: DataTypes.ENUM(...Object.values(enumProfiloTipo)),
+      allowNull: false,
     },
     stato: {
       type: DataTypes.ENUM(...Object.values(enumStato)),

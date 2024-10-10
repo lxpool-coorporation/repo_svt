@@ -1,3 +1,4 @@
+import { enumProfiloTipo } from '../enum/enumProfiloTipo';
 import { enumStato } from '../enum/enumStato';
 
 class eProfilo {
@@ -5,17 +6,31 @@ class eProfilo {
   private id: number;
   private cod: string;
   private descrizione: string;
+  private enum_profilo: enumProfiloTipo;
   private stato: enumStato;
 
-  constructor(id: number, cod: string, descrizione: string, stato: enumStato) {
+  constructor(
+    id: number,
+    cod: string,
+    descrizione: string,
+    enum_profilo: enumProfiloTipo,
+    stato: enumStato,
+  ) {
     this.id = id;
     this.cod = cod;
     this.descrizione = descrizione;
+    this.enum_profilo = enum_profilo;
     this.stato = stato;
   }
 
   static fromJSON(data: any): eProfilo {
-    return new eProfilo(data.id, data.cod, data.descrizione, data.stato);
+    return new eProfilo(
+      data.id,
+      data.cod,
+      data.descrizione,
+      data.enum_profilo,
+      data.stato,
+    );
   }
 
   // Metodi Getters
@@ -27,6 +42,9 @@ class eProfilo {
   }
   get_descrizione(): string {
     return this.descrizione;
+  }
+  get_enum_profilo(): string {
+    return this.enum_profilo;
   }
   get_stato(): enumStato {
     return this.stato;
@@ -41,6 +59,9 @@ class eProfilo {
   }
   set_descrizione(descrizione: string): void {
     this.descrizione = descrizione;
+  }
+  set_enum_profilo(enum_profilo: enumProfiloTipo): void {
+    this.enum_profilo = enum_profilo;
   }
   set_stato(stato: enumStato): void {
     this.stato = stato;

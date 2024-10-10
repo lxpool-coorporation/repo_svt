@@ -144,3 +144,4 @@ uploads/
 .img
 # documentazione
 _documentazione/
+.env_dist

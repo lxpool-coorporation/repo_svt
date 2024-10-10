@@ -132,6 +132,75 @@ export class daoTransitoImplementation
     );
   }
 
+  // Aggiorna un utente esistente nel database
+  async updateFields(
+    t: eTransito,
+    fieldsToUpdate: Partial<{
+      data_transito: Date;
+      speed: number;
+      speed_real: number;
+      id_varco: number;
+      meteo: string;
+      id_veicolo: number;
+      path_immagine: string;
+      stato: string;
+    }>,
+    options?: { transaction?: Transaction },
+  ): Promise<void> {
+    const ormObj = await dbOrm.ormTransito.findByPk(t.get_id(), {
+      transaction: options?.transaction,
+    });
+    if (!ormObj) {
+      throw new Error('Transito not found');
+    }
+
+    // Solo i campi presenti in fieldsToUpdate verranno aggiornati
+    const updatedFields = {
+      ...(fieldsToUpdate.data_transito !== undefined && {
+        data_transito: fieldsToUpdate.data_transito,
+      }),
+      ...(fieldsToUpdate.speed !== undefined && {
+        speed: fieldsToUpdate.speed,
+      }),
+      ...(fieldsToUpdate.speed_real !== undefined && {
+        speed_real: fieldsToUpdate.speed_real,
+      }),
+      ...(fieldsToUpdate.id_varco !== undefined && {
+        id_varco: fieldsToUpdate.id_varco,
+      }),
+      ...(fieldsToUpdate.meteo !== undefined && {
+        meteo: fieldsToUpdate.meteo,
+      }),
+      ...(fieldsToUpdate.id_veicolo !== undefined && {
+        id_veicolo: fieldsToUpdate.id_veicolo,
+      }),
+      ...(fieldsToUpdate.path_immagine !== undefined && {
+        path_immagine: fieldsToUpdate.path_immagine,
+      }),
+      ...(fieldsToUpdate.stato !== undefined && {
+        stato: fieldsToUpdate.stato,
+      }),
+    };
+
+    // Se non ci sono campi da aggiornare, non fare nulla
+    if (Object.keys(updatedFields).length === 0) {
+      return;
+    }
+
+    // Imposta le opzioni di default o applica quelle fornite dall'utente
+    const defaultOptions = {
+      where: { id: t.get_id() },
+      returning: true,
+      validate: true,
+      transaction: options?.transaction,
+    };
+
+    // Combina le opzioni di default con quelle passate dall'esterno
+    const updateOptions = { ...defaultOptions, ...options };
+
+    await dbOrm.ormTransito.update(updatedFields, updateOptions);
+  }
+
   // Elimina un Transito dal database usando Sequelize
   async delete(
     t: eTransito,

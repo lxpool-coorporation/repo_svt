@@ -6,6 +6,7 @@ import {
 import { eProfilo } from '../../../entity/utente/eProfilo';
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { ePermesso } from '../../../entity/utente/ePermesso';
+import { enumProfiloTipo } from '../../../entity/enum/enumProfiloTipo';
 class repositoryProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
   private daoProfilo: daoProfiloImplementation;
 
@@ -17,6 +18,11 @@ class repositoryProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
   }
   getAll(options?: object): Promise<eProfilo[]> {
     return this.daoProfilo.getAll(options);
+  }
+  getAllProfiliByEnum(
+    enumProfilo: enumProfiloTipo,
+  ): Promise<eProfilo[] | null> {
+    return repositoryProfilo.getAllProfiliByEnum(enumProfilo);
   }
   save(
     t: eProfilo,

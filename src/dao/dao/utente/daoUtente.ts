@@ -7,6 +7,7 @@ import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequ
 import { ormUtente } from '../../../models/utente/ormUtente';
 import { eVeicolo } from '../../../entity/svt/eVeicolo';
 import { eProfilo } from '../../../entity/utente/eProfilo';
+import { enumStato } from '../../../entity/enum/enumStato';
 
 // Implementazione del DAO per l'entità `Utente`
 export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
@@ -128,7 +129,13 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
 
       if (Utente.utente_profili) {
         return Utente.utente_profili.map((a) => {
-          return new eProfilo(a.id, a.cod, a.descrizione, a.stato);
+          return new eProfilo(
+            a.id,
+            a.cod,
+            a.descrizione,
+            a.enum_profilo,
+            a.stato,
+          );
         });
       }
 
@@ -177,6 +184,94 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     }
 
     return null;
+  }
+
+  public async saveUtentiProfili(
+    utente: eUtente,
+    profili: eProfilo[],
+    options?: { transaction?: Transaction },
+  ): Promise<Boolean> {
+    let result = false;
+    try {
+      profili.forEach(async (prf) => {
+        await dbOrm.ormUtenteProfilo.create(
+          {
+            id_utente: utente.get_id(),
+            id_profilo: prf.get_id(),
+            stato: enumStato.attivo,
+          },
+          { transaction: options?.transaction },
+        );
+      });
+
+      result = true;
+
+      //return Utente.Utente_permessi; // Qui Sequelize popola automaticamente i permessi associati
+    } catch (error) {
+      console.error(
+        'Errore durante il recupero dei permessi per il Utente:',
+        error,
+      );
+      throw error;
+    }
+
+    return result;
+  }
+
+  public async saveUtentiVeicoli(
+    utente: eUtente,
+    veicoli: eVeicolo[],
+    options?: { transaction?: Transaction },
+  ): Promise<Boolean> {
+    let result = false;
+    try {
+      veicoli.forEach(async (prf) => {
+        await dbOrm.ormUtenteVeicolo.create(
+          {
+            id_utente: utente.get_id(),
+            id_veicolo: prf.get_id(),
+            stato: enumStato.attivo,
+          },
+          { transaction: options?.transaction },
+        );
+      });
+
+      result = true;
+
+      //return Utente.Utente_permessi; // Qui Sequelize popola automaticamente i permessi associati
+    } catch (error) {
+      console.error(
+        'Errore durante il recupero dei permessi per il Utente:',
+        error,
+      );
+      throw error;
+    }
+
+    return result;
+  }
+
+  // Elimina un'associazione tra utente e veicolo dal database usando Sequelize
+  async deleteAssociazioneUtenteVeicolo(
+    idUtente: number,
+    idVeicolo: number,
+    options?: { transaction?: Transaction },
+  ): Promise<void> {
+    // Trova l'associazione nella tabella ormUtenteVeicolo
+    const ormAssociazione = await dbOrm.ormUtenteVeicolo.findOne({
+      where: {
+        id_utente: idUtente,
+        id_veicolo: idVeicolo,
+      },
+      transaction: options?.transaction,
+    });
+
+    // Se l'associazione non esiste, lancia un errore
+    if (!ormAssociazione) {
+      throw new Error('Associazione Utente-Veicolo non trovata');
+    }
+
+    // Elimina l'associazione
+    await ormAssociazione.destroy({ transaction: options?.transaction });
   }
 }
 

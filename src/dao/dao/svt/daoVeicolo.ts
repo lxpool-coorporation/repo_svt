@@ -19,7 +19,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
 
   async getByTarga(cf: string): Promise<eVeicolo | null> {
     let ret: eVeicolo | null = null;
-    const ormObj = await ormVeicolo.findOne({
+    const ormObj = await dbOrm.ormVeicolo.findOne({
       where: {
         [Op.and]: [
           sequelize.where(
@@ -107,9 +107,11 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
     await ormObj.destroy({ transaction: options?.transaction });
   }
 
-  public async getUtentiByIdVeicolo(
+  public async getUtenteByIdVeicolo(
     idVeicolo: number,
-  ): Promise<eUtente[] | null> {
+  ): Promise<eUtente | null> {
+    let result: eUtente | null = null;
+
     try {
       const ormVeicolo = await dbOrm.ormVeicolo.findByPk(idVeicolo, {
         include: [
@@ -125,15 +127,11 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
       }
 
       // Se ci sono utenti associati, restituiscili
+      // Se c'è almeno un utente associato, restituisci il primo
       if (ormVeicolo.veicolo_utenti && ormVeicolo.veicolo_utenti.length > 0) {
-        // Mappiamo ogni risultato su ePolicySanctionSpeedControl
-        const utenti = ormVeicolo.veicolo_utenti.map((data: any) =>
-          eUtente.fromJSON(data),
-        );
-        return utenti;
+        const utente = eUtente.fromJSON(ormVeicolo.veicolo_utenti[0]);
+        result = utente;
       }
-
-      return null; // Nessun utente associato
     } catch (error) {
       console.error(
         'Errore durante il recupero degli utenti per il veicolo:',
@@ -141,6 +139,7 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
       );
       throw error;
     }
+    return result;
   }
 }
 

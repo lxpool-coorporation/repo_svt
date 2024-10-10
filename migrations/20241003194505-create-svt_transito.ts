@@ -51,7 +51,7 @@ export default {
       stato: {
         type: DataTypes.ENUM(...Object.values(enumTransitoStato)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: enumTransitoStato.acquisito,
+        defaultValue: enumTransitoStato.in_attesa,
       },
       createdAt: {
         allowNull: false,

@@ -14,6 +14,10 @@ import { eTratta } from '../entity/svt/eTratta';
 import { repositoryTratta } from '../dao/repositories/svt/repositoryTratta';
 import { repositoryTransito } from '../dao/repositories/svt/repositoryTransito';
 import { eBollettino } from '../entity/svt/eBollettino';
+import { enumBollettinoStato } from '../entity/enum/enumBollettinoStato';
+import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
+import { v4 as uuidv4 } from 'uuid';
+import messenger from '../utils/messenger';
 
 // classe che gestisce la logica di business dell'MultaSpeedControl
 class serviceMultaSpeedControlImplementation {
@@ -55,6 +59,7 @@ class serviceMultaSpeedControlImplementation {
     id_transito: number | null,
     id_policy: number | null,
     id_policy_type: enumPolicyTipo | null,
+    id_veicolo: number | null,
     id_automobilista: number | null,
     is_notturno: boolean | null,
     is_recidivo: boolean | null,
@@ -71,6 +76,7 @@ class serviceMultaSpeedControlImplementation {
       id_transito,
       id_policy,
       id_policy_type,
+      id_veicolo,
       id_automobilista,
       is_notturno,
       is_recidivo,
@@ -95,6 +101,7 @@ class serviceMultaSpeedControlImplementation {
     id_transito: number | null,
     id_policy: number | null,
     id_policy_type: enumPolicyTipo | null,
+    id_veicolo: number | null,
     id_automobilista: number | null,
     is_notturno: boolean | null,
     is_recidivo: boolean | null,
@@ -111,6 +118,7 @@ class serviceMultaSpeedControlImplementation {
       id_transito,
       id_policy,
       id_policy_type,
+      id_veicolo,
       id_automobilista,
       is_notturno,
       is_recidivo,
@@ -133,6 +141,7 @@ class serviceMultaSpeedControlImplementation {
 
     const MultaSpeedControlDaEliminare = new eMultaSpeedControl(
       id,
+      null,
       null,
       null,
       null,
@@ -244,14 +253,18 @@ class serviceMultaSpeedControlImplementation {
           return null;
         }
 
-        const automobilista: eUtente[] | null =
-          await repositoryVeicolo.getUtentiByIdVeicolo(id_veicolo);
+        let idAutomobilista: number | null = null;
+        const automobilista: eUtente | null =
+          await repositoryVeicolo.getUtenteByIdVeicolo(id_veicolo);
         if (!automobilista) {
           console.log(
             `Nessuna automobilista trovata per il veicolo con id ${id_veicolo}`,
           );
           return null;
+        } else {
+          idAutomobilista = automobilista.get_id();
         }
+
         // Itera su tutte le policy trovate per il varco
         for (const policy of policies) {
           console.log(policy);
@@ -275,7 +288,7 @@ class serviceMultaSpeedControlImplementation {
               transitoUscita.get_data_transito(),
             );
             const isRecidivo: boolean = await this.checkIfRecidivo(
-              automobilista[0].get_id(),
+              automobilista.get_id(),
             );
 
             // Crea la multa se la velocità è maggiore del limite
@@ -283,7 +296,8 @@ class serviceMultaSpeedControlImplementation {
               transitoUscita.get_id(),
               policy.get_id(),
               enumPolicyTipo.speed_control,
-              automobilista[0].get_id(),
+              id_veicolo,
+              idAutomobilista,
               isNotturno, // Implementa la logica notturna
               isRecidivo, // Implementa la logica recidiva
               enumMultaStato.in_attesa,
@@ -355,8 +369,116 @@ class serviceMultaSpeedControlImplementation {
     return repositoryMulta.deleteBollettino(t);
   }
 
-  richiediBollettino(idMulta: number) {
-    return repositoryMulta.richiediBollettino(idMulta);
+  async richiediBollettino(idMulta: number): Promise<eBollettino | null> {
+    let result: eBollettino | null = null;
+
+    try {
+      const multa: eMultaSpeedControl | null =
+        await repositoryMulta.getMultaSpeedControl(idMulta);
+      if (!multa) {
+        throw new Error(
+          `errore in richiesta bollettino: multa con id ${idMulta}`,
+        );
+      } else {
+        const uuidPagamento: string = uuidv4(); // Genera UUID univoco per il pagamento
+        const importo: number | null = await repositoryMulta.getImportoMulta(
+          multa.get_id(),
+        );
+        if (!importo) {
+          throw new Error(
+            `errore in richiesta bollettino: importo non calcolato per multa: ${multa.get_id()}`,
+          );
+        }
+
+        const bollettino = new eBollettino(
+          0,
+          multa.get_id(),
+          uuidPagamento,
+          importo,
+          null,
+          enumBollettinoStato.richiesto,
+        );
+        result = await this.saveBellettino(bollettino);
+        if (!result) {
+          throw new Error(
+            `errore in richiesta bollettino: errore in generazione per multa: ${multa.get_id()}`,
+          );
+        } else {
+          const rabbitMQ = messenger.getInstance();
+
+          // Connessione a RabbitMQ
+          await rabbitMQ.connect();
+
+          // Invia un messaggio alla coda 'tasks_queue'
+          await rabbitMQ.sendToQueue(
+            enumMessengerCoda.queueBollettino,
+            JSON.stringify(result),
+          );
+        }
+      }
+    } catch (err) {
+      throw new Error('errore in richiesta bollettino:' + err);
+    }
+
+    return result;
+  }
+
+  public getMultaStato = (multa: eMulta): enumMultaStato => {
+    let result = enumMultaStato.indefinito;
+
+    try {
+      // Definizione delle regole come array di funzioni
+      const rules: Array<() => enumMultaStato | null> = [
+        () => {
+          // "non processabile" se manca id_veicolo e path_immagine è null
+          if (!multa.get_id_automobilista()) {
+            return enumMultaStato.in_attesa;
+          } else {
+            return null;
+          }
+        },
+      ];
+
+      // Trova la prima regola che soddisfa la condizione
+      let sub_result = rules
+        .map((rule) => rule())
+        .find((stato) => stato !== null);
+
+      if (sub_result) {
+        result = sub_result;
+      }
+
+      // Se uno stato è stato determinato, aggiorna il multa
+      //if (nuovoStato) {
+      //multa.set_stato(nuovoStato);
+      //}
+    } catch (err) {
+      logger.error('serviceSvt - err:', err);
+    }
+
+    return result;
+  };
+
+  async refreshMulta(objMulta: eMulta): Promise<void> {
+    try {
+      const statoUpdated: enumMultaStato = this.getMultaStato(objMulta);
+
+      switch (statoUpdated) {
+        case enumMultaStato.in_attesa:
+          if (!objMulta.get_id_automobilista()) {
+            const rabbitMQ = messenger.getInstance();
+            // Connessione a RabbitMQ
+            await rabbitMQ.connect();
+            // Invia un messaggio alla coda 'tasks_queue'
+            await rabbitMQ.sendToQueue(
+              enumMessengerCoda.queueMultaAutomobilista,
+              JSON.stringify(objMulta),
+            );
+          }
+      }
+    } catch (err) {
+      throw new Error(`refreshMultaStato: ${err}`);
+    }
   }
 }
 

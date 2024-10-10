@@ -14,7 +14,7 @@ export default {
         meteo: enumMeteoTipo.sereno,
         id_veicolo: 1,
         path_immagine: 'data/immagine_1.jpg',
-        stato: enumTransitoStato.acquisito,
+        stato: enumTransitoStato.in_attesa,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -27,7 +27,7 @@ export default {
         meteo: enumMeteoTipo.pioggia,
         id_veicolo: 1,
         path_immagine: 'data/immagine_2.jpg',
-        stato: enumTransitoStato.acquisito,
+        stato: enumTransitoStato.in_attesa,
         createdAt: new Date(),
         updatedAt: new Date()
       },

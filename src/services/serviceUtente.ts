@@ -7,6 +7,8 @@ import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
 import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
+import { enumProfiloTipo } from '../entity/enum/enumProfiloTipo';
+import { eVeicolo } from '../entity/svt/eVeicolo';
 
 // classe che gestisce la logica di business dell'utente
 class serviceUtenteImplementation {
@@ -41,6 +43,12 @@ class serviceUtenteImplementation {
     }
   }
 
+  async getUtenteByIdentificativo(
+    identificativo: string,
+  ): Promise<eUtente | null> {
+    return await repositoryUtente.getByIdentificativo(identificativo);
+  }
+
   // Recupera tutti gli utenti
   async getAllUtenti(options?: object): Promise<eUtente[]> {
     const redisClient = await databaseCache.getInstance();
@@ -68,16 +76,32 @@ class serviceUtenteImplementation {
   // Crea un nuovo utente
   async createUtente(
     codice_fiscale: string,
+    profili: eProfilo[],
     stato: enumStato,
   ): Promise<eUtente | null> {
     const redisClient = await databaseCache.getInstance();
 
     const nuovoUtente = new eUtente(0, codice_fiscale, stato);
-    const savedUtente = await repositoryUtente.save(nuovoUtente);
+    const savedUtente = await repositoryUtente.saveUtenteProfili(
+      nuovoUtente,
+      profili,
+    );
 
     // Invalida la cache degli utenti
     await redisClient.del(`utenti_tutti`);
     return savedUtente;
+  }
+
+  // Crea un nuovo utente
+  async createAssociazioneUtenteVeicoli(
+    t: eUtente,
+    veicoli: eVeicolo[],
+  ): Promise<Boolean> {
+    const result = await repositoryUtente.saveAssociazioneUtenteVeicoli(
+      t,
+      veicoli,
+    );
+    return result;
   }
 
   // Aggiorna un utente esistente
@@ -185,6 +209,19 @@ class serviceUtenteImplementation {
     );
 
     return hasPermesso;
+  }
+
+  async getAllProfiliByEnum(
+    enumProfilo: enumProfiloTipo,
+  ): Promise<eProfilo[] | null> {
+    return await repositoryUtente.getAllProfiliByEnum(enumProfilo);
+  }
+
+  async deleteAssociazioneUtenteVeicolo(
+    idUtente: number,
+    idVeicolo: number,
+  ): Promise<void> {
+    await repositoryUtente.deleteAssociazioneUtenteVeicolo(idUtente, idVeicolo);
   }
 }
 

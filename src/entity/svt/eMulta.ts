@@ -7,6 +7,7 @@ class eMulta {
   private id_transito: number | null;
   private id_policy: number | null;
   private tipo_policy: enumPolicyTipo | null;
+  private id_veicolo: number | null;
   private id_automobilista: number | null;
   private is_notturno: boolean | null;
   private is_recidivo: boolean | null;
@@ -17,6 +18,7 @@ class eMulta {
     id_transito: number | null,
     id_policy: number | null,
     tipo_policy: enumPolicyTipo | null,
+    id_veicolo: number | null,
     id_automobilista: number | null,
     is_notturno: boolean | null,
     is_recidivo: boolean | null,
@@ -25,8 +27,8 @@ class eMulta {
     this.id = id;
     this.id_transito = id_transito;
     this.id_policy = id_policy;
-    (this.tipo_policy = tipo_policy),
-      (this.id_automobilista = id_automobilista);
+    (this.tipo_policy = tipo_policy), (this.id_veicolo = id_veicolo);
+    this.id_automobilista = id_automobilista;
     this.is_notturno = is_notturno;
     this.is_recidivo = is_recidivo;
     this.stato = stato;
@@ -38,6 +40,7 @@ class eMulta {
       data.id_transito,
       data.id_policy,
       data.tipo_policy,
+      data.id_veicolo,
       data.id_automobilista,
       data.is_notturno,
       data.is_recidivo,
@@ -57,6 +60,9 @@ class eMulta {
   }
   get_tipo_policy(): enumPolicyTipo | null {
     return this.tipo_policy;
+  }
+  get_id_veicolo(): number | null {
+    return this.id_veicolo;
   }
   get_id_automobilista(): number | null {
     return this.id_automobilista;
@@ -83,6 +89,9 @@ class eMulta {
   }
   set_tipo_policy(tipo_policy: enumPolicyTipo): void {
     this.tipo_policy = tipo_policy;
+  }
+  set_id_veicolo(id_veicolo: number): void {
+    this.id_veicolo = id_veicolo;
   }
   set_id_automobilista(id_automobilista: number): void {
     this.id_automobilista = id_automobilista;

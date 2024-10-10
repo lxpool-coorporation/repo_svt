@@ -54,10 +54,25 @@ class repositoryTransitoImplementation
   update(t: eTransito, options?: object): Promise<void> {
     return this.daoTransito.update(t, options);
   }
+  updateFields(
+    t: eTransito,
+    fieldsToUpdate: Partial<{
+      data_transito: Date;
+      speed: number;
+      speed_real: number;
+      id_varco: number;
+      meteo: string;
+      id_veicolo: number;
+      path_immagine: string;
+      stato: string;
+    }>,
+    options?: object,
+  ): Promise<void> {
+    return this.daoTransito.updateFields(t, fieldsToUpdate, options);
+  }
   delete(t: eTransito, options?: { transaction?: Transaction }): Promise<void> {
     return this.daoTransito.delete(t, options);
   }
-
   getTransitoIngressoByTransitoUscita(
     idTransitoUscita: number,
   ): Promise<eTransito | null> {

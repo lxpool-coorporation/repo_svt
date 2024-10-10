@@ -30,6 +30,14 @@ export default {
         type: DataTypes.ENUM(...Object.values(enumPolicyTipo)),
         allowNull: false,
       },
+      id_veicolo: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'svt_veicolo',
+          key: 'id',
+        },
+      },
       id_automobilista: {
         type: DataTypes.INTEGER,
         allowNull: false,
