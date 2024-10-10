@@ -1,6 +1,6 @@
 import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
-import { eTransito } from '../entity/svt/eTransito';
+import { eMulta } from '../entity/svt/eMulta';
 
 async function startTaskTransitoVeicoloTipoConsumer(): Promise<void> {
   try {
@@ -25,15 +25,30 @@ async function startTaskTransitoVeicoloTipoConsumer(): Promise<void> {
           const content: string = msg.content.toString();
           console.log(
             enumMessengerCoda.queueTransitoVeicoloTipo +
-              ': Ricevuto: ${content}',
+              `: Ricevuto: ${content}`,
           );
+          const parsedContent =
+            typeof content === 'string' ? JSON.parse(content) : content;
 
-          const objTransitoVeicoloTipo: eTransito = eTransito.fromJSON(content);
-          if (objTransitoVeicoloTipo) {
-            // ...
-
-            channel.ack(msg);
+          const objMulta: eMulta | null = eMulta.fromJSON(parsedContent);
+          if (objMulta) {
+            console.log(objMulta);
           }
+
+          // Imposta le intestazioni per il download del PDF
+          //res.setHeader('Content-Type', 'application/pdf');
+          //res.setHeader('Content-Disposition', `attachment; filename=bollettino_${multaID}.pdf`);
+
+          // Invia il PDF come risposta
+          //doc.pipe(res);
+          //doc.end();
+
+          //}
+
+          // Logica per elaborare il messaggio
+
+          // Conferma che il messaggio è stato elaborato
+          channel.ack(msg);
         }
       },
       {

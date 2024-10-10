@@ -2,7 +2,7 @@ import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
 import { eMulta } from '../entity/svt/eMulta';
 
-async function startTaskTransitoOCRConsumer(): Promise<void> {
+async function startTaskMultaAutomobilistaConsumer(): Promise<void> {
   try {
     // Connessione a RabbitMQ con gestione degli errori
     const connection: Connection = await amqp.connect(
@@ -10,7 +10,7 @@ async function startTaskTransitoOCRConsumer(): Promise<void> {
     );
     const channel: Channel = await connection.createChannel();
 
-    const queue: string = enumMessengerCoda.queueTransitoOCR;
+    const queue: string = enumMessengerCoda.queueMultaAutomobilista;
 
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });
@@ -24,7 +24,8 @@ async function startTaskTransitoOCRConsumer(): Promise<void> {
         if (msg) {
           const content: string = msg.content.toString();
           console.log(
-            enumMessengerCoda.queueTransitoOCR + `: Ricevuto: ${content}`,
+            enumMessengerCoda.queueMultaAutomobilista +
+              `: Ricevuto: ${content}`,
           );
           const parsedContent =
             typeof content === 'string' ? JSON.parse(content) : content;
@@ -59,4 +60,4 @@ async function startTaskTransitoOCRConsumer(): Promise<void> {
   }
 }
 
-export default startTaskTransitoOCRConsumer;
+export default startTaskMultaAutomobilistaConsumer;

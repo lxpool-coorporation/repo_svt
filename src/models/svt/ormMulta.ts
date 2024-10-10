@@ -14,6 +14,7 @@ export class ormMulta extends Model {
   public id_transito!: number;
   public id_policy!: number;
   public tipo_policy!: enumPolicyTipo;
+  public id_veicolo!: number;
   public id_automobilista!: number;
   public is_notturno!: boolean;
   public is_recidivo!: boolean;
@@ -28,6 +29,10 @@ export class ormMulta extends Model {
     ormMulta.belongsTo(models.ormPolicy, {
       foreignKey: 'id_policy',
       as: 'multa_policies',
+    });
+    ormMulta.belongsTo(models.ormVeicolo, {
+      foreignKey: 'id_veicolo',
+      as: 'multa_veicoli',
     });
     ormMulta.belongsTo(models.ormUtente, {
       foreignKey: 'id_automobilista',
@@ -71,6 +76,14 @@ ormMulta.init(
     tipo_policy: {
       type: DataTypes.ENUM(...Object.values(enumPolicyTipo)),
       allowNull: false,
+    },
+    id_veicolo: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'svt_veicolo',
+        key: 'id',
+      },
     },
     id_automobilista: {
       type: DataTypes.INTEGER,

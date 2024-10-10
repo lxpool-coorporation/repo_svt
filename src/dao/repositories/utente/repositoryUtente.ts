@@ -9,6 +9,11 @@ import {
   daoProfilo,
   daoProfiloImplementation,
 } from '../../../dao/dao/utente/daoProfilo';
+import database from '../../../utils/database';
+import { enumProfiloTipo } from '@/entity/enum/enumProfiloTipo';
+import { repositoryProfilo } from './repositoryProfilo';
+
+const db = database.getInstance();
 
 class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   private daoUtente: daoUtenteImplementation;
@@ -33,6 +38,58 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   ): Promise<eUtente | null> {
     return this.daoUtente.save(t, options);
   }
+  async saveUtenteProfili(t: eUtente, ps: eProfilo[]): Promise<eUtente | null> {
+    let result: eUtente | null = null;
+    const transaction: Transaction = await db.transaction();
+
+    try {
+      const options = { transaction };
+
+      const utenteNew = await this.daoUtente.save(t, options);
+      if (utenteNew) {
+        const result_sub: Boolean = await daoUtente.saveUtentiProfili(
+          utenteNew,
+          ps,
+          options,
+        );
+        if (result_sub) {
+          await transaction.commit;
+          result = utenteNew;
+        }
+      }
+    } catch (err) {
+      throw new Error(`error: ${err}`);
+      await transaction.rollback();
+    }
+
+    return result;
+  }
+  async saveAssociazioneUtenteVeicoli(
+    t: eUtente,
+    ps: eVeicolo[],
+  ): Promise<Boolean> {
+    let result: Boolean = false;
+    const transaction: Transaction = await db.transaction();
+
+    try {
+      const options = { transaction };
+
+      const result_sub: Boolean = await daoUtente.saveUtentiVeicoli(
+        t,
+        ps,
+        options,
+      );
+      if (result_sub) {
+        await transaction.commit;
+        result = true;
+      }
+    } catch (err) {
+      throw new Error(`error: ${err}`);
+      await transaction.rollback();
+    }
+
+    return result;
+  }
   update(t: eUtente, options?: object): Promise<void> {
     return this.daoUtente.update(t, options);
   }
@@ -42,6 +99,19 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   getProfili(idUtente: number): Promise<eProfilo[] | null> {
     return this.daoUtente.getProfiliByIdUtente(idUtente);
   }
+
+  // getAllProfiliByEnum
+  async getAllProfiliByEnum(
+    enumProfilo: enumProfiloTipo,
+  ): Promise<eProfilo[] | null> {
+    const result = await repositoryProfilo.getAll({
+      where: {
+        enum_profilo: enumProfilo,
+      },
+    });
+    return result;
+  }
+
   getVeicoli(idUtente: number): Promise<eVeicolo[] | null> {
     return this.daoUtente.getVeicoliByIdUtente(idUtente);
   }
@@ -60,6 +130,13 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
     }
 
     return null;
+  }
+
+  async deleteAssociazioneUtenteVeicolo(
+    idUtente: number,
+    idVeicolo: number,
+  ): Promise<void> {
+    await daoUtente.deleteAssociazioneUtenteVeicolo(idUtente, idVeicolo);
   }
 }
 

@@ -18,6 +18,7 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
       ormObj.id,
       ormObj.cod,
       ormObj.descrizione,
+      ormObj.enum_profilo,
       ormObj.stato,
     );
   }
@@ -27,7 +28,13 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
     const objs: ormProfilo[] = await ormProfilo.findAll(options);
     return objs.map(
       (ormObj) =>
-        new eProfilo(ormObj.id, ormObj.cod, ormObj.descrizione, ormObj.stato),
+        new eProfilo(
+          ormObj.id,
+          ormObj.cod,
+          ormObj.descrizione,
+          ormObj.enum_profilo,
+          ormObj.stato,
+        ),
     );
   }
 
@@ -41,6 +48,7 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
         id: t.get_id(),
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
+        enum_profilo: t.get_enum_profilo(),
         stato: t.get_stato(),
       },
       { transaction: options?.transaction },
@@ -49,6 +57,7 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
       ormObj.id,
       ormObj.cod,
       ormObj.descrizione,
+      ormObj.enum_profilo,
       ormObj.stato,
     );
   }
@@ -68,7 +77,7 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
     // Imposto le opzioni di default o applico quelle fornite dall'utente
     const defaultOptions = {
       where: { id: t.get_id() },
-      fields: ['cod', 'descrizione', 'stato'], // Campi aggiornabili di default
+      fields: ['cod', 'descrizione', 'enum_profilo', 'stato'], // Campi aggiornabili di default
       returning: true,
       ////individualHooks: true,
       validate: true,
@@ -81,6 +90,7 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
       {
         cod: t.get_cod(),
         descrizione: t.get_descrizione(),
+        enum_profilo: t.get_enum_profilo(),
         stato: t.get_stato(),
         // Aggiungi altri campi che devono essere aggiornati
       },
