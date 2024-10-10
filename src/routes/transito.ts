@@ -4,6 +4,7 @@ import { Router } from 'express';
 import { controllerTransito } from '../controllers/controllerTransito';
 import { middlewareValidate } from '../middleware/middlewareValidate';
 import { middlewareUploader } from '../middleware/middlewareUploader';
+import { middlewareVeicolo } from '../middleware/middlewareVeicolo';
 
 const routerTransito = Router();
 
@@ -30,7 +31,8 @@ routerTransito.post(
   middlewareTransito.rebuildBody,
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
-  middlewareTransito.insertTarga,
+  middlewareTransito.ocrTarga,
+  middlewareVeicolo.insertTarga,
   middlewareTransito.calculateSpeedReal,
   controllerTransito.saveTransito,
 );
@@ -53,7 +55,7 @@ routerTransito.put(
   middlewareTransito.rebuildBody,
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
-  middlewareTransito.insertTarga,
+  middlewareVeicolo.insertTarga,
   middlewareTransito.calculateSpeedReal,
   controllerTransito.putTransito,
 );
@@ -69,7 +71,7 @@ routerTransito.patch(
   middlewareTransito.rebuildBody,
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
-  middlewareTransito.insertTarga,
+  middlewareVeicolo.insertTarga,
   middlewareTransito.calculateSpeedReal,
   controllerTransito.patchTransito,
 );

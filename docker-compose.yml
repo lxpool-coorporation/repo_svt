@@ -3,7 +3,6 @@ services:
     build: .
     command: ["/wait-for-it.sh", "svt-db:3306", "--", "node", "dist/index.js"]
     volumes:
-      - ./dist:/usr/src/app/dist/
       - ./.keys/:/app/.keys/
     ports:
       - "3000:3000"
@@ -33,6 +32,8 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
+      - IMAGE_PATH=${IMAGE_PATH}
+      - IMAGE_TYPE=${IMAGE_TYPE}
     depends_on:
       - svt-db
       - svt-redis_cache
@@ -88,7 +89,6 @@ services:
       target: build
     command: ["/wait-for-it.sh", "svt-db:3306", "--", "npm", "run", "test"]
     volumes:
-      - ./dist:/usr/src/app/dist/
       - ./.keys/:/app/.keys/
     #ports:
     #  - "3000:3000"
@@ -114,6 +114,9 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
+      - IMAGE_PATH=${IMAGE_PATH}
+      - IMAGE_TYPE=${IMAGE_TYPE}
     depends_on:
       - svt-db
       - svt-redis_cache

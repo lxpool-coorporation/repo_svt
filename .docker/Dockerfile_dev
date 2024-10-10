@@ -1,0 +1,50 @@
+FROM node:20-buster
+
+# Installa TypeScript a livello globale
+#RUN npm install -g npm@10.9.0
+#RUN npm install -g typescript
+
+# Aggiorna i pacchetti e installa Tesseract-OCR e le dipendenze di OpenCV
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-ita \ 
+    libopencv-dev \
+    build-essential \
+    cmake \
+    pkg-config \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crea una directory di lavoro
+WORKDIR /app
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends bash curl default-mysql-client && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY ../wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh && chown -R node:node /wait-for-it.sh
+#RUN chmod +x /wait-for-it.sh
+
+# Crea la directory logs e imposta i permessi
+RUN mkdir -p logs && chown -R node:node logs
+
+ENV OPENCV4NODEJS_DISABLE_AUTOBUILD=1
+ENV OPENCV_INCLUDE_DIR=/usr/local/include
+ENV OPENCV_LIB_DIR=/usr/lib/x86_64-linux-gnu
+
+# Copia il package.json e installa le dipendenze di Node.js
+COPY package.json *.config.mjs *.config.cjs *.config.js *.setup.mjs *.setup.cjs *.setup.js tsconfig.json ./
+
+RUN rm -rf node_modules package-lock.json
+
+RUN npm install opencv4nodejs --build-from-source
+RUN npm install     
+
+# Esponi la porta dell'applicazione (se ne hai una)
+# EXPOSE 3000
+
+# Comando per avviare l'applicazione
+

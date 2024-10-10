@@ -9,6 +9,7 @@ import routerVarco from './routes/varco';
 import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
 import routerTransito from './routes/transito';
+import routerMulta from './routes/multa';
 import databaseCache from './utils/database-cache';
 import { serviceMulta } from './services/serviceMulta';
 import database from './utils/database';
@@ -37,6 +38,7 @@ app.use('/varco', routerVarco);
 app.use('/tratta', routerTratta);
 app.use('/veicolo', routerVeicolo);
 app.use('/transito', routerTransito);
+app.use('/multa', routerMulta);
 
 // catch 404 and forward to error handler
 app.use(function (_req, _res, next) {

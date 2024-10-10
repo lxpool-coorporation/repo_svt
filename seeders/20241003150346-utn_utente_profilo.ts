@@ -20,6 +20,12 @@ export default {
         id_profilo: 1,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        id_utente: 3,
+        id_profilo: 3,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {});
   },
@@ -29,7 +35,8 @@ export default {
       [Op.or]: [
         { id_utente: 1, id_profilo: 1 },
         { id_utente: 1, id_profilo: 2 },
-        { id_utente: 2, id_profilo: 1 }
+        { id_utente: 2, id_profilo: 1 },
+        { id_utente: 3, id_profilo: 3 }
       ]
     }, {});
   }

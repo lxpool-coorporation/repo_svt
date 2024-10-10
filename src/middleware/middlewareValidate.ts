@@ -21,8 +21,9 @@ export class middlewareValidate {
   public static validateTarga = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo)
+    let ret: ValidationChain = callback(campo)
       .matches(/^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/)
       .withMessage(
         'La targa deve contenere solo lettere maiuscole (A-Z) e numeri (0-9)',
@@ -36,8 +37,9 @@ export class middlewareValidate {
   public static validateStato = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo).custom((value) => {
+    let ret: ValidationChain = callback(campo).custom((value: any) => {
       if (!Object.values(enumStato).includes(value)) {
         throw new Error('Stato non valido');
       }
@@ -48,8 +50,9 @@ export class middlewareValidate {
   public static validateStatoTransito = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo).custom((value) => {
+    let ret: ValidationChain = callback(campo).custom((value: any) => {
       if (!Object.values(enumTransitoStato).includes(value)) {
         throw new Error('Stato transito non valido');
       }
@@ -60,8 +63,9 @@ export class middlewareValidate {
   public static validateMeteo = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo).custom((value) => {
+    let ret: ValidationChain = callback(campo).custom((value: any) => {
       if (!Object.values(enumMeteoTipo).includes(value)) {
         throw new Error('Meteo non valido');
       }
@@ -72,8 +76,9 @@ export class middlewareValidate {
   public static validateTipoVeicolo = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo).custom((value) => {
+    let ret: ValidationChain = callback(campo).custom((value: any) => {
       if (!Object.values(enumVeicoloTipo).includes(value)) {
         throw new Error('Tipo veicolo non valido');
       }
@@ -84,8 +89,9 @@ export class middlewareValidate {
   public static validateString = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo)
+    let ret: ValidationChain = callback(campo)
       .trim()
       .notEmpty()
       .withMessage(`${campo} non può essere vuoto.`);
@@ -94,8 +100,9 @@ export class middlewareValidate {
   public static validateLatitudine = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo)
+    let ret: ValidationChain = callback(campo)
       .isFloat({ min: -90, max: 90 })
       .withMessage('La latitudine deve essere compresa tra -90 e 90');
     return optional ? ret.optional() : ret;
@@ -103,8 +110,9 @@ export class middlewareValidate {
   public static validateLongitudine = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo)
+    let ret: ValidationChain = callback(campo)
       .isFloat({ min: -180, max: 180 })
       .withMessage('La latitudine deve essere compresa tra -180 e 180');
     return optional ? ret.optional() : ret;
@@ -131,11 +139,12 @@ export class middlewareValidate {
   public static validateNumber = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo)
+    let ret: ValidationChain = callback(campo)
       .isNumeric()
       .withMessage('Il valore deve essere un numero')
-      .custom((value) => {
+      .custom((value: any) => {
         if (value <= 0) {
           throw new Error('Il valore deve essere maggiore di 0');
         }
@@ -158,14 +167,15 @@ export class middlewareValidate {
   public static validateDateISO8601 = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo)
+    let ret: ValidationChain = callback(campo)
       .isISO8601()
       .withMessage(
         'La data deve essere in formato ISO 8601 (es: 2024-10-06T19:09:00).',
       )
       .bail() // Ferma ulteriori validazioni se il formato è errato
-      .custom((value) => {
+      .custom((value: any) => {
         const dataTransito = parseISO(value); // Converte la stringa in oggetto Date
         const now = new Date(); // Ottieni la data corrente
 
@@ -180,8 +190,9 @@ export class middlewareValidate {
   public static validateDate = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo)
+    let ret: ValidationChain = callback(campo)
       .isDate()
       .withMessage('La data non è valida')
       .isAfter(new Date().toISOString()) // Assicura che la data sia nel futuro
@@ -191,8 +202,9 @@ export class middlewareValidate {
   public static validateVeicoloTipo = (
     campo: string,
     optional: boolean,
+    callback: Function = body,
   ): ValidationChain => {
-    let ret: ValidationChain = body(campo).custom((value) => {
+    let ret: ValidationChain = callback(campo).custom((value: any) => {
       if (!Object.values(enumVeicoloTipo).includes(value)) {
         throw new Error('Tipo veicolo non valido');
       }

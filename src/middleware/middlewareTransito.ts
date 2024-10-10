@@ -9,14 +9,13 @@ import { middlewareValidate } from './middlewareValidate';
 import { serviceUtente } from '../services/serviceUtente';
 import { eProfilo } from '../entity/utente/eProfilo';
 import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
-import { repositoryVeicolo } from '../dao/repositories/svt/repositoryVeicolo';
-import { eVeicolo } from '../entity/svt/eVeicolo';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
-import { serviceVeicolo } from '../services/serviceVeicolo';
-import { enumStato } from '../entity/enum/enumStato';
+import path from 'path';
+import { controllerOcr } from '../controllers/controllerOcr';
 
 dotenv.config();
 let SPEED_TOLLERANCE = process.env.SPEED_TOLLERANCE || 0;
+const IMAGE_PATH = process.env.IMAGE_PATH || '.img';
 
 export class middlewareTransito {
   private constructor() {}
@@ -191,39 +190,6 @@ export class middlewareTransito {
       },
     );
   };
-  public static insertTarga = async (
-    req: Request,
-    _res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    let ret: retMiddleware = new retMiddleware();
-    try {
-      //non blocco l'esecuzione se non riesce a inserire la targa tanto l'ocr verificherà anche questa
-      const targa: string | null = req.body?.targa;
-      const veicolo_tipo: enumVeicoloTipo = req.body.veicolo_tipo;
-      if (!!targa) {
-        const veicolo: eVeicolo | null =
-          await repositoryVeicolo.getByTarga(targa);
-        if (!!veicolo) {
-          req.body.id_veicolo = veicolo.get_id();
-        } else {
-          const veicoloRes: eVeicolo | null =
-            await serviceVeicolo.createVeicolo(
-              veicolo_tipo,
-              targa,
-              enumStato.attivo,
-            );
-          if (!!veicoloRes) {
-            req.body.id_veicolo = veicoloRes.get_id();
-          }
-        }
-      }
-    } catch (error: any) {
-      logger.warn('middlewareTransito.insertTarga :' + error?.message);
-    }
-
-    ret.returnNext(next);
-  };
   public static calculateSpeedReal = (
     req: Request,
     _res: Response,
@@ -240,6 +206,34 @@ export class middlewareTransito {
       }
     } catch (error: any) {
       logger.warn('middlewareTransito.calculateSpeedReal :' + error?.message);
+    }
+
+    ret.returnNext(next);
+  };
+  public static ocrTarga = async (
+    req: Request,
+    _res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    let ret: retMiddleware = new retMiddleware();
+    try {
+      //non blocco l'esecuzione se non riesce a inserire la targa tanto l'ocr verificherà anche questa
+      let targa: string | null = req.body?.targa;
+      if (!targa) {
+        const filePath = path.join(IMAGE_PATH, req.body?.path_immagine || '');
+        targa = await controllerOcr.detectAndRecognizePlate(filePath);
+        if (targa === '') {
+          req.body.stato = enumTransitoStato.indefinito;
+        } else {
+          req.body.targa = targa;
+          const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
+          if (targaRegex.test(targa) === false) {
+            req.body.stato = enumTransitoStato.non_processabile;
+          }
+        }
+      }
+    } catch (error: any) {
+      logger.warn('middlewareTransito.ocrTarga :' + error?.message);
     }
 
     ret.returnNext(next);

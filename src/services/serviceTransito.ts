@@ -65,6 +65,11 @@ class serviceTransitoImplementation {
     //return await repositoryTransito.getAll();
   }
 
+  async getTransitiFromQuery(options?: object): Promise<eTransito[]> {
+    return await repositoryTransito.getFromQuery(options);
+    //return await repositoryTransito.getAll();
+  }
+
   // Crea un nuovo Transito
   async createTransito(
     data_transito: Date,

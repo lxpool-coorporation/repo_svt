@@ -135,7 +135,7 @@ export class daoPolicySanctionImplementation
     if (!ormObj) {
       throw new Error('PolicySanction not found');
     }
-    await dbOrm.ormPolicySanction.destroy({
+    await ormObj.destroy({
       transaction: options?.transaction,
     });
   }

@@ -113,7 +113,7 @@ export class daoPermessoImplementation
     if (!ormObj) {
       throw new Error('Permesso not found');
     }
-    await dbOrm.ormPermesso.destroy({ transaction: options?.transaction });
+    await ormObj.destroy({ transaction: options?.transaction });
   }
 }
 
