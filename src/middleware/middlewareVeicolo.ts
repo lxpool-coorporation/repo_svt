@@ -88,6 +88,27 @@ export class middlewareVeicolo {
     );
   };
 
+  public static validateAssociation = (
+    req: Request,
+    _res: Response,
+    next: NextFunction,
+  ): void => {
+    let ret: retMiddleware = new retMiddleware();
+    let optional: boolean = req.method.toLowerCase() === 'patch';
+    // Aggiungi le varie validazioni
+    const validations = [
+      middlewareValidate.validateString('identificativo', optional),
+      middlewareValidate.validateTarga('targa', optional),
+    ];
+
+    // Esegui le validazioni
+    Promise.all(validations.map((validation) => validation.run(req))).then(
+      () => {
+        ret.returnNext(next);
+      },
+    );
+  };
+
   public static insertTarga = async (
     req: Request,
     _res: Response,

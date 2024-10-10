@@ -85,13 +85,23 @@ export default {
         stato: enumStato.attivo,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        id: 9,
+        cod: 'A009',
+        descrizione: 'multa - lettura',
+        categoria: enumPermessoCategoria.multa,
+        tipo: enumPermessoTipo.lettura,
+        stato: enumStato.attivo,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {});
   },
 
   down: async (queryInterface: QueryInterface) => {
     await queryInterface.bulkDelete('utn_prf_permesso',{
-      id: {[Op.in]: [1,2,3,4,5,6,7,8]},
+      id: {[Op.in]: [1,2,3,4,5,6,7,8,9]},
     }, {});
   }
 };

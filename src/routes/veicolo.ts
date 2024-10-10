@@ -48,5 +48,13 @@ routerVeicolo.patch(
   middlewareValidate.handleValidationErrors,
   controllerVeicolo.patchVeicolo,
 );
+routerVeicolo.post(
+  '/associate_user',
+  middlewareAuth.verifyToken,
+  middlewareVeicolo.checkPermissionWrite,
+  middlewareVeicolo.validateAssociation,
+  middlewareValidate.handleValidationErrors,
+  controllerVeicolo.associateUser,
+);
 
 export default routerVeicolo;

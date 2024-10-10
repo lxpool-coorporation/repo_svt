@@ -19,6 +19,11 @@ interface iEVeicolo {
   stato: enumStato;
 }
 
+interface iEVeicoloUtente {
+  targa: string;
+  identificativo: string;
+}
+
 export class controllerVeicolo {
   private constructor() {}
   public static checkPermission = async (
@@ -90,7 +95,6 @@ export class controllerVeicolo {
     let ret: retMiddleware = new retMiddleware();
     try {
       const veicolo = req.body as iEVeicolo | null;
-      console.log(veicolo);
       if (!!veicolo) {
         const veicoloRes: eVeicolo | null = await serviceVeicolo.createVeicolo(
           veicolo?.tipo,
@@ -261,5 +265,37 @@ export class controllerVeicolo {
       logger.error('controllerVeicolo.ricavaTipo :' + error?.message);
     }
     return ret;
+  };
+  public static associateUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    let ret: retMiddleware = new retMiddleware();
+    try {
+      const veicoloUtente = req.body as iEVeicoloUtente | null;
+      if (!!veicoloUtente) {
+        /*
+        const veicoloUtenteRes: eVeicolo | null =
+          await serviceVeicolo.createVeicolo(
+            veicoloUtente?.identificativo,
+            veicoloUtente?.targa,
+          );
+        if (!!veicoloUtenteRes) {
+          ret.setResponse(200, veicoloUtenteRes);
+        } else {
+          ret.setResponse(400, {
+            message: 'errore inserimento associazione veicolo - utente',
+          });
+        }
+          */
+      } else {
+        ret.setResponse(400, { message: 'oggetto non presente' });
+      }
+    } catch (error: any) {
+      logger.error('controllerVeicolo.associateUser :' + error?.message);
+      ret.setResponse(500, { message: 'errore associazione veicolo utente' });
+    }
+    ret.returnResponseJson(res, next);
   };
 }

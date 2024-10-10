@@ -36,13 +36,15 @@ async function startTaskBollettinoConsumer(): Promise<void> {
           console.log(
             enumMessengerCoda.queueBollettino + `: Ricevuto: ${content}`,
           );
-          const parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
-          const objBollettino: eBollettino = eBollettino.fromJSON(parsedContent);
+          const parsedContent =
+            typeof content === 'string' ? JSON.parse(content) : content;
+          const objBollettino: eBollettino =
+            eBollettino.fromJSON(parsedContent);
           if (objBollettino) {
             console.log(objBollettino);
             const multa: eMultaSpeedControl | null =
               await serviceMulta.getMultaSpeedControlById(
-                objBollettino.get_id_multa()
+                objBollettino.get_id_multa(),
               );
             if (!multa) {
               throw new Error(
@@ -106,9 +108,10 @@ async function startTaskBollettinoConsumer(): Promise<void> {
               );
               if (fs.existsSync(targaImagePath)) {
                 doc.text(`\nImmagine della targa:`, 50, 320, { align: 'left' }); // Posiziona il testo esplicitamente
-                doc.image(targaImagePath, 50, 350, { // Cambia qui le coordinate e le dimensioni dell'immagine della targa
+                doc.image(targaImagePath, 50, 350, {
+                  // Cambia qui le coordinate e le dimensioni dell'immagine della targa
                   fit: [250, 150],
-                  align: 'center'
+                  align: 'center',
                 });
               }
 

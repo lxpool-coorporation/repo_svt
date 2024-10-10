@@ -17,13 +17,20 @@ export default {
         stato: enumStato.attivo,
         createdAt: new Date(),
         updatedAt: new Date()
+      },
+      {
+        id: 3,
+        identificativo: 'VARCO_1',
+        stato: enumStato.attivo,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
     ], {});
   },
 
   down: async (queryInterface: QueryInterface) => {
     await queryInterface.bulkDelete('utn_utente', {
-      identificativo: ['CRMNTU89P26A392R', 'PPTREQ22P36A423B']
+      identificativo: ['CRMNTU89P26A392R', 'PPTREQ22P36A423B','VARCO_1']
     });
   }
 };

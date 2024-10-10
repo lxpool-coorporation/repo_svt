@@ -223,12 +223,12 @@ export class middlewareTransito {
         const filePath = path.join(IMAGE_PATH, req.body?.path_immagine || '');
         targa = await controllerOcr.detectAndRecognizePlate(filePath);
         if (targa === '') {
-          req.body.stato = enumTransitoStato.illegibile;
+          req.body.stato = enumTransitoStato.indefinito;
         } else {
           req.body.targa = targa;
           const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
           if (targaRegex.test(targa) === false) {
-            req.body.stato = enumTransitoStato.dubbia;
+            req.body.stato = enumTransitoStato.non_processabile;
           }
         }
       }
