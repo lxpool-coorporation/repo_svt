@@ -1,15 +1,39 @@
 # Stage 1: Build
-FROM node:16-alpine AS build
+FROM node:20-buster AS build
 
-# Imposta la directory di lavoro
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-ita \ 
+    libopencv-dev \
+    build-essential \
+    cmake \
+    pkg-config \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crea una directory di lavoro
 WORKDIR /app
+
+# Installa curl e mysql-client se necessario
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends bash curl default-mysql-client && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copia solo i file di dipendenza per sfruttare la cache
 #COPY package*.json .
-COPY . ./
+ENV OPENCV4NODEJS_DISABLE_AUTOBUILD=1
+ENV OPENCV_INCLUDE_DIR=/usr/local/include
+ENV OPENCV_LIB_DIR=/usr/lib/x86_64-linux-gnu
+
+# Copia il package.json e installa le dipendenze di Node.js
+COPY src/ ./src/
+COPY package.json *.config.mjs *.config.cjs *.config.js *.setup.mjs *.setup.cjs *.setup.js tsconfig.json ./
 
 # Installa tutte le dipendenze, inclusi i dev dependencies
-RUN npm install
+RUN npm install opencv4nodejs --build-from-source
+RUN npm install 
 
 # Compila il progetto TypeScript
 RUN npm run build
@@ -17,8 +41,6 @@ RUN npm run build
 # Esegui i test (opzionale, rimuovi se preferisci eseguire i test separatamente)
 #RUN npm test <-- eseguiti dalla pipeline ci.yml
 
-# Installa curl e mysql-client se necessario
-RUN apk add --no-cache bash curl mysql-client
 COPY wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh && chown -R node:node /wait-for-it.sh
 #RUN chmod +x /wait-for-it.sh
@@ -30,22 +52,42 @@ RUN mkdir -p logs && chown -R node:node logs
 USER node
 
 # Stage 2: Production
-FROM node:16-alpine
+FROM node:20-buster
 
-# Imposta la directory di lavoro
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-eng \
+    tesseract-ocr-ita \ 
+    libopencv-dev \
+    build-essential \
+    cmake \
+    pkg-config \
+    python3 \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crea una directory di lavoro
 WORKDIR /app
 
-# Copia i file di dipendenza
-COPY package.json package-lock.json ./
-
-# Installa solo le dipendenze di produzione
-RUN npm install --only=production
+# Installa curl e mysql-client se necessario
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends bash curl default-mysql-client && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copia i file compilati dalla fase di build
 COPY --from=build /app/dist ./dist
 
-# Installa curl e mysql-client se necessario
-RUN apk add --no-cache bash curl mysql-client
+ENV OPENCV4NODEJS_DISABLE_AUTOBUILD=1
+ENV OPENCV_INCLUDE_DIR=/usr/local/include
+ENV OPENCV_LIB_DIR=/usr/lib/x86_64-linux-gnu
+
+# Copia i file di dipendenza
+COPY package.json *.config.mjs *.config.cjs *.config.js *.setup.mjs *.setup.cjs *.setup.js tsconfig.json ./
+
+# Installa solo le dipendenze di produzione
+RUN npm install opencv4nodejs --build-from-source --only=production
+RUN npm install --only=production
+
 COPY wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh && chown -R node:node /wait-for-it.sh
 
