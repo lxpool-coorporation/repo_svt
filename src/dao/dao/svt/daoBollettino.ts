@@ -1,10 +1,11 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eBollettino } from '../../../entity/svt/eBollettino';
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormBollettino } from '../../../models/svt/ormBollettino';
 import { enumBollettinoStato } from '../../../entity/enum/enumBollettinoStato';
+import sequelize from 'sequelize';
 
 // Implementazione del DAO per l'entità `Bollettino`
 export class daoBollettinoImplementation
@@ -24,6 +25,24 @@ export class daoBollettinoImplementation
       ormObj.path_bollettino,
       ormObj.stato,
     );
+  }
+
+  async getBollettinoByUiid(uuid: string): Promise<eBollettino | null> {
+    let ret: eBollettino | null = null;
+    const ormObj = await dbOrm.ormBollettino.findOne({
+      where: {
+        [Op.and]: [
+          sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('uuid')),
+            uuid.toLowerCase(),
+          ),
+        ],
+      },
+    });
+    if (!!ormObj) {
+      ret = new eBollettino(ormObj.id, ormObj.id_multa, ormObj.uuid, ormObj.importo, ormObj.path_bollettino, ormObj.stato);
+    }
+    return ret;
   }
 
   async getByIdMulta(idMulta: number): Promise<eBollettino | null> {

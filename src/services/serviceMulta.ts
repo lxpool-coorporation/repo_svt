@@ -406,6 +406,9 @@ class serviceMultaSpeedControlImplementation {
   getBollettinoById(id: number): Promise<eBollettino | null> {
     return repositoryMulta.getBollettinoById(id);
   }
+  getBollettinoByUUID(uuid: string): Promise<eBollettino | null> {
+    return repositoryMulta.getBollettinoByUUID(uuid);
+  }
   getBollettinoByIdMulta(id: number): Promise<eBollettino | null> {
     return repositoryMulta.getBollettinoByIdMulta(id);
   }

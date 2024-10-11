@@ -167,6 +167,9 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   getBollettinoById(id: number): Promise<eBollettino | null> {
     return this.daoBollettino.get(id);
   }
+  getBollettinoByUUID(uuid: string): Promise<eBollettino | null> {
+    return this.daoBollettino.getBollettinoByUiid(uuid);
+  }
   getBollettinoByIdMulta(id: number): Promise<eBollettino | null> {
     return this.daoBollettino.getByIdMulta(id);
   }

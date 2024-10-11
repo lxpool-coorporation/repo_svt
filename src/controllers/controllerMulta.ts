@@ -100,7 +100,7 @@ export class controllerMulta {
     try {
       if (isString(req.params.id)) {
         const bollettino: eBollettino | null =
-          await serviceMulta.getBollettinoById(parseInt(req.params.id));
+          await serviceMulta.getBollettinoByUUID(req.params.id);
         if (!!bollettino) {
           // Percorso assoluto del file da scaricare
           const filePath = path.join(
