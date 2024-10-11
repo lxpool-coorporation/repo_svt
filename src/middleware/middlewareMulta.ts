@@ -77,6 +77,8 @@ export class middlewareMulta {
       middlewareValidate.validateDateISO8601('data_inizio', optional, query),
       middlewareValidate.validateDateISO8601('data_fine', optional, query),
       middlewareValidate.validateString('targa', optional, query),
+      middlewareValidate.validateFormatoOutput('format', optional, query),
+      /*
       middlewareValidate
         .validateString('format', optional, query)
         .custom((value) => {
@@ -85,6 +87,7 @@ export class middlewareMulta {
           }
           return true;
         }),
+      */
     ];
 
     // Esegui le validazioni

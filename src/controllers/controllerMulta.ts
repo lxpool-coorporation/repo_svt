@@ -5,8 +5,7 @@ import { enumPermessoTipo } from '../entity/enum/enumPermessoTipo';
 import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
-import { eMulta } from '../entity/svt/eMulta';
-import { isString } from '../utils/utils';
+import { isNumeric, isString } from '../utils/utils';
 import { serviceMulta } from '../services/serviceMulta';
 import { eBollettino } from '../entity/svt/eBollettino';
 import fs from 'fs';
@@ -51,20 +50,26 @@ export class controllerMulta {
       const dataFineString: string | undefined = req.query.data_fine as string;
       // Se il parametro 'stato' esiste, splitto per ottenere l'array
       const format: string | undefined = req.query.format as string;
-
-      let multeResult:string|null = null;
-      if (arrayTarghe.length > 0 || arrayTarghe.length > 0) {
-        
+      let userId: number = 0;
+      let multeResult: string | null = null;
+      if (arrayTarghe.length > 0 || (arrayTarghe.length > 0 && req.userId)) {
         console.log(arrayTarghe);
         console.log(dataInizioString);
         console.log(dataFineString);
         console.log(format);
         console.log(req.userId);
 
-
-        const formatoEnum = format as enumExportFormato;
-        multeResult = await serviceMulta.getAllMulteExport(formatoEnum,dataInizioString,dataFineString,arrayTarghe,req.userId);
-
+        if (isNumeric(req.userId)) {
+          userId = req.userId;
+          const formatoEnum = format as enumExportFormato;
+          multeResult = await serviceMulta.getAllMulteExport(
+            formatoEnum,
+            new Date(dataInizioString),
+            new Date(dataFineString),
+            arrayTarghe,
+            userId,
+          );
+        }
 
         /*
          */

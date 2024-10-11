@@ -12,6 +12,7 @@ import { enumStato } from '../entity/enum/enumStato';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
 import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
+import { enumExportFormato } from '../entity/enum/enumExportFormato';
 import { parseISO } from 'date-fns'; // Opzionale, per gestire meglio la data
 
 dotenv.config();
@@ -207,6 +208,23 @@ export class middlewareValidate {
     let ret: ValidationChain = callback(campo).custom((value: any) => {
       if (!Object.values(enumVeicoloTipo).includes(value)) {
         throw new Error('Tipo veicolo non valido');
+      }
+      return true;
+    });
+    return optional ? ret.optional() : ret;
+  };
+  public static validateFormatoOutput = (
+    campo: string,
+    optional: boolean,
+    callback: Function = body,
+  ): ValidationChain => {
+    let ret: ValidationChain = callback(campo).custom((value: any) => {
+      if (!Object.values(enumExportFormato).includes(value)) {
+        throw new Error('formato non valido');
+      } else {
+        if (value != enumExportFormato.JSON) {
+          throw new Error('si accetta solo formato JSON');
+        }
       }
       return true;
     });
