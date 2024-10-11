@@ -145,3 +145,4 @@ uploads/
 # documentazione
 _documentazione/
 .env_dist
+.pdf
