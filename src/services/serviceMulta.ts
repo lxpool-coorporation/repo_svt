@@ -161,6 +161,32 @@ class serviceMultaSpeedControlImplementation {
     await redisClient.del('MultaSpeedControl_tutti');
   }
 
+  async updateFieldsMulta(
+    objMulta: eMulta,
+    fieldsToUpdate: Partial<{
+      id_transito: number | null,
+      id_policy: number | null,
+      tipo_policy: enumPolicyTipo | null,
+      id_veicolo: number | null,
+      id_automobilista: number | null,
+      is_notturno: boolean | null,
+      is_recidivo: boolean | null,
+      stato: enumMultaStato | null,
+    }>,
+  ): Promise<void> {
+    try {
+      const redisClient = await databaseCache.getInstance();
+
+      await repositoryMulta.updateFields(objMulta, fieldsToUpdate);
+
+      // Invalida la cache dell'Multa aggiornato e la cache generale
+      await redisClient.del(`Multa_${objMulta.get_id()}`);
+      await redisClient.del('Transiti_tutti');
+    } catch (err) {
+      throw new Error(`serviceMulta - updateFields: ${err}`);
+    }
+  }
+
   // Funzione per calcolare la differenza di tempo in ore
   calcolaDifferenzaOre(transitoIn: Date, transitoOut: Date): number {
     const diffInMillis = transitoOut.getTime() - transitoIn.getTime(); // Differenza in millisecondi
@@ -194,7 +220,7 @@ class serviceMultaSpeedControlImplementation {
     return velocitaMedia - tolleranza; // Sottrai la tolleranza dalla velocità media
   }
 
-  async verificaSanzione(transitoUscita: eTransito): Promise<eMulta | null> {
+  async verificaMulta(transitoUscita: eTransito): Promise<eMulta | null> {
     let result = null;
 
     try {
@@ -226,17 +252,24 @@ class serviceMultaSpeedControlImplementation {
           return null;
         }
 
+        const data_in = new Date(transitoIngresso.get_data_transito());
+        const data_ot = new Date(transitoUscita.get_data_transito());
+
         // Calcola la differenza in ore tra i due transiti
         const differenzaOre = this.calcolaDifferenzaOre(
-          transitoIngresso.get_data_transito(),
-          transitoUscita.get_data_transito(),
+          data_in,
+          data_ot,
         );
+
+        console.log("differenza ore: " + differenzaOre);
 
         // Calcola la velocità media
         const speed_real = this.calcolaVelocitaMedia(
           tratta.get_distanza(),
           differenzaOre,
         );
+
+        console.log("speed_real: " + speed_real);
 
         const tolleranza = this.calcolaTolleranza(speed_real); // Calcola la tolleranza
 
@@ -260,7 +293,7 @@ class serviceMultaSpeedControlImplementation {
           console.log(
             `Nessuna automobilista trovata per il veicolo con id ${id_veicolo}`,
           );
-          return null;
+          //return null;
         } else {
           idAutomobilista = automobilista.get_id();
         }
@@ -287,12 +320,15 @@ class serviceMultaSpeedControlImplementation {
             const isNotturno: boolean = this.checkIfNotturno(
               transitoUscita.get_data_transito(),
             );
-            const isRecidivo: boolean = await this.checkIfRecidivo(
-              automobilista.get_id(),
-            );
+            const isRecidivo: boolean = false;
+            if(idAutomobilista){
+                await this.checkIfRecidivo(
+                  idAutomobilista,
+                );
+              }
 
             // Crea la multa se la velocità è maggiore del limite
-            const multa = await this.createMultaSpeedControl(
+            const objMulta = await this.createMultaSpeedControl(
               transitoUscita.get_id(),
               policy.get_id(),
               enumPolicyTipo.speed_control,
@@ -307,8 +343,13 @@ class serviceMultaSpeedControlImplementation {
               speedDelta,
             );
 
+            if(objMulta){
+              const statoMulta:enumMultaStato = this.getMultaStato(objMulta);
+
+            }
+
             console.log(
-              `Multa generata per transito ${transitoUscita.get_id()} con id multa: ${multa?.get_id()}`,
+              `Multa generata per transito ${transitoUscita.get_id()} con id multa: ${objMulta?.get_id()}`,
             );
           } else {
             console.log('limite non superato!');
@@ -343,10 +384,13 @@ class serviceMultaSpeedControlImplementation {
   getBollettinoById(id: number): Promise<eBollettino | null> {
     return repositoryMulta.getBollettinoById(id);
   }
+  getBollettinoByIdMulta(id: number): Promise<eBollettino | null> {
+    return repositoryMulta.getBollettinoByIdMulta(id);
+  }
   getAllBollettini(options?: object): Promise<eBollettino[]> {
     return repositoryMulta.getAllBollettini(options);
   }
-  async saveBellettino(t: eBollettino): Promise<eBollettino | null> {
+  async saveBollettino(t: eBollettino): Promise<eBollettino | null> {
     try {
       const objMulta: eMulta | null = await this.getMultaSpeedControlById(
         t.get_id_multa(),
@@ -398,7 +442,7 @@ class serviceMultaSpeedControlImplementation {
           null,
           enumBollettinoStato.richiesto,
         );
-        result = await this.saveBellettino(bollettino);
+        result = await this.saveBollettino(bollettino);
         if (!result) {
           throw new Error(
             `errore in richiesta bollettino: errore in generazione per multa: ${multa.get_id()}`,
@@ -471,10 +515,28 @@ class serviceMultaSpeedControlImplementation {
             await rabbitMQ.connect();
             // Invia un messaggio alla coda 'tasks_queue'
             await rabbitMQ.sendToQueue(
-              enumMessengerCoda.queueMultaAutomobilista,
+              enumMessengerCoda.queueCheckMultaAutomobilista,
               JSON.stringify(objMulta),
             );
           }
+          case enumMultaStato.elaborato:
+            if (objMulta.get_id_automobilista()) {
+
+              const objBollettino:eBollettino|null = await this.getBollettinoByIdMulta(objMulta.get_id());
+              if(!(objBollettino)){
+
+                const rabbitMQ = messenger.getInstance();
+                // Connessione a RabbitMQ
+                await rabbitMQ.connect();
+                // Invia un messaggio alla coda 'tasks_queue'
+                await rabbitMQ.sendToQueue(
+                  enumMessengerCoda.queueCheckMultaBollettino,
+                  JSON.stringify(objMulta),
+                );
+
+              }
+
+            }
       }
     } catch (err) {
       throw new Error(`refreshMultaStato: ${err}`);

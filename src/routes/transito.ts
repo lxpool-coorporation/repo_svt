@@ -31,9 +31,9 @@ routerTransito.post(
   middlewareTransito.rebuildBody,
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
-  middlewareTransito.ocrTarga,
+  //middlewareTransito.ocrTarga,
   middlewareVeicolo.insertTarga,
-  middlewareTransito.calculateSpeedReal,
+  //middlewareTransito.calculateSpeedReal,
   controllerTransito.saveTransito,
 );
 routerTransito.delete(
@@ -56,7 +56,7 @@ routerTransito.put(
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
   middlewareVeicolo.insertTarga,
-  middlewareTransito.calculateSpeedReal,
+  //middlewareTransito.calculateSpeedReal,
   controllerTransito.putTransito,
 );
 routerTransito.patch(
@@ -72,7 +72,7 @@ routerTransito.patch(
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
   middlewareVeicolo.insertTarga,
-  middlewareTransito.calculateSpeedReal,
+ // middlewareTransito.calculateSpeedReal,
   controllerTransito.patchTransito,
 );
 routerTransito.get(

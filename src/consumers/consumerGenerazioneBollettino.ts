@@ -12,7 +12,7 @@ import { serviceTransito } from '../services/serviceTransito';
 import { serviceVeicolo } from '../services/serviceVeicolo';
 import { eVeicolo } from '../entity/svt/eVeicolo';
 
-async function startTaskBollettinoConsumer(): Promise<void> {
+async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
   try {
     // Connessione a RabbitMQ con gestione degli errori
     const connection: Connection = await amqp.connect(
@@ -169,4 +169,4 @@ async function startTaskBollettinoConsumer(): Promise<void> {
   }
 }
 
-export default startTaskBollettinoConsumer;
+export default startTaskGenerazioneBollettinoConsumer;

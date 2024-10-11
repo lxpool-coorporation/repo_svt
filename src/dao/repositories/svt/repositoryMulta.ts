@@ -13,6 +13,8 @@ import {
   daoBollettinoImplementation,
 } from '../../../dao/dao/svt/daoBollettino';
 import { eBollettino } from '../../../entity/svt/eBollettino';
+import { enumPolicyTipo } from '../../../entity/enum/enumPolicyTipo';
+import { enumMultaStato } from '../../../entity/enum/enumMultaStato';
 
 const db = database.getInstance();
 
@@ -160,6 +162,9 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   getBollettinoById(id: number): Promise<eBollettino | null> {
     return this.daoBollettino.get(id);
   }
+  getBollettinoByIdMulta(id: number): Promise<eBollettino | null> {
+    return this.daoBollettino.getByIdMulta(id);
+  }
   getAllBollettini(options?: object): Promise<eBollettino[]> {
     return this.daoBollettino.getAll(options);
   }
@@ -176,6 +181,24 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   async getImportoMulta(idMulta: number): Promise<number | null> {
     return daoMultaSpeedControl.getImportoMulta(idMulta);
   }
+
+  updateFields(
+    t: eMulta,
+    fieldsToUpdate: Partial<{
+      id_transito: number | null,
+      id_policy: number | null,
+      tipo_policy: enumPolicyTipo | null,
+      id_veicolo: number | null,
+      id_automobilista: number | null,
+      is_notturno: boolean | null,
+      is_recidivo: boolean | null,
+      stato: enumMultaStato | null,
+    }>,
+    options?: object,
+  ): Promise<void> {
+    return this.daoMulta.updateFields(t, fieldsToUpdate, options);
+  }
+
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

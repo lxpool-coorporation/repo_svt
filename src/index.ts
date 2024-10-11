@@ -11,11 +11,13 @@ import routerVeicolo from './routes/veicolo';
 import routerTransito from './routes/transito';
 import routerMulta from './routes/multa';
 import databaseCache from './utils/database-cache';
-import { serviceMulta } from './services/serviceMulta';
 import database from './utils/database';
 import messenger from './utils/messenger';
-import { eBollettino } from './entity/svt/eBollettino';
-import startTaskBollettinoConsumer from './consumers/consumerBollettino';
+import startTaskCheckMultaConsumer from './consumers/consumerCheckMulta';
+import { stereoRectifyUncalibrated } from 'opencv4nodejs';
+import startTaskGenerazioneBollettinoConsumer from './consumers/consumerGenerazioneBollettino';
+import startTaskCheckMultaAutomobilistaConsumer from './consumers/consumerCheckMultaAutomobilista';
+import startTaskCheckMultaBollettinoConsumer from './consumers/consumerCheckMultaBollettino';
 dotenv.config();
 logger.info('app started');
 
@@ -70,7 +72,10 @@ app
 
     clearRedisCache();
     // Avvio di RabbitMQ
-    startTaskBollettinoConsumer();
+    startTaskCheckMultaConsumer();
+    startTaskCheckMultaAutomobilistaConsumer();
+    startTaskCheckMultaBollettinoConsumer();
+    startTaskGenerazioneBollettinoConsumer();
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {
@@ -84,7 +89,7 @@ process.on('SIGINT', async () => {
   // Chiude la connessione RabbitMQ
   const rabbitMQ = messenger.getInstance(); // Ottiene l'istanza del singleton RabbitMQ
   await rabbitMQ.close();
-  // Chiudi la connessione al database
+  // Chiudi la connessione al database 
   const sequelize = database.getInstance(); // Assumendo che `database.getInstance()` restituisca l'istanza Sequelize
   await sequelize.close(); // Chiude le connessioni al database
 
@@ -112,7 +117,7 @@ async function _readUser2() {
   */
 
   // CHECK BOLLETTINO
-
+  /*
   const objBollettino: eBollettino | null =
     await serviceMulta.richiediBollettino(1);
   if (objBollettino) {
@@ -120,6 +125,7 @@ async function _readUser2() {
   } else {
     console.log('bollettino non generato');
   }
+    */
   //await serviceUtente.initStruttura({alter:true })
   //await serviceTransito.initStruttura({alter:true })
   //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)

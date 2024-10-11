@@ -4,6 +4,8 @@ import { Transaction } from 'sequelize';
 
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormBollettino } from '../../../models/svt/ormBollettino';
+import { eMulta } from '../../../entity/svt/eMulta';
+import sequelize from 'sequelize';
 
 // Implementazione del DAO per l'entità `Bollettino`
 export class daoBollettinoImplementation
@@ -23,6 +25,19 @@ export class daoBollettinoImplementation
       ormObj.path_bollettino,
       ormObj.stato,
     );
+  }
+
+  async getByIdMulta(idMulta: number): Promise<eBollettino | null> {
+    let ret: eBollettino | null = null;
+    const ormObj = await dbOrm.ormBollettino.findOne({
+      where: {
+        id_multa: idMulta,
+      },
+    });
+    if (!!ormObj) {
+      ret = new eBollettino(ormObj.id, ormObj.id_multa, ormObj.uuid, ormObj.importo, ormObj.path_bollettino, ormObj.stato);
+    }
+    return ret;
   }
 
   // Trova tutti gli utenti usando Sequelize

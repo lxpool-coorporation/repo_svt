@@ -228,7 +228,7 @@ export class middlewareTransito {
           req.body.targa = targa;
           const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
           if (targaRegex.test(targa) === false) {
-            req.body.stato = enumTransitoStato.non_processabile;
+            req.body.stato = enumTransitoStato.in_attesa;
           }
         }
       }

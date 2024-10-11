@@ -1,4 +1,4 @@
-import { enumStato } from '../enum/enumStato';
+import { enumVeicoloStato } from '../enum/enumVeicoloStato';
 import { enumVeicoloTipo } from '../enum/enumVeicoloTipo';
 
 class eVeicolo {
@@ -6,13 +6,13 @@ class eVeicolo {
   private id: number;
   private tipo: enumVeicoloTipo;
   private targa: string;
-  private stato: enumStato;
+  private stato: enumVeicoloStato;
 
   constructor(
     id: number,
     tipo: enumVeicoloTipo,
     targa: string,
-    stato: enumStato,
+    stato: enumVeicoloStato,
   ) {
     this.id = id;
     this.tipo = tipo;
@@ -22,6 +22,11 @@ class eVeicolo {
 
   static fromJSON(data: any): eVeicolo {
     return new eVeicolo(data.id, data.tipo, data.targa, data.stato);
+  }
+
+  static isTipoVeicoloValid(value: string|null|undefined): Boolean {
+    // Cast del valore a unknown prima di confrontarlo con i valori dell'enum
+    return Object.values(enumVeicoloTipo).includes(value as unknown as enumVeicoloTipo);
   }
 
   // Metodi Getters
@@ -34,7 +39,7 @@ class eVeicolo {
   get_targa(): string {
     return this.targa;
   }
-  get_stato(): enumStato {
+  get_stato(): enumVeicoloStato {
     return this.stato;
   }
 
@@ -48,7 +53,7 @@ class eVeicolo {
   set_targa(targa: string): void {
     this.targa = targa;
   }
-  set_stato(stato: enumStato): void {
+  set_stato(stato: enumVeicoloStato): void {
     this.stato = stato;
   }
 }

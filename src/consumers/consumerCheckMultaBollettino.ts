@@ -1,8 +1,9 @@
 import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
+import { serviceMulta } from '../services/serviceMulta';
 import { eMulta } from '../entity/svt/eMulta';
 
-async function startTaskMultaAutomobilistaConsumer(): Promise<void> {
+async function startTaskCheckMultaBollettinoConsumer(): Promise<void> {
   try {
     // Connessione a RabbitMQ con gestione degli errori
     const connection: Connection = await amqp.connect(
@@ -10,7 +11,7 @@ async function startTaskMultaAutomobilistaConsumer(): Promise<void> {
     );
     const channel: Channel = await connection.createChannel();
 
-    const queue: string = enumMessengerCoda.queueMultaAutomobilista;
+    const queue: string = enumMessengerCoda.queueBollettino;
 
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });
@@ -24,15 +25,18 @@ async function startTaskMultaAutomobilistaConsumer(): Promise<void> {
         if (msg) {
           const content: string = msg.content.toString();
           console.log(
-            enumMessengerCoda.queueMultaAutomobilista +
-              `: Ricevuto: ${content}`,
+            enumMessengerCoda.queueBollettino + `: Ricevuto: ${content}`,
           );
           const parsedContent =
             typeof content === 'string' ? JSON.parse(content) : content;
-
-          const objMulta: eMulta | null = eMulta.fromJSON(parsedContent);
+          const objMulta: eMulta =
+            eMulta.fromJSON(parsedContent);
           if (objMulta) {
             console.log(objMulta);
+            
+            const objBollettino = await serviceMulta.richiediBollettino(objMulta.get_id());
+            console.log(objBollettino);
+
           }
 
           // Imposta le intestazioni per il download del PDF
@@ -60,4 +64,4 @@ async function startTaskMultaAutomobilistaConsumer(): Promise<void> {
   }
 }
 
-export default startTaskMultaAutomobilistaConsumer;
+export default startTaskCheckMultaBollettinoConsumer;

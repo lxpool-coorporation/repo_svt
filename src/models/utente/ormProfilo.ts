@@ -2,7 +2,7 @@ import { enumStato } from '../../entity/enum/enumStato';
 import database from '../../utils/database';
 import { DataTypes, Model, NonAttribute, Sequelize } from 'sequelize';
 import { ormPermesso } from './ormPermesso';
-import { enumProfiloTipo } from '@/entity/enum/enumProfiloTipo';
+import { enumProfiloTipo } from '../../entity/enum/enumProfiloTipo';
 
 /**
  * Instanziazione della connessione verso il RDBMS

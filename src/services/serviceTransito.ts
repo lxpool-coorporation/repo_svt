@@ -4,8 +4,14 @@ import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
 import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
-import messenger from '@/utils/messenger';
-import { enumMessengerCoda } from '@/entity/enum/enumMessengerCoda';
+import messenger from '../utils/messenger';
+import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
+import { serviceVarco } from './serviceVarco';
+import { eVarco } from '../entity/svt/eVarco';
+import { eVeicolo } from '../entity/svt/eVeicolo';
+import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
+import { serviceVeicolo } from './serviceVeicolo';
+import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
 
 // classe che gestisce la logica di business dell'Transito
 class serviceTransitoImplementation {
@@ -112,8 +118,170 @@ class serviceTransitoImplementation {
     return result;
   }
 
+  // Crea un nuovo Transito
+  async createTransitoFromRaw(
+    data_transito: Date,
+    codice_varco: string,
+    targa?: string | null,
+    tipo_veicolo?: string | null,
+    meteo?: enumMeteoTipo | null,
+    speed?: number | null,
+    path_immagine?: string | null,
+  ): Promise<eTransito | null> {
+    let result: eTransito | null = null;
+
+    try {
+      const redisClient = await databaseCache.getInstance();
+
+      const objVarco:eVarco|null = await serviceVarco.getVarcoByCod(codice_varco);
+      if(!objVarco){
+        throw new Error(`Varco ${codice_varco} non trovato`);
+      }
+      
+      let idVeicolo:number|null = null;
+
+      if(targa){
+        const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
+        if (targaRegex.test(targa) === false) {
+          let objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloByTarga(targa);
+          if(!(objVeicolo)){
+              // necessario aggiunta veicolo
+              let objEnumVeicoloTipo:enumVeicoloTipo = enumVeicoloTipo.indefinito;
+              let objVeicoloStato:enumVeicoloStato = enumVeicoloStato.in_attesa;
+              if(eVeicolo.isTipoVeicoloValid(tipo_veicolo)){
+                objEnumVeicoloTipo = tipo_veicolo as enumVeicoloTipo;
+                objVeicoloStato = enumVeicoloStato.acquisito;
+              }
+              objVeicolo = await serviceVeicolo.createVeicolo(objEnumVeicoloTipo, targa, objVeicoloStato);
+              if(objVeicolo){
+                idVeicolo = objVeicolo.get_id();
+              }
+          }
+          else{
+            idVeicolo = objVeicolo.get_id();
+          }
+
+        }
+      }
+
+      let val_speed_real:number|null=null;
+      if(speed){
+        val_speed_real = this.calcolaTolleranza(speed);
+      }
+
+      const nuovoTransito = new eTransito(
+        new eTransitoBuilder()
+          .setDataTransito(data_transito)
+          .setSpeed(speed)
+          .setSpeedReal(val_speed_real)
+          .setIdVarco(objVarco.get_id())
+          .setMeteo(meteo)
+          .setIdVeicolo(idVeicolo)
+          .setpath_immagine(path_immagine)
+          .setStato(enumTransitoStato.indefinito)
+      );
+
+      const statoTransito:enumTransitoStato = this.getTransitoStato(nuovoTransito);
+      nuovoTransito.set_stato(statoTransito);
+
+      const savedTransito = await repositoryTransito.save(nuovoTransito);
+      if (savedTransito) {
+        this.refreshTransito(savedTransito);
+      }
+
+      result = savedTransito;
+
+      // Invalida la cache degli Transiti
+      await redisClient.del(`Transiti_tutti`);
+    } catch (err) {
+      throw new Error('createTransito: ' + err);
+    }
+
+    return result;
+  }
+
+  // Funzione per calcolare la tolleranza
+  calcolaTolleranza(velocita: number): number {
+    const tolleranzaPercentuale = velocita * 0.05; // 5% della velocità
+    return tolleranzaPercentuale > 5 ? tolleranzaPercentuale : 5; // Usa il massimo tra 5 km/h e il 5% della velocità
+  }
+
   // Aggiorna un Transito esistente
-  async updateTransito(
+  async updateTransitoFromRaw(
+    id: number,
+    data_transito: Date,
+    codice_varco: string,
+    targa?: string | null,
+    tipo_veicolo?: string | null,
+    meteo?: enumMeteoTipo | null,
+    speed?: number | null,
+    path_immagine?: string | null,
+  ): Promise<void> {
+    const redisClient = await databaseCache.getInstance();
+
+    const objVarco:eVarco|null = await serviceVarco.getVarcoByCod(codice_varco);
+    if(!objVarco){
+      throw new Error(`Varco ${codice_varco} non trovato`);
+    }
+    
+    let idVeicolo:number|null = null;
+
+    if(targa){
+      const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
+      if (targaRegex.test(targa) === false) {
+        let objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloByTarga(targa);
+        if(!(objVeicolo)){
+            // necessario aggiunta veicolo
+            let objEnumVeicoloTipo:enumVeicoloTipo = enumVeicoloTipo.indefinito;
+            let objVeicoloStato:enumVeicoloStato = enumVeicoloStato.in_attesa;
+            if(eVeicolo.isTipoVeicoloValid(tipo_veicolo)){
+              objEnumVeicoloTipo = tipo_veicolo as enumVeicoloTipo;
+              objVeicoloStato = enumVeicoloStato.acquisito;
+            }
+            objVeicolo = await serviceVeicolo.createVeicolo(objEnumVeicoloTipo, targa, objVeicoloStato);
+            if(objVeicolo){
+              idVeicolo = objVeicolo.get_id();
+            }
+        }
+        else{
+          idVeicolo = objVeicolo.get_id();
+        }
+
+      }
+    }
+
+    let val_speed_real:number|null=null;
+    if(speed){
+      val_speed_real = this.calcolaTolleranza(speed);
+    }
+
+    const Transito = new eTransito(
+      new eTransitoBuilder()
+        .setId(id)
+        .setDataTransito(data_transito)
+        .setSpeed(speed)
+        .setSpeedReal(val_speed_real)
+        .setIdVarco(objVarco.get_id())
+        .setMeteo(meteo)
+        .setIdVeicolo(idVeicolo)
+        .setpath_immagine(path_immagine)
+        .setStato(enumTransitoStato.indefinito)
+    );
+
+    const statoTransito:enumTransitoStato = this.getTransitoStato(Transito);
+    Transito.set_stato(statoTransito);
+
+    await repositoryTransito.update(Transito);
+
+    this.refreshTransito(Transito);
+
+    // Invalida la cache dell'Transito aggiornato e la cache generale
+    await redisClient.del(`Transito_${id}`);
+    await redisClient.del('Transiti_tutti');
+  }
+
+   // Aggiorna un Transito esistente
+   async updateTransito(
     id: number,
     data_transito: Date,
     id_varco: number,
@@ -170,6 +338,7 @@ class serviceTransitoImplementation {
       throw new Error(`serviceTransito - updateFields: ${err}`);
     }
   }
+  
 
   // Elimina un Transito
   async deleteTransito(id: number): Promise<void> {
@@ -232,9 +401,17 @@ class serviceTransitoImplementation {
       const statoUpdated: enumTransitoStato =
         this.getTransitoStato(objTransito);
 
+      if(statoUpdated!==objTransito.get_stato()){
+        objTransito.set_stato(statoUpdated);
+        await this.updateFieldsTransito(objTransito, {stato: statoUpdated});
+      }
+
+      console.log("STATO REFRESH: " + statoUpdated);
       switch (statoUpdated) {
         case enumTransitoStato.in_attesa:
+          console.log("ENTRO QUI IN STATO IN ATTESA");
           if (!objTransito.get_meteo()) {
+            console.log("ENTRO IN STATO ELABORATO: not meteo")
             const rabbitMQ = messenger.getInstance();
             // Connessione a RabbitMQ
             await rabbitMQ.connect();
@@ -244,7 +421,8 @@ class serviceTransitoImplementation {
               JSON.stringify(objTransito),
             );
           }
-          if (!objTransito.get_path_immagine()) {
+          if (objTransito.get_path_immagine() && !(objTransito.get_id_veicolo())) {
+            console.log("ENTRO IN STATO ELABORATO: not veicolo")
             const rabbitMQ = messenger.getInstance();
             // Connessione a RabbitMQ
             await rabbitMQ.connect();
@@ -254,6 +432,33 @@ class serviceTransitoImplementation {
               JSON.stringify(objTransito),
             );
           }
+          const idVeicolo:number | null = objTransito.get_id_veicolo();
+          if (idVeicolo && objTransito.get_meteo()) {
+            console.log("ENTRO IN STATO ELABORATO: meteo ee veicolo")
+            const objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloById(idVeicolo);
+            if(objVeicolo){
+              if(objVeicolo.get_stato()==enumVeicoloStato.acquisito){
+                const rabbitMQ = messenger.getInstance();
+                // Connessione a RabbitMQ
+                await rabbitMQ.connect();
+                // Invia un messaggio alla coda 'tasks_queue'
+                await rabbitMQ.sendToQueue(
+                  enumMessengerCoda.queueCheckMulta,
+                  JSON.stringify(objTransito),
+                );
+              }
+            }
+          }
+        case enumTransitoStato.elaborato:
+          console.log("ENTRO IN STATO ELABORATO")
+          const rabbitMQ = messenger.getInstance();
+          // Connessione a RabbitMQ
+          await rabbitMQ.connect();
+          // Invia un messaggio alla coda 'tasks_queue'
+          await rabbitMQ.sendToQueue(
+            enumMessengerCoda.queueCheckMulta,
+            JSON.stringify(objTransito),
+          );
       }
     } catch (err) {
       throw new Error(`refreshTransitoStato: ${err}`);

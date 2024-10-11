@@ -1,4 +1,4 @@
-import { enumStato } from '../../entity/enum/enumStato';
+import { enumVeicoloStato } from '../../entity/enum/enumVeicoloStato';
 import { enumVeicoloTipo } from '../../entity/enum/enumVeicoloTipo';
 import database from '../../utils/database';
 import { DataTypes, Model, NonAttribute, Sequelize } from 'sequelize';
@@ -14,7 +14,7 @@ export class ormVeicolo extends Model {
   public id!: number;
   public tipo!: enumVeicoloTipo;
   public targa!: string;
-  public stato!: enumStato;
+  public stato!: enumVeicoloStato;
 
   public veicolo_utenti?: NonAttribute<ormUtente[]>; // Sequelize riempirà questo campo dinamicamente
 
@@ -51,7 +51,7 @@ ormVeicolo.init(
       unique: true,
     },
     stato: {
-      type: DataTypes.ENUM(...Object.values(enumStato)),
+      type: DataTypes.ENUM(...Object.values(enumVeicoloStato)),
       allowNull: false,
     },
   },

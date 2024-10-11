@@ -1,5 +1,5 @@
 import { QueryInterface, DataTypes } from 'sequelize';
-import {enumStato} from '../src/entity/enum/enumStato';
+import {enumVeicoloStato} from '../src/entity/enum/enumVeicoloStato';
 import {enumVeicoloTipo} from '../src/entity/enum/enumVeicoloTipo';
 
 
@@ -24,9 +24,9 @@ export default {
         unique: true,
       },
       stato: {
-        type: DataTypes.ENUM(...Object.values(enumStato)), // Definizione dell'ENUM nel database
+        type: DataTypes.ENUM(...Object.values(enumVeicoloStato)), // Definizione dell'ENUM nel database
         allowNull: false,
-        defaultValue: enumStato.attivo  ,
+        defaultValue: enumVeicoloStato.in_attesa  ,
       },
       createdAt: {
         allowNull: false,

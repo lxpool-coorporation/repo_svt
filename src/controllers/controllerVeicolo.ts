@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { StringisNumeric } from '../utils/utils';
 import { eVeicolo } from '../entity/svt/eVeicolo';
-import { enumStato } from '../entity/enum/enumStato';
+import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 
 dotenv.config();
@@ -16,7 +16,7 @@ dotenv.config();
 interface iEVeicolo {
   tipo: enumVeicoloTipo;
   targa: string;
-  stato: enumStato;
+  stato: enumVeicoloStato;
 }
 
 interface iEVeicoloUtente {

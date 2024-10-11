@@ -1,6 +1,20 @@
 import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
-import { eMulta } from '../entity/svt/eMulta';
+import { controllerOcr } from '../controllers/controllerOcr';
+import { eTransito } from '../entity/svt/eTransito';
+import path from 'path';
+import dotenv from 'dotenv';
+import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
+import { eVeicolo } from '../entity/svt/eVeicolo';
+import { serviceVeicolo } from '../services/serviceVeicolo';
+import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
+import { enumStato } from '../entity/enum/enumStato';
+import { serviceTransito } from '../services/serviceTransito';
+import logger from '../utils/logger-winston';
+import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
+
+dotenv.config();
+const IMAGE_PATH = process.env.IMAGE_PATH || '.img';
 
 async function startTaskTransitoOCRConsumer(): Promise<void> {
   try {
@@ -29,11 +43,47 @@ async function startTaskTransitoOCRConsumer(): Promise<void> {
           const parsedContent =
             typeof content === 'string' ? JSON.parse(content) : content;
 
-          const objMulta: eMulta | null = eMulta.fromJSON(parsedContent);
-          if (objMulta) {
-            console.log(objMulta);
+          const objTransito: eTransito | null = eTransito.fromJSON(parsedContent);
+          if (!objTransito) {
+            console.log(parsedContent);
+            throw new Error(`error: eTransito non decodificato: ${parsedContent}`);
           }
 
+          try {
+
+            let stato = enumTransitoStato.indefinito;
+            const filePath = path.join(IMAGE_PATH, objTransito.get_path_immagine() || '');
+              const targa = await controllerOcr.detectAndRecognizePlate(filePath);
+              if (targa === '') {
+                  objTransito.set_stato(enumTransitoStato.indefinito);
+                  await serviceTransito.updateFieldsTransito(objTransito, {stato: enumTransitoStato.indefinito })
+              } else {
+                  
+                  const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
+                  if (targaRegex.test(targa) === false) {
+                    
+                    let idVeicolo:number|null = null;
+
+                    let objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloByTarga(targa);
+                    if(objVeicolo){
+                      idVeicolo = objVeicolo.get_id();
+                    }else{
+                      objVeicolo = await serviceVeicolo.createVeicolo(enumVeicoloTipo.indefinito, targa, enumVeicoloStato.in_attesa);
+                      if(objVeicolo){
+                        idVeicolo = objVeicolo.get_id();
+                      }
+                    }
+                    if(idVeicolo){
+                      await serviceTransito.updateFieldsTransito(objTransito, {id_veicolo: idVeicolo, stato: enumTransitoStato.elaborato });
+                    }
+
+                  }
+                  
+              }
+
+          } catch (error: any) {
+            logger.warn('middlewareTransito.ocrTarga :' + error?.message);
+          }
           // Imposta le intestazioni per il download del PDF
           //res.setHeader('Content-Type', 'application/pdf');
           //res.setHeader('Content-Disposition', `attachment; filename=bollettino_${multaID}.pdf`);

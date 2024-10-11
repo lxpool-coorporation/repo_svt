@@ -1,5 +1,5 @@
 import { Op, QueryInterface } from 'sequelize';
-import {enumStato} from '../src/entity/enum/enumStato';
+import {enumVeicoloStato} from '../src/entity/enum/enumVeicoloStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {
@@ -8,7 +8,7 @@ export default {
         id: 1,
         tipo: 'automobile',
         targa: 'DF334HW',
-        stato: enumStato.attivo,
+        stato: enumVeicoloStato.acquisito,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -16,7 +16,7 @@ export default {
         id: 2,
         tipo: 'automobile',
         targa: 'AK8972W',
-        stato: enumStato.attivo,
+        stato: enumVeicoloStato.acquisito,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -24,7 +24,7 @@ export default {
         id: 3,
         tipo: 'camion',
         targa: 'ARM10ST',
-        stato: enumStato.attivo,
+        stato: enumVeicoloStato.acquisito,
         createdAt: new Date(),
         updatedAt: new Date()
       },

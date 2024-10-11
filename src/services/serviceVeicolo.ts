@@ -1,3 +1,4 @@
+import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
 import { enumStato } from '../entity/enum/enumStato';
 import { eVeicolo } from '../entity/svt/eVeicolo';
 import { repositoryVeicolo } from '../dao/repositories/svt/repositoryVeicolo';
@@ -82,7 +83,7 @@ class serviceVeicoloImplementation {
   async createVeicolo(
     tipo: enumVeicoloTipo,
     targa: string,
-    stato: enumStato,
+    stato: enumVeicoloStato,
   ): Promise<eVeicolo | null> {
     const redisClient = await databaseCache.getInstance();
 
@@ -99,7 +100,7 @@ class serviceVeicoloImplementation {
     id: number,
     tipo: enumVeicoloTipo,
     targa: string,
-    stato: enumStato,
+    stato: enumVeicoloStato,
   ): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
@@ -119,7 +120,7 @@ class serviceVeicoloImplementation {
       id,
       enumVeicoloTipo.autoveicoli,
       '',
-      enumStato.attivo,
+      enumVeicoloStato.in_attesa,
     );
     await repositoryVeicolo.delete(VeicoloDaEliminare);
 
@@ -257,6 +258,7 @@ class serviceVeicoloImplementation {
 
     return result;
   }
+
 }
 
 export const serviceVeicolo = new serviceVeicoloImplementation();

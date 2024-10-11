@@ -4,6 +4,8 @@ import { Transaction } from 'sequelize';
 
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormMulta } from '../../../models/svt/ormMulta';
+import { enumPolicyTipo } from '../../../entity/enum/enumPolicyTipo';
+import { enumMultaStato } from '../../../entity/enum/enumMultaStato';
 
 // Implementazione del DAO per l'entità `Multa`
 export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
@@ -74,6 +76,75 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
       ormObj.is_recidivo,
       ormObj.stato,
     );
+  }
+
+  // Aggiorna un utente esistente nel database
+  async updateFields(
+    t: eMulta,
+    fieldsToUpdate: Partial<{
+      id_transito: number | null,
+      id_policy: number | null,
+      tipo_policy: enumPolicyTipo | null,
+      id_veicolo: number | null,
+      id_automobilista: number | null,
+      is_notturno: boolean | null,
+      is_recidivo: boolean | null,
+      stato: enumMultaStato | null,
+    }>,
+    options?: { transaction?: Transaction },
+  ): Promise<void> {
+    const ormObj = await dbOrm.ormMulta.findByPk(t.get_id(), {
+      transaction: options?.transaction,
+    });
+    if (!ormObj) {
+      throw new Error('Multa not found');
+    }
+
+    // Solo i campi presenti in fieldsToUpdate verranno aggiornati
+    const updatedFields = {
+      ...(fieldsToUpdate.id_transito !== undefined && {
+        id_transito: fieldsToUpdate.id_transito,
+      }),
+      ...(fieldsToUpdate.id_policy !== undefined && {
+        id_policy: fieldsToUpdate.id_policy,
+      }),
+      ...(fieldsToUpdate.tipo_policy !== undefined && {
+        tipo_policy: fieldsToUpdate.tipo_policy,
+      }),
+      ...(fieldsToUpdate.id_veicolo !== undefined && {
+        id_veicolo: fieldsToUpdate.id_veicolo,
+      }),
+      ...(fieldsToUpdate.id_automobilista !== undefined && {
+        id_automobilista: fieldsToUpdate.id_automobilista,
+      }),
+      ...(fieldsToUpdate.is_notturno !== undefined && {
+        is_notturno: fieldsToUpdate.is_notturno,
+      }),
+      ...(fieldsToUpdate.is_recidivo !== undefined && {
+        is_recidivo: fieldsToUpdate.is_recidivo,
+      }),
+      ...(fieldsToUpdate.stato !== undefined && {
+        stato: fieldsToUpdate.stato,
+      }),
+    };
+
+    // Se non ci sono campi da aggiornare, non fare nulla
+    if (Object.keys(updatedFields).length === 0) {
+      return;
+    }
+
+    // Imposta le opzioni di default o applica quelle fornite dall'utente
+    const defaultOptions = {
+      where: { id: t.get_id() },
+      returning: true,
+      validate: true,
+      transaction: options?.transaction,
+    };
+
+    // Combina le opzioni di default con quelle passate dall'esterno
+    const updateOptions = { ...defaultOptions, ...options };
+
+    await dbOrm.ormMulta.update(updatedFields, updateOptions);
   }
 
   // Aggiorna un utente esistente nel database

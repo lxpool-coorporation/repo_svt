@@ -1,6 +1,7 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eVarco } from '../../../entity/svt/eVarco';
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
+import sequelize from 'sequelize';
 
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormVarco } from '../../../models/svt/ormVarco';
@@ -25,6 +26,24 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
         : 0,
       ormObj.dataValues.stato,
     );
+  }
+
+  async getByCod(cod: string): Promise<eVarco | null> {
+    let ret: eVarco | null = null;
+    const ormObj = await dbOrm.ormUtente.findOne({
+      where: {
+        [Op.and]: [
+          sequelize.where(
+            sequelize.fn('LOWER', sequelize.col('cod')),
+            cod.toLowerCase(),
+          ),
+        ],
+      },
+    });
+    if (!!ormObj) {
+      ret = new eVarco(ormObj.id, ormObj.cod, ormObj.descrizione,ormObj.latitudine, ormObj.longitudine, ormObj.stato);
+    }
+    return ret;
   }
 
   // Trova tutti gli utenti usando Sequelize

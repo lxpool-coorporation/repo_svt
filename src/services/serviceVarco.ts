@@ -39,6 +39,10 @@ class serviceVarcoImplementation {
     }
   }
 
+  async getVarcoByCod(cod: string): Promise<eVarco | null> {
+    return await repositoryVarco.getByCod(cod);
+  }
+
   // Recupera tutti gli Varchi
   async getAllVarchi(options?: object): Promise<eVarco[]> {
     const redisClient = await databaseCache.getInstance();

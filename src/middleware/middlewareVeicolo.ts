@@ -7,10 +7,10 @@ import { controllerVeicolo } from '../controllers/controllerVeicolo';
 import { isNumeric } from '../utils/utils';
 import { middlewareValidate } from './middlewareValidate';
 import { serviceVeicolo } from '../services/serviceVeicolo';
-import { enumStato } from '../entity/enum/enumStato';
 import { repositoryVeicolo } from '../dao/repositories/svt/repositoryVeicolo';
 import { eVeicolo } from '../entity/svt/eVeicolo';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
+import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
 
 dotenv.config();
 
@@ -129,7 +129,7 @@ export class middlewareVeicolo {
             await serviceVeicolo.createVeicolo(
               veicolo_tipo,
               targa,
-              enumStato.attivo,
+              enumVeicoloStato.acquisito,
             );
           if (!!veicoloRes) {
             req.body.id_veicolo = veicoloRes.get_id();

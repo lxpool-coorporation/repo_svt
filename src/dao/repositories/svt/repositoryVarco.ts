@@ -26,6 +26,9 @@ class repositoryVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
   get(id: number): Promise<eVarco | null> {
     return this.daoVarco.get(id);
   }
+  getByCod(cod: string): Promise<eVarco | null> {
+    return this.daoVarco.getByCod(cod);
+  }
   getAll(options?: object): Promise<eVarco[]> {
     return this.daoVarco.getAll(options);
   }
