@@ -1,5 +1,4 @@
 import { enumStato } from '../enum/enumStato';
-import { eVarco } from '../svt/eVarco';
 import { eVistaTransito } from './eVistaTransito';
 
 class eVistaTratta {

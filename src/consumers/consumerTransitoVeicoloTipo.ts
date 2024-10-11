@@ -1,6 +1,5 @@
 import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
-import { eMulta } from '../entity/svt/eMulta';
 
 async function startTaskTransitoVeicoloTipoConsumer(): Promise<void> {
   try {
@@ -15,38 +14,11 @@ async function startTaskTransitoVeicoloTipoConsumer(): Promise<void> {
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });
 
-    console.log(`[*] In attesa di messaggi nella coda: ${queue}`);
-
     // Consuma i messaggi dalla coda
     channel.consume(
       queue,
       async (msg: Message | null) => {
         if (msg) {
-          const content: string = msg.content.toString();
-          console.log(
-            enumMessengerCoda.queueTransitoVeicoloTipo +
-              `: Ricevuto: ${content}`,
-          );
-          const parsedContent =
-            typeof content === 'string' ? JSON.parse(content) : content;
-
-          const objMulta: eMulta | null = eMulta.fromJSON(parsedContent);
-          if (objMulta) {
-            console.log(objMulta);
-          }
-
-          // Imposta le intestazioni per il download del PDF
-          //res.setHeader('Content-Type', 'application/pdf');
-          //res.setHeader('Content-Disposition', `attachment; filename=bollettino_${multaID}.pdf`);
-
-          // Invia il PDF come risposta
-          //doc.pipe(res);
-          //doc.end();
-
-          //}
-
-          // Logica per elaborare il messaggio
-
           // Conferma che il messaggio è stato elaborato
           channel.ack(msg);
         }
@@ -55,9 +27,7 @@ async function startTaskTransitoVeicoloTipoConsumer(): Promise<void> {
         noAck: false, // Modalità di conferma manuale
       },
     );
-  } catch (error) {
-    console.error('Errore nel consumer RabbitMQ:', error);
-  }
+  } catch (_error) {}
 }
 
 export default startTaskTransitoVeicoloTipoConsumer;

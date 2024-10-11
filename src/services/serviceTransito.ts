@@ -13,9 +13,19 @@ import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 import { serviceVeicolo } from './serviceVeicolo';
 import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
 
-// classe che gestisce la logica di business dell'Transito
+/**
+ *classe che gestisce la logica di business dell'Transito
+ *
+ * @class serviceTransitoImplementation
+ */
 class serviceTransitoImplementation {
-  // Recupera un Transito per ID
+  /**
+   *Recupera un Transito per ID
+   *
+   * @param {number} id
+   * @return {*}  {(Promise<eTransito | null>)}
+   * @memberof serviceTransitoImplementation
+   */
   async getTransitoById(id: number): Promise<eTransito | null> {
     try {
       const redisClient = await databaseCache.getInstance();
@@ -46,7 +56,13 @@ class serviceTransitoImplementation {
     }
   }
 
-  // Recupera tutti gli Transiti
+  /**
+   *Recupera tutti gli Transiti
+   *
+   * @param {object} [options]
+   * @return {*}  {Promise<eTransito[]>}
+   * @memberof serviceTransitoImplementation
+   */
   async getAllTransiti(options?: object): Promise<eTransito[]> {
     const redisClient = await databaseCache.getInstance();
 
@@ -71,12 +87,32 @@ class serviceTransitoImplementation {
     //return await repositoryTransito.getAll();
   }
 
+  /**
+   *
+   *
+   * @param {object} [options]
+   * @return {*}  {Promise<eTransito[]>}
+   * @memberof serviceTransitoImplementation
+   */
   async getTransitiFromQuery(options?: object): Promise<eTransito[]> {
     return await repositoryTransito.getFromQuery(options);
     //return await repositoryTransito.getAll();
   }
 
-  // Crea un nuovo Transito
+  /**
+   *Crea un nuovo Transito
+   *
+   * @param {Date} data_transito
+   * @param {number} id_varco
+   * @param {enumTransitoStato} stato
+   * @param {(number | null)} [speed]
+   * @param {(number | null)} [speed_real]
+   * @param {(enumMeteoTipo | null)} [meteo]
+   * @param {(number | null)} [id_veicolo]
+   * @param {(string | null)} [path_immagine]
+   * @return {*}  {(Promise<eTransito | null>)}
+   * @memberof serviceTransitoImplementation
+   */
   async createTransito(
     data_transito: Date,
     id_varco: number,
@@ -118,7 +154,19 @@ class serviceTransitoImplementation {
     return result;
   }
 
-  // Crea un nuovo Transito
+  /**
+   *Crea un nuovo Transito
+   *
+   * @param {Date} data_transito
+   * @param {string} codice_varco
+   * @param {(string | null)} [targa]
+   * @param {(string | null)} [tipo_veicolo]
+   * @param {(enumMeteoTipo | null)} [meteo]
+   * @param {(number | null)} [speed]
+   * @param {(string | null)} [path_immagine]
+   * @return {*}  {(Promise<eTransito | null>)}
+   * @memberof serviceTransitoImplementation
+   */
   async createTransitoFromRaw(
     data_transito: Date,
     codice_varco: string,
@@ -133,39 +181,44 @@ class serviceTransitoImplementation {
     try {
       const redisClient = await databaseCache.getInstance();
 
-      const objVarco:eVarco|null = await serviceVarco.getVarcoByCod(codice_varco);
-      if(!objVarco){
+      const objVarco: eVarco | null =
+        await serviceVarco.getVarcoByCod(codice_varco);
+      if (!objVarco) {
         throw new Error(`Varco ${codice_varco} non trovato`);
       }
-      
-      let idVeicolo:number|null = null;
 
-      if(targa){
+      let idVeicolo: number | null = null;
+
+      if (targa) {
         const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
         if (targaRegex.test(targa) === false) {
-          let objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloByTarga(targa);
-          if(!(objVeicolo)){
-              // necessario aggiunta veicolo
-              let objEnumVeicoloTipo:enumVeicoloTipo = enumVeicoloTipo.indefinito;
-              let objVeicoloStato:enumVeicoloStato = enumVeicoloStato.in_attesa;
-              if(eVeicolo.isTipoVeicoloValid(tipo_veicolo)){
-                objEnumVeicoloTipo = tipo_veicolo as enumVeicoloTipo;
-                objVeicoloStato = enumVeicoloStato.acquisito;
-              }
-              objVeicolo = await serviceVeicolo.createVeicolo(objEnumVeicoloTipo, targa, objVeicoloStato);
-              if(objVeicolo){
-                idVeicolo = objVeicolo.get_id();
-              }
-          }
-          else{
+          let objVeicolo: eVeicolo | null =
+            await serviceVeicolo.getVeicoloByTarga(targa);
+          if (!objVeicolo) {
+            // necessario aggiunta veicolo
+            let objEnumVeicoloTipo: enumVeicoloTipo =
+              enumVeicoloTipo.indefinito;
+            let objVeicoloStato: enumVeicoloStato = enumVeicoloStato.in_attesa;
+            if (eVeicolo.isTipoVeicoloValid(tipo_veicolo)) {
+              objEnumVeicoloTipo = tipo_veicolo as enumVeicoloTipo;
+              objVeicoloStato = enumVeicoloStato.acquisito;
+            }
+            objVeicolo = await serviceVeicolo.createVeicolo(
+              objEnumVeicoloTipo,
+              targa,
+              objVeicoloStato,
+            );
+            if (objVeicolo) {
+              idVeicolo = objVeicolo.get_id();
+            }
+          } else {
             idVeicolo = objVeicolo.get_id();
           }
-
         }
       }
 
-      let val_speed_real:number|null=null;
-      if(speed){
+      let val_speed_real: number | null = null;
+      if (speed) {
         val_speed_real = this.calcolaTolleranza(speed);
       }
 
@@ -178,10 +231,11 @@ class serviceTransitoImplementation {
           .setMeteo(meteo)
           .setIdVeicolo(idVeicolo)
           .setpath_immagine(path_immagine)
-          .setStato(enumTransitoStato.indefinito)
+          .setStato(enumTransitoStato.indefinito),
       );
 
-      const statoTransito:enumTransitoStato = this.getTransitoStato(nuovoTransito);
+      const statoTransito: enumTransitoStato =
+        this.getTransitoStato(nuovoTransito);
       nuovoTransito.set_stato(statoTransito);
 
       const savedTransito = await repositoryTransito.save(nuovoTransito);
@@ -200,13 +254,32 @@ class serviceTransitoImplementation {
     return result;
   }
 
-  // Funzione per calcolare la tolleranza
+  /**
+   *Funzione per calcolare la tolleranza
+   *
+   * @param {number} velocita
+   * @return {*}  {number}
+   * @memberof serviceTransitoImplementation
+   */
   calcolaTolleranza(velocita: number): number {
     const tolleranzaPercentuale = velocita * 0.05; // 5% della velocità
     return tolleranzaPercentuale > 5 ? tolleranzaPercentuale : 5; // Usa il massimo tra 5 km/h e il 5% della velocità
   }
 
-  // Aggiorna un Transito esistente
+  /**
+   *Aggiorna un Transito esistente
+   *
+   * @param {number} id
+   * @param {Date} data_transito
+   * @param {string} codice_varco
+   * @param {(string | null)} [targa]
+   * @param {(string | null)} [tipo_veicolo]
+   * @param {(enumMeteoTipo | null)} [meteo]
+   * @param {(number | null)} [speed]
+   * @param {(string | null)} [path_immagine]
+   * @return {*}  {Promise<void>}
+   * @memberof serviceTransitoImplementation
+   */
   async updateTransitoFromRaw(
     id: number,
     data_transito: Date,
@@ -219,39 +292,43 @@ class serviceTransitoImplementation {
   ): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
-    const objVarco:eVarco|null = await serviceVarco.getVarcoByCod(codice_varco);
-    if(!objVarco){
+    const objVarco: eVarco | null =
+      await serviceVarco.getVarcoByCod(codice_varco);
+    if (!objVarco) {
       throw new Error(`Varco ${codice_varco} non trovato`);
     }
-    
-    let idVeicolo:number|null = null;
 
-    if(targa){
+    let idVeicolo: number | null = null;
+
+    if (targa) {
       const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
       if (targaRegex.test(targa) === false) {
-        let objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloByTarga(targa);
-        if(!(objVeicolo)){
-            // necessario aggiunta veicolo
-            let objEnumVeicoloTipo:enumVeicoloTipo = enumVeicoloTipo.indefinito;
-            let objVeicoloStato:enumVeicoloStato = enumVeicoloStato.in_attesa;
-            if(eVeicolo.isTipoVeicoloValid(tipo_veicolo)){
-              objEnumVeicoloTipo = tipo_veicolo as enumVeicoloTipo;
-              objVeicoloStato = enumVeicoloStato.acquisito;
-            }
-            objVeicolo = await serviceVeicolo.createVeicolo(objEnumVeicoloTipo, targa, objVeicoloStato);
-            if(objVeicolo){
-              idVeicolo = objVeicolo.get_id();
-            }
-        }
-        else{
+        let objVeicolo: eVeicolo | null =
+          await serviceVeicolo.getVeicoloByTarga(targa);
+        if (!objVeicolo) {
+          // necessario aggiunta veicolo
+          let objEnumVeicoloTipo: enumVeicoloTipo = enumVeicoloTipo.indefinito;
+          let objVeicoloStato: enumVeicoloStato = enumVeicoloStato.in_attesa;
+          if (eVeicolo.isTipoVeicoloValid(tipo_veicolo)) {
+            objEnumVeicoloTipo = tipo_veicolo as enumVeicoloTipo;
+            objVeicoloStato = enumVeicoloStato.acquisito;
+          }
+          objVeicolo = await serviceVeicolo.createVeicolo(
+            objEnumVeicoloTipo,
+            targa,
+            objVeicoloStato,
+          );
+          if (objVeicolo) {
+            idVeicolo = objVeicolo.get_id();
+          }
+        } else {
           idVeicolo = objVeicolo.get_id();
         }
-
       }
     }
 
-    let val_speed_real:number|null=null;
-    if(speed){
+    let val_speed_real: number | null = null;
+    if (speed) {
       val_speed_real = this.calcolaTolleranza(speed);
     }
 
@@ -265,10 +342,10 @@ class serviceTransitoImplementation {
         .setMeteo(meteo)
         .setIdVeicolo(idVeicolo)
         .setpath_immagine(path_immagine)
-        .setStato(enumTransitoStato.indefinito)
+        .setStato(enumTransitoStato.indefinito),
     );
 
-    const statoTransito:enumTransitoStato = this.getTransitoStato(Transito);
+    const statoTransito: enumTransitoStato = this.getTransitoStato(Transito);
     Transito.set_stato(statoTransito);
 
     await repositoryTransito.update(Transito);
@@ -280,8 +357,22 @@ class serviceTransitoImplementation {
     await redisClient.del('Transiti_tutti');
   }
 
-   // Aggiorna un Transito esistente
-   async updateTransito(
+  /**
+   *Aggiorna un Transito esistente
+   *
+   * @param {number} id
+   * @param {Date} data_transito
+   * @param {number} id_varco
+   * @param {enumTransitoStato} stato
+   * @param {(number | null)} [speed]
+   * @param {(number | null)} [speed_real]
+   * @param {(enumMeteoTipo | null)} [meteo]
+   * @param {(number | null)} [id_veicolo]
+   * @param {(string | null)} [path_immagine]
+   * @return {*}  {Promise<void>}
+   * @memberof serviceTransitoImplementation
+   */
+  async updateTransito(
     id: number,
     data_transito: Date,
     id_varco: number,
@@ -315,6 +406,23 @@ class serviceTransitoImplementation {
     await redisClient.del('Transiti_tutti');
   }
 
+  /**
+   *
+   *
+   * @param {eTransito} objTransito
+   * @param {Partial<{
+   *       data_transito: Date;
+   *       speed: number;
+   *       speed_real: number;
+   *       id_varco: number;
+   *       meteo: enumMeteoTipo;
+   *       id_veicolo: number;
+   *       path_immagine: string;
+   *       stato: enumTransitoStato;
+   *     }>} fieldsToUpdate
+   * @return {*}  {Promise<void>}
+   * @memberof serviceTransitoImplementation
+   */
   async updateFieldsTransito(
     objTransito: eTransito,
     fieldsToUpdate: Partial<{
@@ -341,9 +449,14 @@ class serviceTransitoImplementation {
       throw new Error(`serviceTransito - updateFields: ${err}`);
     }
   }
-  
 
-  // Elimina un Transito
+  /**
+   *Elimina un Transito
+   *
+   * @param {number} id
+   * @return {*}  {Promise<void>}
+   * @memberof serviceTransitoImplementation
+   */
   async deleteTransito(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
@@ -355,6 +468,12 @@ class serviceTransitoImplementation {
     await redisClient.del('Transiti_tutti');
   }
 
+  /**
+   *
+   *
+   * @param {eTransito} transito
+   * @memberof serviceTransitoImplementation
+   */
   public getTransitoStato = (transito: eTransito): enumTransitoStato => {
     let result: enumTransitoStato = enumTransitoStato.indefinito;
 
@@ -379,7 +498,11 @@ class serviceTransitoImplementation {
         },
         () => {
           // "acquisito" se entrambi id_veicolo e meteo sono valorizzati
-          if (!transito.get_id_veicolo() && transito.get_path_immagine() && transito.get_stato()==enumTransitoStato.illeggibile) {
+          if (
+            !transito.get_id_veicolo() &&
+            transito.get_path_immagine() &&
+            transito.get_stato() == enumTransitoStato.illeggibile
+          ) {
             return enumTransitoStato.illeggibile;
           } else {
             return null;
@@ -387,7 +510,11 @@ class serviceTransitoImplementation {
         },
         () => {
           // "acquisito" se entrambi id_veicolo e meteo sono valorizzati
-          if (!transito.get_id_veicolo() && transito.get_path_immagine() && transito.get_stato()!==enumTransitoStato.illeggibile) {
+          if (
+            !transito.get_id_veicolo() &&
+            transito.get_path_immagine() &&
+            transito.get_stato() !== enumTransitoStato.illeggibile
+          ) {
             return enumTransitoStato.in_attesa_di_ocr;
           } else {
             return null;
@@ -415,22 +542,28 @@ class serviceTransitoImplementation {
     return result;
   };
 
+  /**
+   *
+   *
+   * @param {eTransito} objTransito
+   * @return {*}  {Promise<void>}
+   * @memberof serviceTransitoImplementation
+   */
   async refreshTransito(objTransito: eTransito): Promise<void> {
     try {
       const statoUpdated: enumTransitoStato =
         this.getTransitoStato(objTransito);
 
-      if(statoUpdated!==objTransito.get_stato()){
+      if (statoUpdated !== objTransito.get_stato()) {
         objTransito.set_stato(statoUpdated);
-        await repositoryTransito.updateFields(objTransito, {stato: statoUpdated});
+        await repositoryTransito.updateFields(objTransito, {
+          stato: statoUpdated,
+        });
       }
 
-      console.log("STATO REFRESH: " + statoUpdated);
       switch (statoUpdated) {
         case enumTransitoStato.in_attesa:
-          console.log("ENTRO QUI IN STATO IN ATTESA");
           if (!objTransito.get_meteo()) {
-            console.log("ENTRO IN STATO ELABORATO: not meteo")
             const rabbitMQ = messenger.getInstance();
             // Connessione a RabbitMQ
             await rabbitMQ.connect();
@@ -442,8 +575,10 @@ class serviceTransitoImplementation {
           }
           break;
         case enumTransitoStato.in_attesa_di_ocr:
-          if (objTransito.get_path_immagine() && !(objTransito.get_id_veicolo())) {
-            console.log("ENTRO IN STATO ELABORATO: not veicolo")
+          if (
+            objTransito.get_path_immagine() &&
+            !objTransito.get_id_veicolo()
+          ) {
             const rabbitMQ = messenger.getInstance();
             // Connessione a RabbitMQ
             await rabbitMQ.connect();
@@ -455,7 +590,6 @@ class serviceTransitoImplementation {
           }
           break;
         case enumTransitoStato.elaborato:
-          console.log("ENTRO IN STATO ELABORATO")
           const rabbitMQ = messenger.getInstance();
           // Connessione a RabbitMQ
           await rabbitMQ.connect();
@@ -467,7 +601,6 @@ class serviceTransitoImplementation {
           break;
 
         default:
-          console.log("Nessuno stato corrispondente trovato.");
           break;
       }
     } catch (err) {

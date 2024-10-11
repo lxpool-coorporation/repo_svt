@@ -10,8 +10,27 @@ import { query } from 'express-validator';
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @export
+ * @class middlewareMulta
+ */
 export class middlewareMulta {
+  /**
+   * Creates an instance of middlewareMulta.
+   * @memberof middlewareMulta
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareMulta
+   */
   public static checkPermissionRead = async (
     req: Request,
     _res: Response,
@@ -38,6 +57,15 @@ export class middlewareMulta {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareMulta
+   */
   public static checkPermissionWrite = async (
     req: Request,
     _res: Response,
@@ -64,6 +92,15 @@ export class middlewareMulta {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareMulta
+   */
   public static validate = async (
     req: Request,
     _res: Response,

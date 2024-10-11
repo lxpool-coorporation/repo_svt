@@ -12,6 +12,11 @@ import { enumStato } from '../entity/enum/enumStato';
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @interface iETratta
+ */
 interface iETratta {
   cod: string;
   descrizione: string;
@@ -21,8 +26,26 @@ interface iETratta {
   stato: enumStato;
 }
 
+/**
+ *
+ *
+ * @export
+ * @class controllerTratta
+ */
 export class controllerTratta {
+  /**
+   * Creates an instance of controllerTratta.
+   * @memberof controllerTratta
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {number} idUtente
+   * @param {enumPermessoTipo} tipoPermesso
+   * @memberof controllerTratta
+   */
   public static checkPermission = async (
     idUtente: number,
     tipoPermesso: enumPermessoTipo,
@@ -40,6 +63,15 @@ export class controllerTratta {
     }
     return ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} _req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTratta
+   */
   public static getAll = async (
     _req: Request,
     res: Response,
@@ -59,6 +91,15 @@ export class controllerTratta {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTratta
+   */
   public static getById = async (
     req: Request,
     res: Response,
@@ -84,6 +125,15 @@ export class controllerTratta {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTratta
+   */
   public static saveTratta = async (
     req: Request,
     res: Response,
@@ -115,6 +165,15 @@ export class controllerTratta {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTratta
+   */
   public static deleteById = async (
     req: Request,
     res: Response,
@@ -141,6 +200,15 @@ export class controllerTratta {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTratta
+   */
   public static putTratta = async (
     req: Request,
     res: Response,
@@ -180,6 +248,15 @@ export class controllerTratta {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTratta
+   */
   public static patchTratta = async (
     req: Request,
     res: Response,

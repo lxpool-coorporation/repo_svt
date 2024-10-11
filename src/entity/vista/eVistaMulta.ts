@@ -25,7 +25,6 @@ class eVistaMulta {
     (this.meteo = meteo), (this.velocita_media = velocita_media);
     this.velocita_delta = velocita_delta;
   }
-
 }
 
 export { eVistaMulta };

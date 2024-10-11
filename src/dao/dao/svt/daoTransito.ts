@@ -234,7 +234,6 @@ export class daoTransitoImplementation
           type: QueryTypes.SELECT,
         },
       );
-      //console.log(rawTransitoIngresso)
       // Mappiamo ogni risultato su ePolicySanctionSpeedControl
       const objTransitoIngresso = eTransito.fromJSON(rawTransitoIngresso[0]);
 

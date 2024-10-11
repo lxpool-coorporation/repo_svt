@@ -72,7 +72,7 @@ routerTransito.patch(
   middlewareTransito.validate,
   middlewareValidate.handleValidationErrors,
   middlewareVeicolo.insertTarga,
- // middlewareTransito.calculateSpeedReal,
+  // middlewareTransito.calculateSpeedReal,
   controllerTransito.patchTransito,
 );
 routerTransito.get(

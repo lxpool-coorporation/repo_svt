@@ -40,7 +40,14 @@ export class daoBollettinoImplementation
       },
     });
     if (!!ormObj) {
-      ret = new eBollettino(ormObj.id, ormObj.id_multa, ormObj.uuid, ormObj.importo, ormObj.path_bollettino, ormObj.stato);
+      ret = new eBollettino(
+        ormObj.id,
+        ormObj.id_multa,
+        ormObj.uuid,
+        ormObj.importo,
+        ormObj.path_bollettino,
+        ormObj.stato,
+      );
     }
     return ret;
   }
@@ -53,7 +60,14 @@ export class daoBollettinoImplementation
       },
     });
     if (!!ormObj) {
-      ret = new eBollettino(ormObj.id, ormObj.id_multa, ormObj.uuid, ormObj.importo, ormObj.path_bollettino, ormObj.stato);
+      ret = new eBollettino(
+        ormObj.id,
+        ormObj.id_multa,
+        ormObj.uuid,
+        ormObj.importo,
+        ormObj.path_bollettino,
+        ormObj.stato,
+      );
     }
     return ret;
   }
@@ -141,11 +155,11 @@ export class daoBollettinoImplementation
   async updateFields(
     t: eBollettino,
     fieldsToUpdate: Partial<{
-      id_multa: number | null,
-      uuid: string | null,
-      importo: number | null,
-      path_bollettino: string | null,
-      stato: enumBollettinoStato | null,
+      id_multa: number | null;
+      uuid: string | null;
+      importo: number | null;
+      path_bollettino: string | null;
+      stato: enumBollettinoStato | null;
     }>,
     options?: { transaction?: Transaction },
   ): Promise<void> {
@@ -176,23 +190,23 @@ export class daoBollettinoImplementation
     };
 
     // Se non ci sono campi da aggiornare, non fare nulla
-       // Se non ci sono campi da aggiornare, non fare nulla
-       if (Object.keys(updatedFields).length === 0) {
-        return;
-      }
-  
-      // Imposta le opzioni di default o applica quelle fornite dall'utente
-      const defaultOptions = {
-        where: { id: t.get_id() },
-        returning: true,
-        validate: true,
-        transaction: options?.transaction,
-      };
-  
-      // Combina le opzioni di default con quelle passate dall'esterno
-      const updateOptions = { ...defaultOptions, ...options };
-  
-      await dbOrm.ormBollettino.update(updatedFields, updateOptions);
+    // Se non ci sono campi da aggiornare, non fare nulla
+    if (Object.keys(updatedFields).length === 0) {
+      return;
+    }
+
+    // Imposta le opzioni di default o applica quelle fornite dall'utente
+    const defaultOptions = {
+      where: { id: t.get_id() },
+      returning: true,
+      validate: true,
+      transaction: options?.transaction,
+    };
+
+    // Combina le opzioni di default con quelle passate dall'esterno
+    const updateOptions = { ...defaultOptions, ...options };
+
+    await dbOrm.ormBollettino.update(updatedFields, updateOptions);
   }
 
   // Elimina un Bollettino dal database usando Sequelize

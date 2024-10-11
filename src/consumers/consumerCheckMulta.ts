@@ -3,7 +3,6 @@ import amqp, { Channel, Connection, Message } from 'amqplib';
 import { eMulta } from '../entity/svt/eMulta';
 import { eTransito } from '../entity/svt/eTransito';
 import { serviceMulta } from '../services/serviceMulta';
-import { enumMultaStato } from '../entity/enum/enumMultaStato';
 
 async function startTaskCheckMultaConsumer(): Promise<void> {
   try {
@@ -18,47 +17,24 @@ async function startTaskCheckMultaConsumer(): Promise<void> {
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });
 
-    console.log(`[*] In attesa di messaggi nella coda: ${queue}`);
-
     // Consuma i messaggi dalla coda
     channel.consume(
       queue,
       async (msg: Message | null) => {
         if (msg) {
           const content: string = msg.content.toString();
-          console.log(
-            enumMessengerCoda.queueCheckMulta +
-              `: Ricevuto: ${content}`,
-          );
           const parsedContent =
             typeof content === 'string' ? JSON.parse(content) : content;
 
-          const objTransito: eTransito | null = eTransito.fromJSON(parsedContent);
-          if (objTransito) {
-            console.log(objTransito);
-          }
+          const objTransito: eTransito | null =
+            eTransito.fromJSON(parsedContent);
 
-          const objMulta:eMulta | null = await serviceMulta.verificaMulta(objTransito);
-          if(objMulta){
-            console.log(`MULTA GENERATA: ${objMulta.get_id()}`);
-            //const statoMulta:enumMultaStato = await serviceMulta.getMultaStato(objMulta);
+          const objMulta: eMulta | null =
+            await serviceMulta.verificaMulta(objTransito);
+          if (objMulta) {
             await serviceMulta.refreshMultaStato(objMulta);
-            
           }
 
-          // Imposta le intestazioni per il download del PDF
-          //res.setHeader('Content-Type', 'application/pdf');
-          //res.setHeader('Content-Disposition', `attachment; filename=bollettino_${multaID}.pdf`);
-
-          // Invia il PDF come risposta
-          //doc.pipe(res);
-          //doc.end();
-
-          //}
-
-          // Logica per elaborare il messaggio
-
-          // Conferma che il messaggio è stato elaborato
           channel.ack(msg);
         }
       },
@@ -66,9 +42,7 @@ async function startTaskCheckMultaConsumer(): Promise<void> {
         noAck: false, // Modalità di conferma manuale
       },
     );
-  } catch (error) {
-    console.error('Errore nel consumer RabbitMQ:', error);
-  }
+  } catch (_error) {}
 }
 
 export default startTaskCheckMultaConsumer;

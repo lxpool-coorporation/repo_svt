@@ -11,8 +11,24 @@ const IMAGE_TYPE =
     ? new RegExp(process.env.IMAGE_TYPE)
     : /jpeg|jpg|png/;
 
+/**
+ *
+ *
+ * @export
+ * @class middlewareUploader
+ */
 export class middlewareUploader {
+  /**
+   * Creates an instance of middlewareUploader.
+   * @memberof middlewareUploader
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @memberof middlewareUploader
+   */
   public static storage = (): multer.StorageEngine => {
     return multer.diskStorage({
       destination: (_req, _file, cb) => {
@@ -29,6 +45,12 @@ export class middlewareUploader {
       },
     });
   };
+  /**
+   *
+   *
+   * @static
+   * @memberof middlewareUploader
+   */
   public static upload = (): multer.Multer => {
     return multer({
       storage: middlewareUploader.storage(),

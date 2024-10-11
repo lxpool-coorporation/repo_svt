@@ -15,8 +15,26 @@ import { enumExportFormato } from '@/entity/enum/enumExportFormato';
 dotenv.config();
 const IMAGE_FILE = process.env.IMAGE_FILE || '.pdf';
 
+/**
+ *
+ *
+ * @export
+ * @class controllerMulta
+ */
 export class controllerMulta {
+  /**
+   * Creates an instance of controllerMulta.
+   * @memberof controllerMulta
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {number} idUtente
+   * @param {enumPermessoTipo} tipoPermesso
+   * @memberof controllerMulta
+   */
   public static checkPermission = async (
     idUtente: number,
     tipoPermesso: enumPermessoTipo,
@@ -34,6 +52,15 @@ export class controllerMulta {
     }
     return ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerMulta
+   */
   public static getAll = async (
     req: Request,
     res: Response,
@@ -53,12 +80,6 @@ export class controllerMulta {
       let userId: number = 0;
       let multeResult: string | null = null;
       if (arrayTarghe.length > 0 || (arrayTarghe.length > 0 && req.userId)) {
-        console.log(arrayTarghe);
-        console.log(dataInizioString);
-        console.log(dataFineString);
-        console.log(format);
-        console.log(req.userId);
-
         if (isNumeric(req.userId)) {
           userId = req.userId;
           const formatoEnum = format as enumExportFormato;
@@ -90,6 +111,15 @@ export class controllerMulta {
     ret.returnResponseJson(res, next);
   };
 
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerMulta
+   */
   public static download = async (
     req: Request,
     res: Response,
@@ -108,7 +138,6 @@ export class controllerMulta {
             IMAGE_FILE,
             bollettino.get_path_bollettino() || '',
           );
-          console.log(filePath);
           // Verifica se il file esiste
           if (fs.existsSync(filePath)) {
             // Invia il file al client

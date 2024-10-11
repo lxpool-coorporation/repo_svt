@@ -5,9 +5,19 @@ import databaseCache from '../utils/database-cache';
 import logger from '../utils/logger-winston';
 import { enumPolicyTipo } from '../entity/enum/enumPolicyTipo';
 
-// classe che gestisce la logica di business dell'PolicySanctionSpeedControl
+/**
+ *classe che gestisce la logica di business dell'PolicySanctionSpeedControl
+ *
+ * @class servicePolicySanctionSpeedControlImplementation
+ */
 class servicePolicySanctionSpeedControlImplementation {
-  // Recupera un PolicySanctionSpeedControl per ID
+  /**
+   *Recupera un PolicySanctionSpeedControl per ID
+   *
+   * @param {number} id
+   * @return {*}  {(Promise<ePolicySanctionSpeedControl | null>)}
+   * @memberof servicePolicySanctionSpeedControlImplementation
+   */
   async getPolicySanctionSpeedControlById(
     id: number,
   ): Promise<ePolicySanctionSpeedControl | null> {
@@ -45,7 +55,21 @@ class servicePolicySanctionSpeedControlImplementation {
     }
   }
 
-  // Crea un nuovo PolicySanctionSpeedControl
+  /**
+   *Crea un nuovo PolicySanctionSpeedControl
+   *
+   * @param {enumPolicyTipo} tipo_policy
+   * @param {string} cod
+   * @param {string} descrizione
+   * @param {number} costo_min
+   * @param {number} costo_max
+   * @param {number} costo_punti_patente
+   * @param {enumStato} stato
+   * @param {number} speed_min
+   * @param {number} speed_max
+   * @return {*}  {(Promise<ePolicySanctionSpeedControl | null>)}
+   * @memberof servicePolicySanctionSpeedControlImplementation
+   */
   async createPolicySanctionSpeedControl(
     tipo_policy: enumPolicyTipo,
     cod: string,
@@ -81,7 +105,22 @@ class servicePolicySanctionSpeedControlImplementation {
     return savedPolicySanctionSpeedControl;
   }
 
-  // Aggiorna un PolicySanctionSpeedControl esistente
+  /**
+   *Aggiorna un PolicySanctionSpeedControl esistente
+   *
+   * @param {number} id
+   * @param {enumPolicyTipo} tipo_policy
+   * @param {string} cod
+   * @param {string} descrizione
+   * @param {number} costo_min
+   * @param {number} costo_max
+   * @param {number} costo_punti_patente
+   * @param {enumStato} stato
+   * @param {number} speed_min
+   * @param {number} speed_max
+   * @return {*}  {Promise<void>}
+   * @memberof servicePolicySanctionSpeedControlImplementation
+   */
   async updatePolicySanctionSpeedControl(
     id: number,
     tipo_policy: enumPolicyTipo,
@@ -119,7 +158,13 @@ class servicePolicySanctionSpeedControlImplementation {
     await redisClient.del('PolicySanctionSpeedControl_tutti');
   }
 
-  // Elimina un PolicySanctionSpeedControl
+  /**
+   *Elimina un PolicySanctionSpeedControl
+   *
+   * @param {number} id
+   * @return {*}  {Promise<void>}
+   * @memberof servicePolicySanctionSpeedControlImplementation
+   */
   async deletePolicySanctionSpeedControl(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 

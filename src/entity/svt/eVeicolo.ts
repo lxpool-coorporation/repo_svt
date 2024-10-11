@@ -24,9 +24,11 @@ class eVeicolo {
     return new eVeicolo(data.id, data.tipo, data.targa, data.stato);
   }
 
-  static isTipoVeicoloValid(value: string|null|undefined): Boolean {
+  static isTipoVeicoloValid(value: string | null | undefined): Boolean {
     // Cast del valore a unknown prima di confrontarlo con i valori dell'enum
-    return Object.values(enumVeicoloTipo).includes(value as unknown as enumVeicoloTipo);
+    return Object.values(enumVeicoloTipo).includes(
+      value as unknown as enumVeicoloTipo,
+    );
   }
 
   // Metodi Getters

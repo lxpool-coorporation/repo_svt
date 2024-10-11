@@ -5,7 +5,14 @@ import { enumStato } from '../entity/enum/enumStato';
 
 // Controller per gestire le operazioni su `Utente`
 
-// Recupera un utente per ID
+/**
+ *Recupera un utente per ID
+ *
+ * @export
+ * @param {Request} req
+ * @param {Response} res
+ * @return {*}
+ */
 export async function getUtenteById(req: Request, res: Response) {
   try {
     const id = Number(req.params.id); // Ottieni l'ID dalla richiesta
@@ -22,7 +29,14 @@ export async function getUtenteById(req: Request, res: Response) {
   }
 }
 
-// Recupera tutti gli utenti
+/**
+ *Recupera tutti gli utenti
+ *
+ * @export
+ * @param {Request} _req
+ * @param {Response} res
+ * @return {*}
+ */
 export async function getAllUtenti(_req: Request, res: Response) {
   try {
     const utenti = await daoUtente.getAll();
@@ -33,7 +47,14 @@ export async function getAllUtenti(_req: Request, res: Response) {
   }
 }
 
-// Crea un nuovo utente
+/**
+ *Crea un nuovo utente
+ *
+ * @export
+ * @param {Request} req
+ * @param {Response} res
+ * @return {*}
+ */
 export async function createUtente(req: Request, res: Response) {
   try {
     const { codice_fiscale, stato } = req.body; // Ottieni i campi dal body della richiesta
@@ -46,7 +67,14 @@ export async function createUtente(req: Request, res: Response) {
   }
 }
 
-// Aggiorna un utente esistente
+/**
+ *Aggiorna un utente esistente
+ *
+ * @export
+ * @param {Request} req
+ * @param {Response} res
+ * @return {*}
+ */
 export async function updateUtente(req: Request, res: Response) {
   try {
     const id = Number(req.params.id); // Ottieni l'ID dalla richiesta
@@ -60,7 +88,14 @@ export async function updateUtente(req: Request, res: Response) {
   }
 }
 
-// Elimina un utente
+/**
+ *Elimina un utente
+ *
+ * @export
+ * @param {Request} req
+ * @param {Response} res
+ * @return {*}
+ */
 export async function deleteUtente(req: Request, res: Response) {
   try {
     const id = Number(req.params.id); // Ottieni l'ID dalla richiesta

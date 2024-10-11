@@ -41,7 +41,14 @@ export class daoVarcoImplementation implements DaoInterfaceGeneric<eVarco> {
       },
     });
     if (!!ormObj) {
-      ret = new eVarco(ormObj.id, ormObj.cod, ormObj.descrizione,ormObj.latitudine, ormObj.longitudine, ormObj.stato);
+      ret = new eVarco(
+        ormObj.id,
+        ormObj.cod,
+        ormObj.descrizione,
+        ormObj.latitudine,
+        ormObj.longitudine,
+        ormObj.stato,
+      );
     }
     return ret;
   }

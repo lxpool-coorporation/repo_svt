@@ -23,19 +23,13 @@ class Messenger {
           process.env.RABBITMQ_URL || 'amqp://localhost',
         );
         this.channel = await this.connection.createChannel();
-        console.log('Connesso a Messenger');
-      } catch (error) {
-        console.error('Errore nella connessione a Messenger:', error);
-      }
+      } catch (_error) {}
     }
   }
 
   // Metodo per inviare messaggi
   public async sendToQueue(queue: string, message: string): Promise<void> {
     if (!this.channel) {
-      console.error(
-        'Canale Messenger non esistente. Connessione non inizializzata.',
-      );
       return;
     }
 
@@ -44,10 +38,7 @@ class Messenger {
       this.channel.sendToQueue(queue, Buffer.from(message), {
         persistent: true,
       });
-      console.log(` [x] Inviato: ${message}`);
-    } catch (error) {
-      console.error("Errore nell'invio del messaggio:", error);
-    }
+    } catch (_error) {}
   }
 
   // Metodo per chiudere la connessione
@@ -55,10 +46,7 @@ class Messenger {
     try {
       await this.channel?.close();
       await this.connection?.close();
-      console.log('Connessione Messenger chiusa');
-    } catch (error) {
-      console.error('Errore nella chiusura di Messenger:', error);
-    }
+    } catch (_error) {}
   }
 }
 

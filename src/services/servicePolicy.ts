@@ -7,9 +7,19 @@ import { enumPolicyTipo } from '../entity/enum/enumPolicyTipo';
 import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
 
-// classe che gestisce la logica di business dell'PolicySpeedControl
+/**
+ *classe che gestisce la logica di business dell'PolicySpeedControl
+ *
+ * @class servicePolicySpeedControlImplementation
+ */
 class servicePolicySpeedControlImplementation {
-  // Recupera un PolicySpeedControl per ID
+  /**
+   *Recupera un PolicySpeedControl per ID
+   *
+   * @param {number} id
+   * @return {*}  {(Promise<ePolicySpeedControl | null>)}
+   * @memberof servicePolicySpeedControlImplementation
+   */
   async getPolicySpeedControlById(
     id: number,
   ): Promise<ePolicySpeedControl | null> {
@@ -43,7 +53,19 @@ class servicePolicySpeedControlImplementation {
     }
   }
 
-  // Crea un nuovo PolicySpeedControl
+  /**
+   *Crea un nuovo PolicySpeedControl
+   *
+   * @param {string} cod
+   * @param {string} descrizione
+   * @param {enumPolicyTipo} tipo
+   * @param {enumStato} stato
+   * @param {enumMeteoTipo} meteo
+   * @param {enumVeicoloTipo} veicolo
+   * @param {number} speed_limit
+   * @return {*}  {(Promise<ePolicySpeedControl | null>)}
+   * @memberof servicePolicySpeedControlImplementation
+   */
   async createPolicySpeedControl(
     cod: string,
     descrizione: string,
@@ -73,7 +95,20 @@ class servicePolicySpeedControlImplementation {
     return savedPolicySpeedControl;
   }
 
-  // Aggiorna un PolicySpeedControl esistente
+  /**
+   *Aggiorna un PolicySpeedControl esistente
+   *
+   * @param {number} id
+   * @param {string} cod
+   * @param {string} descrizione
+   * @param {enumPolicyTipo} tipo
+   * @param {enumStato} stato
+   * @param {enumMeteoTipo} meteo
+   * @param {enumVeicoloTipo} veicolo
+   * @param {number} speed_limit
+   * @return {*}  {Promise<void>}
+   * @memberof servicePolicySpeedControlImplementation
+   */
   async updatePolicySpeedControl(
     id: number,
     cod: string,
@@ -103,7 +138,13 @@ class servicePolicySpeedControlImplementation {
     await redisClient.del('PolicySpeedControl_tutti');
   }
 
-  // Elimina un PolicySpeedControl
+  /**
+   *Elimina un PolicySpeedControl
+   *
+   * @param {number} id
+   * @return {*}  {Promise<void>}
+   * @memberof servicePolicySpeedControlImplementation
+   */
   async deletePolicySpeedControl(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 

@@ -14,19 +14,47 @@ import { eUtente } from '../entity/utente/eUtente';
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @interface iEVeicolo
+ */
 interface iEVeicolo {
   tipo: enumVeicoloTipo;
   targa: string;
   stato: enumVeicoloStato;
 }
 
+/**
+ *
+ *
+ * @interface iEVeicoloUtente
+ */
 interface iEVeicoloUtente {
   targa: string;
   identificativo: string;
 }
 
+/**
+ *
+ *
+ * @export
+ * @class controllerVeicolo
+ */
 export class controllerVeicolo {
+  /**
+   * Creates an instance of controllerVeicolo.
+   * @memberof controllerVeicolo
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {number} idUtente
+   * @param {enumPermessoTipo} tipoPermesso
+   * @memberof controllerVeicolo
+   */
   public static checkPermission = async (
     idUtente: number,
     tipoPermesso: enumPermessoTipo,
@@ -44,6 +72,15 @@ export class controllerVeicolo {
     }
     return ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} _req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVeicolo
+   */
   public static getAll = async (
     _req: Request,
     res: Response,
@@ -63,6 +100,15 @@ export class controllerVeicolo {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVeicolo
+   */
   public static getById = async (
     req: Request,
     res: Response,
@@ -88,6 +134,15 @@ export class controllerVeicolo {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVeicolo
+   */
   public static saveVeicolo = async (
     req: Request,
     res: Response,
@@ -116,6 +171,15 @@ export class controllerVeicolo {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVeicolo
+   */
   public static deleteById = async (
     req: Request,
     res: Response,
@@ -142,6 +206,15 @@ export class controllerVeicolo {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVeicolo
+   */
   public static putVeicolo = async (
     req: Request,
     res: Response,
@@ -178,6 +251,15 @@ export class controllerVeicolo {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVeicolo
+   */
   public static patchVeicolo = async (
     req: Request,
     res: Response,
@@ -239,6 +321,13 @@ export class controllerVeicolo {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} targa
+   * @memberof controllerVeicolo
+   */
   public static ricavaTipo = (targa: string): enumVeicoloTipo | null => {
     let ret: enumVeicoloTipo | null = null;
     try {
@@ -267,6 +356,15 @@ export class controllerVeicolo {
     }
     return ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVeicolo
+   */
   public static associateUser = async (
     req: Request,
     res: Response,
@@ -276,8 +374,11 @@ export class controllerVeicolo {
     try {
       const veicoloUtente = req.body as iEVeicoloUtente | null;
       if (!!veicoloUtente) {
-
-        const objUtente:eUtente|null = await serviceVeicolo.checkAddAutomobilistaTarga(veicoloUtente.targa, veicoloUtente.identificativo);
+        const objUtente: eUtente | null =
+          await serviceVeicolo.checkAddAutomobilistaTarga(
+            veicoloUtente.targa,
+            veicoloUtente.identificativo,
+          );
         if (!!objUtente) {
           ret.setResponse(200, objUtente);
         } else {

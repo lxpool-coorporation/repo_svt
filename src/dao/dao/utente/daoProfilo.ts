@@ -144,10 +144,6 @@ export class daoProfiloImplementation implements DaoInterfaceGeneric<eProfilo> {
 
       //return profilo.profilo_permessi; // Qui Sequelize popola automaticamente i permessi associati
     } catch (error) {
-      console.error(
-        'Errore durante il recupero dei permessi per il profilo:',
-        error,
-      );
       throw error;
     }
     return null;

@@ -141,10 +141,6 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
 
       //return Utente.Utente_permessi; // Qui Sequelize popola automaticamente i permessi associati
     } catch (error) {
-      console.error(
-        'Errore durante il recupero dei profili per Utente:',
-        error,
-      );
       throw error;
     }
 
@@ -176,10 +172,6 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
 
       //return Utente.Utente_permessi; // Qui Sequelize popola automaticamente i permessi associati
     } catch (error) {
-      console.error(
-        'Errore durante il recupero dei permessi per il Utente:',
-        error,
-      );
       throw error;
     }
 
@@ -203,16 +195,11 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
           { transaction: options?.transaction },
         );
       }
-  
 
       result = true;
 
       //return Utente.Utente_permessi; // Qui Sequelize popola automaticamente i permessi associati
     } catch (error) {
-      console.error(
-        'Errore durante il recupero dei permessi per il Utente:',
-        error,
-      );
       throw error;
     }
 
@@ -235,16 +222,12 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
           },
           { transaction: options?.transaction },
         );
-      };
+      }
 
       result = true;
 
       //return Utente.Utente_permessi; // Qui Sequelize popola automaticamente i permessi associati
     } catch (error) {
-      console.error(
-        'Errore durante il recupero dei permessi per il Utente:',
-        error,
-      );
       throw error;
     }
 

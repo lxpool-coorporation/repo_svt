@@ -17,8 +17,27 @@ dotenv.config();
 let SPEED_TOLLERANCE = process.env.SPEED_TOLLERANCE || 0;
 const IMAGE_PATH = process.env.IMAGE_PATH || '.img';
 
+/**
+ *
+ *
+ * @export
+ * @class middlewareTransito
+ */
 export class middlewareTransito {
+  /**
+   * Creates an instance of middlewareTransito.
+   * @memberof middlewareTransito
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTransito
+   */
   public static checkPermissionRead = async (
     req: Request,
     _res: Response,
@@ -45,6 +64,15 @@ export class middlewareTransito {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTransito
+   */
   public static checkPermissionWrite = async (
     req: Request,
     _res: Response,
@@ -71,6 +99,15 @@ export class middlewareTransito {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTransito
+   */
   public static checkPermissionOperatore = async (
     req: Request,
     _res: Response,
@@ -106,6 +143,15 @@ export class middlewareTransito {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTransito
+   */
   public static rebuildBody = async (
     req: Request,
     _res: Response,
@@ -136,6 +182,15 @@ export class middlewareTransito {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTransito
+   */
   public static validate = async (
     req: Request,
     _res: Response,
@@ -190,6 +245,15 @@ export class middlewareTransito {
       },
     );
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTransito
+   */
   public static calculateSpeedReal = (
     req: Request,
     _res: Response,
@@ -210,6 +274,15 @@ export class middlewareTransito {
 
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTransito
+   */
   public static ocrTarga = async (
     req: Request,
     _res: Response,

@@ -50,9 +50,7 @@ async function generatePlantUML() {
 
     // Scrivi il diagramma UML nel file
     fs.writeFileSync('diagram.puml', umlDiagram);
-    console.log('UML diagram generated as diagram.puml');
-  } catch (err) {
-    console.error('Error generating UML diagram:', err);
+  } catch (_err) {
   } finally {
     await sequelize.close(); // Chiudi la connessione al database
   }

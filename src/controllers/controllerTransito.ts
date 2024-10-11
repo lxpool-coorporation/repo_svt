@@ -16,6 +16,11 @@ import fs from 'fs';
 dotenv.config();
 const IMAGE_PATH = process.env.IMAGE_PATH || '.img';
 
+/**
+ *
+ *
+ * @interface iETransito
+ */
 interface iETransito {
   data_transito: Date;
   id_varco: number;
@@ -27,8 +32,26 @@ interface iETransito {
   path_immagine?: string | null;
 }
 
+/**
+ *
+ *
+ * @export
+ * @class controllerTransito
+ */
 export class controllerTransito {
+  /**
+   * Creates an instance of controllerTransito.
+   * @memberof controllerTransito
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {number} idUtente
+   * @param {enumPermessoTipo} tipoPermesso
+   * @memberof controllerTransito
+   */
   public static checkPermission = async (
     idUtente: number,
     tipoPermesso: enumPermessoTipo,
@@ -46,6 +69,15 @@ export class controllerTransito {
     }
     return ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTransito
+   */
   public static getAll = async (
     req: Request,
     res: Response,
@@ -83,6 +115,15 @@ export class controllerTransito {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTransito
+   */
   public static getById = async (
     req: Request,
     res: Response,
@@ -107,6 +148,15 @@ export class controllerTransito {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTransito
+   */
   public static saveTransito = async (
     req: Request,
     res: Response,
@@ -141,6 +191,15 @@ export class controllerTransito {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTransito
+   */
   public static deleteById = async (
     req: Request,
     res: Response,
@@ -167,6 +226,15 @@ export class controllerTransito {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTransito
+   */
   public static putTransito = async (
     req: Request,
     res: Response,
@@ -209,6 +277,15 @@ export class controllerTransito {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTransito
+   */
   public static patchTransito = async (
     req: Request,
     res: Response,
@@ -295,6 +372,15 @@ export class controllerTransito {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerTransito
+   */
   public static download = async (
     req: Request,
     res: Response,
@@ -313,7 +399,6 @@ export class controllerTransito {
             IMAGE_PATH,
             transito.get_path_immagine() || '',
           );
-          console.log(filePath);
           // Verifica se il file esiste
           if (fs.existsSync(filePath)) {
             // Invia il file al client

@@ -4,7 +4,6 @@ import { Request, Response, NextFunction } from 'express';
 import createError from 'http-errors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-import routerLogin from './routes/login';
 import routerVarco from './routes/varco';
 import routerTratta from './routes/tratta';
 import routerVeicolo from './routes/veicolo';
@@ -14,13 +13,11 @@ import databaseCache from './utils/database-cache';
 import database from './utils/database';
 import messenger from './utils/messenger';
 import startTaskCheckMultaConsumer from './consumers/consumerCheckMulta';
-import { stereoRectifyUncalibrated } from 'opencv4nodejs';
 import startTaskGenerazioneBollettinoConsumer from './consumers/consumerGenerazioneBollettino';
 import startTaskCheckMultaAutomobilistaConsumer from './consumers/consumerCheckMultaAutomobilista';
 import startTaskCheckMultaBollettinoConsumer from './consumers/consumerCheckMultaBollettino';
 import startTaskTransitoOCRConsumer from './consumers/consumerTransitoOCR';
-import { serviceMulta } from './services/serviceMulta';
-import { enumExportFormato } from './entity/enum/enumExportFormato';
+
 dotenv.config();
 logger.info('app started');
 
@@ -38,7 +35,7 @@ const morganMiddleware = morgan(
 app.use(morganMiddleware);
 app.use(express.json());
 
-app.use('/login', routerLogin);
+// app.use('/login', routerLogin); ROTTA UTILIZZATA PER TEST
 app.use('/varco', routerVarco);
 app.use('/tratta', routerTratta);
 app.use('/veicolo', routerVeicolo);
@@ -71,8 +68,6 @@ const PORT = process.env.SERVER_PORT || 3000;
 
 app
   .listen(PORT, () => {
-    _readUser2();
-
     clearRedisCache();
     // Avvio di RabbitMQ
     startTaskCheckMultaConsumer();
@@ -93,7 +88,7 @@ process.on('SIGINT', async () => {
   // Chiude la connessione RabbitMQ
   const rabbitMQ = messenger.getInstance(); // Ottiene l'istanza del singleton RabbitMQ
   await rabbitMQ.close();
-  // Chiudi la connessione al database 
+  // Chiudi la connessione al database
   const sequelize = database.getInstance(); // Assumendo che `database.getInstance()` restituisca l'istanza Sequelize
   await sequelize.close(); // Chiude le connessioni al database
 
@@ -106,94 +101,15 @@ process.on('SIGINT', async () => {
 
 export default app;
 
-async function _readUser2() {
-  // CHECK MULTA
-  //const objMulta = await serviceMulta.getMultaSpeedControlById(1);
-  //console.log(objMulta)
-
-  //const dataInizio = new Date(2022, 0, 1, 10, 0, 0);
-  //const dataFine = new Date(2024, 11, 1, 10, 0, 0);
-  //const arrayTarghe:string[] = ['DEK896AE','DF334HW','ARM10ST'];
-  //await serviceMulta.getAllMulteExport(enumExportFormato.JSON, dataInizio,dataFine,arrayTarghe,11);
-
-
-
-  /*
-  
-  const objTransito = await serviceTransito.getTransitoById(2);
-  if (objTransito) {
-    const multa = await serviceMulta.verificaSanzione(objTransito);
-    if (!multa) console.log('multa da non generare!');
-    else console.log('multa da generare');
-  }
-  */
-
-  // CHECK BOLLETTINO
-  /*
-  const objBollettino: eBollettino | null =
-    await serviceMulta.richiediBollettino(1);
-  if (objBollettino) {
-    console.log('bollettino emesso con id: ' + objBollettino.get_id());
-  } else {
-    console.log('bollettino non generato');
-  }
-    */
-  //await serviceUtente.initStruttura({alter:true })
-  //await serviceTransito.initStruttura({alter:true })
-  //await serviceUtente.createUtente("CRLLCU88P11L4872",enumStato.attivo)
-  //await serviceUtente.createUtente("BVLOVD43P99ALSJD",enumStato.attivo)
-  // const utenteConProfili1 = await ormUtente.findByPk(2)
-  //const obj = await serviceVeicolo.getVeicoloById(1);
-  //if(obj){
-  //  console.log(obj);
-  //}
-  /*
-  const utente = await serviceUtente.getUtenteById(1);
-  if (utente) {
-    console.log('TROVATO UTENTE : ' + utente.get_identificativo());
-    console.log(JSON.stringify(utente));
-    const profiliUtente = await serviceUtente.getProfiliByIdUtente(
-      utente.get_id(),
-    );
-    if (profiliUtente) {
-      console.log('PROFILI ASSOCIATI: ');
-      profiliUtente.forEach((a) => {
-        console.log(`- ${a.get_descrizione()}`);
-        console.log(JSON.stringify(a));
-      });
-    }
-
-    const permessiUtente = await serviceUtente.getPermessiByIdUtente(
-      utente.get_id(),
-    );
-    if (permessiUtente) {
-      console.log('PERMESSI ASSOCIATI: ');
-      permessiUtente.forEach((c) => {
-        console.log(`- ${c.get_descrizione()}`);
-        console.log(JSON.stringify(c));
-      });
-    }
-
-    const checkPermessoUtente = await serviceUtente.hasPermessoByIdUtente(
-      utente.get_id(),
-      enumPermessoCategoria.varco,
-      enumPermessoTipo.lettura,
-    );
-    if (checkPermessoUtente) console.log('UTENTE HA PERMESSO DI LETTURA SU');
-    else console.log('UTENTE NON HA IL PERMESSO');
-  }
-    */
-}
-
 // Funzione per pulire la cache di Redis
 async function clearRedisCache() {
   const redisClient = await databaseCache.getInstance();
   try {
     // Pulisce tutti i database di Redis
     await redisClient.flushAll();
-    console.log('Cache Redis pulita con successo!');
+    logger.info('Cache Redis pulita con successo!');
   } catch (error) {
-    console.error('Errore durante la pulizia della cache Redis:', error);
+    logger.error('Errore durante la pulizia della cache Redis:', error);
   } finally {
     //redisClient.disconnect(); // Chiudi la connessione
   }

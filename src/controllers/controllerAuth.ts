@@ -36,12 +36,35 @@ const options: SignOptions = {
   algorithm: 'RS256',
 };
 
+/**
+ *
+ *
+ * @export
+ * @interface JwtPayload
+ */
 export interface JwtPayload {
   id_utente: number; // Aggiungiamo altre proprietà se hai più dati nel payload
 }
 
+/**
+ *
+ *
+ * @export
+ * @class controllerAuth
+ */
 export class controllerAuth {
+  /**
+   * Creates an instance of controllerAuth.
+   * @memberof controllerAuth
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {number} userId
+   * @memberof controllerAuth
+   */
   public static generateToken = (userId: number): string => {
     let ret: string = '';
     try {
@@ -60,6 +83,13 @@ export class controllerAuth {
     }
     return ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} token
+   * @memberof controllerAuth
+   */
   public static verifyToken = (token: string): JwtPayload | null => {
     let ret: JwtPayload | null = null;
     try {
@@ -72,6 +102,15 @@ export class controllerAuth {
     }
     return ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerAuth
+   */
   public static login = async (
     req: Request,
     res: Response,

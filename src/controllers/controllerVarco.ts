@@ -12,6 +12,11 @@ import { enumStato } from '../entity/enum/enumStato';
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @interface iEVarco
+ */
 interface iEVarco {
   cod: string;
   descrizione: string;
@@ -20,8 +25,26 @@ interface iEVarco {
   stato: enumStato;
 }
 
+/**
+ *
+ *
+ * @export
+ * @class controllerVarco
+ */
 export class controllerVarco {
+  /**
+   * Creates an instance of controllerVarco.
+   * @memberof controllerVarco
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {number} idUtente
+   * @param {enumPermessoTipo} tipoPermesso
+   * @memberof controllerVarco
+   */
   public static checkPermission = async (
     idUtente: number,
     tipoPermesso: enumPermessoTipo,
@@ -39,6 +62,15 @@ export class controllerVarco {
     }
     return ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} _req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVarco
+   */
   public static getAll = async (
     _req: Request,
     res: Response,
@@ -58,6 +90,15 @@ export class controllerVarco {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVarco
+   */
   public static getById = async (
     req: Request,
     res: Response,
@@ -89,6 +130,15 @@ export class controllerVarco {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVarco
+   */
   public static saveVarco = async (
     req: Request,
     res: Response,
@@ -119,6 +169,15 @@ export class controllerVarco {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVarco
+   */
   public static deleteById = async (
     req: Request,
     res: Response,
@@ -144,6 +203,15 @@ export class controllerVarco {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVarco
+   */
   public static putVarco = async (
     req: Request,
     res: Response,
@@ -181,6 +249,15 @@ export class controllerVarco {
     }
     ret.returnResponseJson(res, next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} res
+   * @param {NextFunction} next
+   * @memberof controllerVarco
+   */
   public static patchVarco = async (
     req: Request,
     res: Response,

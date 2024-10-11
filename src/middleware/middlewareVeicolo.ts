@@ -14,8 +14,27 @@ import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @export
+ * @class middlewareVeicolo
+ */
 export class middlewareVeicolo {
+  /**
+   * Creates an instance of middlewareVeicolo.
+   * @memberof middlewareVeicolo
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareVeicolo
+   */
   public static checkPermissionRead = async (
     req: Request,
     _res: Response,
@@ -40,6 +59,15 @@ export class middlewareVeicolo {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareVeicolo
+   */
   public static checkPermissionWrite = async (
     req: Request,
     _res: Response,
@@ -66,6 +94,15 @@ export class middlewareVeicolo {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareVeicolo
+   */
   public static validate = (
     req: Request,
     _res: Response,
@@ -88,6 +125,15 @@ export class middlewareVeicolo {
     );
   };
 
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareVeicolo
+   */
   public static validateAssociation = (
     req: Request,
     _res: Response,
@@ -109,6 +155,15 @@ export class middlewareVeicolo {
     );
   };
 
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareVeicolo
+   */
   public static insertTarga = async (
     req: Request,
     _res: Response,

@@ -31,23 +31,18 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });
 
-    console.log(`[*] In attesa di messaggi nella coda: ${queue}`);
-
     // Consuma i messaggi dalla coda
     channel.consume(
       queue,
       async (msg: Message | null) => {
         if (msg) {
           const content: string = msg.content.toString();
-          console.log(
-            enumMessengerCoda.queueMultaBollettino + `: Ricevuto: ${content}`,
-          );
+
           const parsedContent =
             typeof content === 'string' ? JSON.parse(content) : content;
           const objBollettino: eBollettino =
             eBollettino.fromJSON(parsedContent);
           if (objBollettino) {
-            console.log(objBollettino);
             const multa: eMultaSpeedControl | null =
               await serviceMulta.getMultaSpeedControlById(
                 objBollettino.get_id_multa(),
@@ -121,13 +116,9 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
                 });
               }
 
-              const fileNamePDF:string = `bollettino_${objBollettino.get_id_multa()}.pdf`;
+              const fileNamePDF: string = `bollettino_${objBollettino.get_id_multa()}.pdf`;
 
-              const pdfPath = path.join(
-                '/',
-                IMAGE_FILE,
-                fileNamePDF,
-              );
+              const pdfPath = path.join('/', IMAGE_FILE, fileNamePDF);
 
               // Crea la directory 'bollettini' se non esiste
               if (!fs.existsSync(path.dirname(pdfPath))) {
@@ -142,29 +133,15 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
               doc.end();
 
               writeStream.on('finish', () => {
-                console.log(`PDF salvato correttamente su: ${pdfPath}`);
-
-                serviceMulta.updateFieldsBollettino(objBollettino, {path_bollettino: fileNamePDF, stato: enumBollettinoStato.emesso});
-
+                serviceMulta.updateFieldsBollettino(objBollettino, {
+                  path_bollettino: fileNamePDF,
+                  stato: enumBollettinoStato.emesso,
+                });
               });
 
-              writeStream.on('error', (err) => {
-                console.error('Errore durante il salvataggio del PDF:', err);
-              });
+              writeStream.on('error', (_err) => {});
             }
           }
-
-          // Imposta le intestazioni per il download del PDF
-          //res.setHeader('Content-Type', 'application/pdf');
-          //res.setHeader('Content-Disposition', `attachment; filename=bollettino_${multaID}.pdf`);
-
-          // Invia il PDF come risposta
-          //doc.pipe(res);
-          //doc.end();
-
-          //}
-
-          // Logica per elaborare il messaggio
 
           // Conferma che il messaggio è stato elaborato
           channel.ack(msg);
@@ -174,9 +151,7 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
         noAck: false, // Modalità di conferma manuale
       },
     );
-  } catch (error) {
-    console.error('Errore nel consumer RabbitMQ:', error);
-  }
+  } catch (_error) {}
 }
 
 export default startTaskGenerazioneBollettinoConsumer;

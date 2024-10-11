@@ -13,20 +13,28 @@ import messenger from '../utils/messenger';
 import { serviceMulta } from './serviceMulta';
 import { eMulta } from '../entity/svt/eMulta';
 
-// classe che gestisce la logica di business dell'Veicolo
+/**
+ *classe che gestisce la logica di business dell'Veicolo
+ *
+ * @class serviceVeicoloImplementation
+ */
 class serviceVeicoloImplementation {
-  // Recupera un Veicolo per ID
+  /**
+   *Recupera un Veicolo per ID
+   *
+   * @param {number} id
+   * @return {*}  {(Promise<eVeicolo | null>)}
+   * @memberof serviceVeicoloImplementation
+   */
   async getVeicoloById(id: number): Promise<eVeicolo | null> {
     try {
       const redisClient = await databaseCache.getInstance();
-      console.log("PASSO IRA")
       const cacheKey = `Veicolo_${id}`;
 
       // Controlla se l'Veicolo è in cache
-      
+
       const jsonData = await redisClient.get(cacheKey);
       if (jsonData) {
-        console.log("FROM CACHE VEICOLO!")
         const data = JSON.parse(jsonData); // Restituisce l'Veicolo dalla cache
         const cacheObject = eVeicolo.fromJSON(data); // Assumendo che tu abbia una classe Veicolo
         return cacheObject;
@@ -35,7 +43,6 @@ class serviceVeicoloImplementation {
       // Se non è in cache, recupera dal repository
       const Veicolo = await repositoryVeicolo.get(id);
       if (Veicolo) {
-        console.log(Veicolo)
         // Memorizza l'Veicolo in cache per 1 ora
         await redisClient.set(cacheKey, JSON.stringify(Veicolo), {
           EX: parseInt(process.env.REDIS_CACHE_TIMEOUT || '3600'),
@@ -49,6 +56,13 @@ class serviceVeicoloImplementation {
     }
   }
 
+  /**
+   *
+   *
+   * @param {string} targa
+   * @return {*}  {(Promise<eVeicolo | null>)}
+   * @memberof serviceVeicoloImplementation
+   */
   async getVeicoloByTarga(targa: string): Promise<eVeicolo | null> {
     let result: eVeicolo | null = null;
     try {
@@ -62,7 +76,13 @@ class serviceVeicoloImplementation {
     return result;
   }
 
-  // Recupera tutti gli Veicoli
+  /**
+   *Recupera tutti gli Veicoli
+   *
+   * @param {object} [options]
+   * @return {*}  {Promise<eVeicolo[]>}
+   * @memberof serviceVeicoloImplementation
+   */
   async getAllVeicoli(options?: object): Promise<eVeicolo[]> {
     const redisClient = await databaseCache.getInstance();
 
@@ -86,7 +106,15 @@ class serviceVeicoloImplementation {
     //return await repositoryVeicolo.getAll();
   }
 
-  // Crea un nuovo Veicolo
+  /**
+   *Crea un nuovo Veicolo
+   *
+   * @param {enumVeicoloTipo} tipo
+   * @param {string} targa
+   * @param {enumVeicoloStato} stato
+   * @return {*}  {(Promise<eVeicolo | null>)}
+   * @memberof serviceVeicoloImplementation
+   */
   async createVeicolo(
     tipo: enumVeicoloTipo,
     targa: string,
@@ -102,32 +130,45 @@ class serviceVeicoloImplementation {
     return savedVeicolo;
   }
 
-  // Aggiorna un Veicolo esistente
+  /**
+   *Aggiorna un Veicolo esistente
+   *
+   * @param {number} id
+   * @param {enumVeicoloTipo} tipo
+   * @param {string} targa
+   * @param {enumVeicoloStato} stato
+   * @return {*}  {Promise<void>}
+   * @memberof serviceVeicoloImplementation
+   */
   async updateVeicolo(
     id: number,
     tipo: enumVeicoloTipo,
     targa: string,
     stato: enumVeicoloStato,
   ): Promise<void> {
-
-    try{
+    try {
       const redisClient = await databaseCache.getInstance();
 
       const objVeicolo = new eVeicolo(id, tipo, targa, stato);
       await repositoryVeicolo.update(objVeicolo);
-  
+
       await this.refreshStatoVeicolo(objVeicolo);
-  
+
       // Invalida la cache dell'Veicolo aggiornato e la cache generale
       await redisClient.del(`Veicolo_${id}`);
       await redisClient.del('Veicoli_tutti');
-    }catch(error){
+    } catch (error) {
       throw new Error('errore: ' + error);
     }
-    
   }
 
-  // Elimina un Veicolo
+  /**
+   *Elimina un Veicolo
+   *
+   * @param {number} id
+   * @return {*}  {Promise<void>}
+   * @memberof serviceVeicoloImplementation
+   */
   async deleteVeicolo(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
@@ -144,7 +185,13 @@ class serviceVeicoloImplementation {
     await redisClient.del('Veicoli_tutti');
   }
 
-  // Ottieni Utenti di un Veicolo
+  /**
+   *Ottieni Utenti di un Veicolo
+   *
+   * @param {number} idVeicolo
+   * @return {*}  {(Promise<eUtente | null>)}
+   * @memberof serviceVeicoloImplementation
+   */
   async getUtenteByIdVeicolo(idVeicolo: number): Promise<eUtente | null> {
     const redisClient = await databaseCache.getInstance();
 
@@ -171,7 +218,13 @@ class serviceVeicoloImplementation {
     return Utente;
   }
 
-  // Ottieni Utenti di un Veicolo
+  /**
+   *Ottieni Utenti di un Veicolo
+   *
+   * @param {string} targa
+   * @return {*}  {(Promise<eUtente | null>)}
+   * @memberof serviceVeicoloImplementation
+   */
   async getAutomobilistaByTarga(targa: string): Promise<eUtente | null> {
     let result: eUtente | null = null;
 
@@ -196,7 +249,14 @@ class serviceVeicoloImplementation {
     return result;
   }
 
-  // add automobilista/targa
+  /**
+   *add automobilista/targa
+   *
+   * @param {string} targa
+   * @param {string} cf
+   * @return {*}  {(Promise<eUtente | null>)}
+   * @memberof serviceVeicoloImplementation
+   */
   async checkAddAutomobilistaTarga(
     targa: string,
     cf: string,
@@ -219,68 +279,60 @@ class serviceVeicoloImplementation {
       const automobilistaTarga: eUtente | null =
         await this.getAutomobilistaByTarga(targa);
       if (!automobilistaTarga) {
-          automobilista = await serviceUtente.getUtenteByIdentificativo(cf);
-          if (!automobilista) {
-            automobilista = await serviceUtente.createUtente(
-              cf,
-              profiliAutomobilista,
-              enumStato.attivo,
-            );
-          } else {
-          }
-          if (!automobilista) {
-            throw new Error(`automobilista non creato/trovato`);
-          }
+        automobilista = await serviceUtente.getUtenteByIdentificativo(cf);
+        if (!automobilista) {
+          automobilista = await serviceUtente.createUtente(
+            cf,
+            profiliAutomobilista,
+            enumStato.attivo,
+          );
+        } else {
+        }
+        if (!automobilista) {
+          throw new Error(`automobilista non creato/trovato`);
+        }
 
+        const veicoli: eVeicolo[] = [veicoloTarga];
+        await serviceUtente.createAssociazioneUtenteVeicoli(
+          automobilista,
+          veicoli,
+        );
+      } else {
+        automobilista = await serviceUtente.getUtenteById(
+          automobilistaTarga.get_id(),
+        );
+        if (!automobilista) {
+          throw new Error(`automobilista from targa non trovato`);
+        }
+        if (automobilista.get_identificativo() !== cf) {
+          // TO DO -> delete vecchia associazione
+          await serviceUtente.deleteAssociazioneUtenteVeicolo(
+            automobilista.get_id(),
+            veicoloTarga.get_id(),
+          );
+
+          // TO DO -> crea nuova associazione
           const veicoli: eVeicolo[] = [veicoloTarga];
           await serviceUtente.createAssociazioneUtenteVeicoli(
-              automobilista,
-              veicoli,
-            );
-        } else {
-          automobilista = await serviceUtente.getUtenteById(
-            automobilistaTarga.get_id(),
+            automobilista,
+            veicoli,
           );
-          if (!automobilista) {
-            throw new Error(`automobilista from targa non trovato`);
-          }
-          if (automobilista.get_identificativo() !== cf) {
-            console.log(
-              `alert: cf: ${cf} diverso da ${automobilista.get_identificativo} -> necessario aggiornamento`,
-            );
-
-            // TO DO -> delete vecchia associazione
-            await serviceUtente.deleteAssociazioneUtenteVeicolo(
-              automobilista.get_id(),
-              veicoloTarga.get_id(),
-            );
-
-            // TO DO -> crea nuova associazione
-            const veicoli: eVeicolo[] = [veicoloTarga];
-            await serviceUtente.createAssociazioneUtenteVeicoli(
-              automobilista,
-              veicoli,
-            );
-          }
         }
+      }
 
-        const objMulte:eMulta[]|null = await serviceMulta.getAllMultePendingByTarga(targa);
-        if(objMulte && automobilista){
-
-          objMulte.forEach(async(multa:eMulta) => {
-
-            if(automobilista)
-            {
-              multa.set_id_automobilista(automobilista.get_id());
-              await serviceMulta.updateFieldsMulta(multa, {id_automobilista: automobilista.get_id()});
-              serviceMulta.refreshMultaStato(multa);
-            }
-            
-          });
-
-        }
-
-
+      const objMulte: eMulta[] | null =
+        await serviceMulta.getAllMultePendingByTarga(targa);
+      if (objMulte && automobilista) {
+        objMulte.forEach(async (multa: eMulta) => {
+          if (automobilista) {
+            multa.set_id_automobilista(automobilista.get_id());
+            await serviceMulta.updateFieldsMulta(multa, {
+              id_automobilista: automobilista.get_id(),
+            });
+            serviceMulta.refreshMultaStato(multa);
+          }
+        });
+      }
     } catch (err) {
       throw new Error(`error: ${err}`);
     }
@@ -288,6 +340,12 @@ class serviceVeicoloImplementation {
     return automobilista;
   }
 
+  /**
+   *
+   *
+   * @param {eVeicolo} veicolo
+   * @memberof serviceVeicoloImplementation
+   */
   public getVeicoloStato = (veicolo: eVeicolo): enumVeicoloStato => {
     let result = enumVeicoloStato.in_attesa;
 
@@ -332,52 +390,54 @@ class serviceVeicoloImplementation {
     return result;
   };
 
+  /**
+   *
+   *
+   * @param {eVeicolo} objVeicolo
+   * @return {*}  {Promise<void>}
+   * @memberof serviceVeicoloImplementation
+   */
   async refreshStatoVeicolo(objVeicolo: eVeicolo): Promise<void> {
     try {
       const statoUpdated: enumVeicoloStato = this.getVeicoloStato(objVeicolo);
       objVeicolo.set_stato(statoUpdated);
       await repositoryVeicolo.update(objVeicolo);
-      
+
       switch (statoUpdated) {
         case enumVeicoloStato.in_attesa:
-          if (objVeicolo.get_tipo()==enumVeicoloTipo.indefinito) {
-            
-              const rabbitMQ = messenger.getInstance();
-              // Connessione a RabbitMQ
-              await rabbitMQ.connect();
-              // Invia un messaggio alla coda 'tasks_queue'
-              await rabbitMQ.sendToQueue(
-                enumMessengerCoda.queueTransitoVeicoloTipo,
-                JSON.stringify(objVeicolo),
-              );
-            }
-            break;
+          if (objVeicolo.get_tipo() == enumVeicoloTipo.indefinito) {
+            const rabbitMQ = messenger.getInstance();
+            // Connessione a RabbitMQ
+            await rabbitMQ.connect();
+            // Invia un messaggio alla coda 'tasks_queue'
+            await rabbitMQ.sendToQueue(
+              enumMessengerCoda.queueTransitoVeicoloTipo,
+              JSON.stringify(objVeicolo),
+            );
+          }
+          break;
 
         case enumVeicoloStato.acquisito:
-          if (objVeicolo.get_tipo()!==enumVeicoloTipo.indefinito) {
-
-            const objMulte:eMulta[]|null = await serviceMulta.getAllMultePendingByTarga(objVeicolo.get_targa());
-            if(objMulte){
-
-              objMulte.forEach(async(multa:eMulta) => {
-
+          if (objVeicolo.get_tipo() !== enumVeicoloTipo.indefinito) {
+            const objMulte: eMulta[] | null =
+              await serviceMulta.getAllMultePendingByTarga(
+                objVeicolo.get_targa(),
+              );
+            if (objMulte) {
+              objMulte.forEach(async (multa: eMulta) => {
                 await serviceMulta.refreshMultaStato(multa);
-                
               });
-
             }
           }
           break;
-          
+
         default:
-          console.log("Nessuno stato corrispondente trovato.");
           break;
       }
     } catch (err) {
       throw new Error(`refreshVeicoloStato: ${err}`);
     }
   }
-
 }
 
 export const serviceVeicolo = new serviceVeicoloImplementation();

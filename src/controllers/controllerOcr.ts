@@ -13,10 +13,26 @@ const tesseractConfig = {
   tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', // Limita il riconoscimento a lettere maiuscole e numeri
 };
 
+/**
+ *
+ *
+ * @export
+ * @class controllerOcr
+ */
 export class controllerOcr {
+  /**
+   * Creates an instance of controllerOcr.
+   * @memberof controllerOcr
+   */
   private constructor() {}
 
-  //cerca un rettangolo contenente solo la targa all'interno dell'immagine
+  /**
+   *cerca un rettangolo contenente solo la targa all'interno dell'immagine
+   *
+   * @static
+   * @param {string} imagePath
+   * @memberof controllerOcr
+   */
   public static detectPlate = (imagePath: string): cv.Mat | null => {
     let ret: cv.Mat | null = null;
     try {
@@ -58,7 +74,14 @@ export class controllerOcr {
     }
     return ret;
   };
-  // Funzione per eseguire OCR sulla targa rilevata usando node-tesseract-ocr
+
+  /**
+   *Funzione per eseguire OCR sulla targa rilevata usando node-tesseract-ocr
+   *
+   * @static
+   * @param {cv.Mat} plateImage
+   * @memberof controllerOcr
+   */
   public static recognizePlate = async (
     plateImage: cv.Mat,
   ): Promise<string> => {
@@ -68,7 +91,6 @@ export class controllerOcr {
 
       // Salva temporaneamente l'immagine della targa per l'elaborazione con Tesseract
       //const tempImagePath = path.resolve(__dirname, 'targa2.jpg');
-      //console.log(tempImagePath);
       //cv.imwrite('.img/tempImagePath.jpg', grayPlateImage);
 
       //salvo l'immagine su un buffer per renderlo fruibile per tesseract
@@ -89,7 +111,13 @@ export class controllerOcr {
     }
     return ret;
   };
-  //funzione che prima delimita la regione contenente la targa e poi applica OCR
+  /**
+   *funzione che prima delimita la regione contenente la targa e poi applica OCR
+   *
+   * @static
+   * @param {string} plateImagePath
+   * @memberof controllerOcr
+   */
   public static detectAndRecognizePlate = async (
     plateImagePath: string,
   ): Promise<string> => {

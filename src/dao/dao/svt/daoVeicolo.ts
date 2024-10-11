@@ -12,7 +12,6 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
   async get(id: number): Promise<eVeicolo | null> {
     //await new Promise((resolve) => setTimeout(resolve, 1000));
     const ormObj = await dbOrm.ormVeicolo.findByPk(id, { raw: true });
-    //console.log(ormObj)
     if (!ormObj) {
       throw new Error(`Veicolo non trovato per l'id ${id}`);
     }
@@ -85,7 +84,6 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
 
     // Combina le opzioni di default con quelle passate dall'esterno
     const updateOptions = { ...defaultOptions, ...options };
-    console.log("aggiorno stato a:" + t.get_stato())
     await dbOrm.ormVeicolo.update(
       {
         tipo: t.get_tipo(),
@@ -94,10 +92,6 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
       },
       updateOptions,
     );
-
-    const updatedVehicle = await this.get(t.get_id());
-    console.log("ddddd",updatedVehicle);
-
   }
 
   // Elimina un Veicolo dal database usando Sequelize
@@ -140,10 +134,6 @@ export class daoVeicoloImplementation implements DaoInterfaceGeneric<eVeicolo> {
         result = utente;
       }
     } catch (error) {
-      console.error(
-        'Errore durante il recupero degli utenti per il veicolo:',
-        error,
-      );
       throw error;
     }
     return result;

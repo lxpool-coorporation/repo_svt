@@ -8,7 +8,6 @@ import { enumPolicyTipo } from '../../../entity/enum/enumPolicyTipo';
 import { enumMultaStato } from '../../../entity/enum/enumMultaStato';
 import database from '../../../utils/database';
 
-
 const db = database.getInstance();
 
 // Implementazione del DAO per l'entità `Multa`
@@ -86,14 +85,14 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   async updateFields(
     t: eMulta,
     fieldsToUpdate: Partial<{
-      id_transito: number | null,
-      id_policy: number | null,
-      tipo_policy: enumPolicyTipo | null,
-      id_veicolo: number | null,
-      id_automobilista: number | null,
-      is_notturno: boolean | null,
-      is_recidivo: boolean | null,
-      stato: enumMultaStato | null,
+      id_transito: number | null;
+      id_policy: number | null;
+      tipo_policy: enumPolicyTipo | null;
+      id_veicolo: number | null;
+      id_automobilista: number | null;
+      is_notturno: boolean | null;
+      is_recidivo: boolean | null;
+      stato: enumMultaStato | null;
     }>,
     options?: { transaction?: Transaction },
   ): Promise<void> {
@@ -213,34 +212,31 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     await ormObj.destroy({ transaction: options?.transaction });
   }
 
-  async getAllMultePendingByTarga(
-      targa: string,
-    ): Promise<eMulta[] | null> {
-      let result = null;
+  async getAllMultePendingByTarga(targa: string): Promise<eMulta[] | null> {
+    let result = null;
 
-      try {
-        const rawMulte = await db.query(
-          `SELECT t_mlt.*
+    try {
+      const rawMulte = await db.query(
+        `SELECT t_mlt.*
            FROM svt_multa t_mlt
            LEFT JOIN svt_veicolo vc ON (t_mlt.id_veicolo = vc.id)
            WHERE t_mlt.id_automobilista is NULL AND vc.targa=:targa;`,
-          {
-            replacements: { targa: targa },
-            type: QueryTypes.SELECT,
-          },
-        );
+        {
+          replacements: { targa: targa },
+          type: QueryTypes.SELECT,
+        },
+      );
 
-        const objMulte:eMulta[]|null = rawMulte.map((multa) => {
-            return eMulta.fromJSON(multa);
-        });
-        
-        result = objMulte;
-      } catch (error) {
-        throw new Error('getAllMultePendingByTarga error: ' + error);
-      }
-      return result;
+      const objMulte: eMulta[] | null = rawMulte.map((multa) => {
+        return eMulta.fromJSON(multa);
+      });
+
+      result = objMulte;
+    } catch (error) {
+      throw new Error('getAllMultePendingByTarga error: ' + error);
     }
-
+    return result;
+  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

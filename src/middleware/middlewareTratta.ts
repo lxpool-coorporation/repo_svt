@@ -9,8 +9,27 @@ import { middlewareValidate } from './middlewareValidate';
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @export
+ * @class middlewareTratta
+ */
 export class middlewareTratta {
+  /**
+   * Creates an instance of middlewareTratta.
+   * @memberof middlewareTratta
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTratta
+   */
   public static checkPermissionRead = async (
     req: Request,
     _res: Response,
@@ -35,6 +54,15 @@ export class middlewareTratta {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTratta
+   */
   public static checkPermissionWrite = async (
     req: Request,
     _res: Response,
@@ -61,6 +89,15 @@ export class middlewareTratta {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareTratta
+   */
   public static validate = (
     req: Request,
     _res: Response,

@@ -158,7 +158,7 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     return result.length > 0;
   }
 
-  getAllMultePendingByTarga(targa: string): Promise<eMulta[]|null> {
+  getAllMultePendingByTarga(targa: string): Promise<eMulta[] | null> {
     return daoMulta.getAllMultePendingByTarga(targa);
   }
 
@@ -193,14 +193,14 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   updateFieldsMulta(
     t: eMulta,
     fieldsToUpdate: Partial<{
-      id_transito: number | null,
-      id_policy: number | null,
-      tipo_policy: enumPolicyTipo | null,
-      id_veicolo: number | null,
-      id_automobilista: number | null,
-      is_notturno: boolean | null,
-      is_recidivo: boolean | null,
-      stato: enumMultaStato | null,
+      id_transito: number | null;
+      id_policy: number | null;
+      tipo_policy: enumPolicyTipo | null;
+      id_veicolo: number | null;
+      id_automobilista: number | null;
+      is_notturno: boolean | null;
+      is_recidivo: boolean | null;
+      stato: enumMultaStato | null;
     }>,
     options?: object,
   ): Promise<void> {
@@ -208,34 +208,44 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   }
 
   updateFieldsBollettino(
-      t: eBollettino,
-      fieldsToUpdate: Partial<{
-        id_multa: number | null,
-        uuid: string | null,
-        importo: number | null,
-        path_bollettino: string | null,
-        stato: enumBollettinoStato | null,
-      }>,
-      options?: object,
-    ): Promise<void> {
-      return this.daoBollettino.updateFields(t, fieldsToUpdate, options);
-    }
+    t: eBollettino,
+    fieldsToUpdate: Partial<{
+      id_multa: number | null;
+      uuid: string | null;
+      importo: number | null;
+      path_bollettino: string | null;
+      stato: enumBollettinoStato | null;
+    }>,
+    options?: object,
+  ): Promise<void> {
+    return this.daoBollettino.updateFields(t, fieldsToUpdate, options);
+  }
 
-    getAllMulteSpeedControlToOperatore(
-      dataInizio: Date,
-      dataFine: Date,
-      arrayTarghe: string[]): Promise<eMultaSpeedControl[]|null>{
-        return daoMultaSpeedControl.getAllMulteSpeedControlToOperatore(dataInizio,dataFine,arrayTarghe);
-      }
+  getAllMulteSpeedControlToOperatore(
+    dataInizio: Date,
+    dataFine: Date,
+    arrayTarghe: string[],
+  ): Promise<eMultaSpeedControl[] | null> {
+    return daoMultaSpeedControl.getAllMulteSpeedControlToOperatore(
+      dataInizio,
+      dataFine,
+      arrayTarghe,
+    );
+  }
 
-    getAllMulteSpeedControlToAutomobilista(
-      dataInizio: Date,
-      dataFine: Date,
-      arrayTarghe: string[],
-      idUtente: number): Promise<eMultaSpeedControl[]|null>{
-        return daoMultaSpeedControl.getAllMulteSpeedControlToAutomobilista(dataInizio,dataFine,arrayTarghe,idUtente);
-      }
-
+  getAllMulteSpeedControlToAutomobilista(
+    dataInizio: Date,
+    dataFine: Date,
+    arrayTarghe: string[],
+    idUtente: number,
+  ): Promise<eMultaSpeedControl[] | null> {
+    return daoMultaSpeedControl.getAllMulteSpeedControlToAutomobilista(
+      dataInizio,
+      dataFine,
+      arrayTarghe,
+      idUtente,
+    );
+  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

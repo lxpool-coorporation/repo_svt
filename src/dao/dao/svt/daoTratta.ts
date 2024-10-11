@@ -152,11 +152,6 @@ export class daoTrattaImplementation implements DaoInterfaceGeneric<eTratta> {
         ormObj.stato,
       );
     } catch (error) {
-      console.error(
-        'Errore durante il recupero della Tratta per id varco uscita: ' +
-          idVarcoUscita,
-        error,
-      );
       throw error;
     }
 

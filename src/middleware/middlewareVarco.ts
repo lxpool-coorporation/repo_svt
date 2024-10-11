@@ -9,8 +9,27 @@ import { middlewareValidate } from './middlewareValidate';
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @export
+ * @class middlewareVarco
+ */
 export class middlewareVarco {
+  /**
+   * Creates an instance of middlewareVarco.
+   * @memberof middlewareVarco
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareVarco
+   */
   public static checkPermissionRead = async (
     req: Request,
     _res: Response,
@@ -35,6 +54,15 @@ export class middlewareVarco {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareVarco
+   */
   public static checkPermissionWrite = async (
     req: Request,
     _res: Response,
@@ -61,6 +89,15 @@ export class middlewareVarco {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareVarco
+   */
   public static validate = (
     req: Request,
     _res: Response,

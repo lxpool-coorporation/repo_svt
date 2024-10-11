@@ -6,9 +6,19 @@ import logger from '../utils/logger-winston';
 import { eTransito } from '../entity/svt/eTransito';
 import { ePolicy } from '../entity/svt/ePolicy';
 
-// classe che gestisce la logica di business dell'Varco
+/**
+ *classe che gestisce la logica di business dell'Varco
+ *
+ * @class serviceVarcoImplementation
+ */
 class serviceVarcoImplementation {
-  // Recupera un Varco per ID
+  /**
+   *Recupera un Varco per ID
+   *
+   * @param {number} id
+   * @return {*}  {(Promise<eVarco | null>)}
+   * @memberof serviceVarcoImplementation
+   */
   async getVarcoById(id: number): Promise<eVarco | null> {
     try {
       const redisClient = await databaseCache.getInstance();
@@ -39,11 +49,24 @@ class serviceVarcoImplementation {
     }
   }
 
+  /**
+   *
+   *
+   * @param {string} cod
+   * @return {*}  {(Promise<eVarco | null>)}
+   * @memberof serviceVarcoImplementation
+   */
   async getVarcoByCod(cod: string): Promise<eVarco | null> {
     return await repositoryVarco.getByCod(cod);
   }
 
-  // Recupera tutti gli Varchi
+  /**
+   *Recupera tutti gli Varchi
+   *
+   * @param {object} [options]
+   * @return {*}  {Promise<eVarco[]>}
+   * @memberof serviceVarcoImplementation
+   */
   async getAllVarchi(options?: object): Promise<eVarco[]> {
     const redisClient = await databaseCache.getInstance();
 
@@ -67,7 +90,17 @@ class serviceVarcoImplementation {
     //return await repositoryVarco.getAll();
   }
 
-  // Crea un nuovo Varco
+  /**
+   *Crea un nuovo Varco
+   *
+   * @param {string} cod
+   * @param {string} descrizione
+   * @param {number} latitudine
+   * @param {number} longitudine
+   * @param {enumStato} stato
+   * @return {*}  {(Promise<eVarco | null>)}
+   * @memberof serviceVarcoImplementation
+   */
   async createVarco(
     cod: string,
     descrizione: string,
@@ -92,7 +125,18 @@ class serviceVarcoImplementation {
     return savedVarco;
   }
 
-  // Aggiorna un Varco esistente
+  /**
+   *Aggiorna un Varco esistente
+   *
+   * @param {number} id
+   * @param {string} cod
+   * @param {string} descrizione
+   * @param {number} latitudine
+   * @param {number} longitudine
+   * @param {enumStato} stato
+   * @return {*}  {Promise<void>}
+   * @memberof serviceVarcoImplementation
+   */
   async updateVarco(
     id: number,
     cod: string,
@@ -118,7 +162,13 @@ class serviceVarcoImplementation {
     await redisClient.del('Varchi_tutti');
   }
 
-  // Elimina un Varco
+  /**
+   *Elimina un Varco
+   *
+   * @param {number} id
+   * @return {*}  {Promise<void>}
+   * @memberof serviceVarcoImplementation
+   */
   async deleteVarco(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
@@ -130,7 +180,13 @@ class serviceVarcoImplementation {
     await redisClient.del('Varchi_tutti');
   }
 
-  // Ottieni Transiti di un Varco
+  /**
+   *Ottieni Transiti di un Varco
+   *
+   * @param {number} idVarco
+   * @return {*}  {(Promise<eTransito[] | null>)}
+   * @memberof serviceVarcoImplementation
+   */
   async getTransitiByIdVarco(idVarco: number): Promise<eTransito[] | null> {
     const redisClient = await databaseCache.getInstance();
 
@@ -157,7 +213,13 @@ class serviceVarcoImplementation {
     return transiti;
   }
 
-  // Ottieni Policies di un Varco
+  /**
+   *Ottieni Policies di un Varco
+   *
+   * @param {number} idVarco
+   * @return {*}  {(Promise<ePolicy[] | null>)}
+   * @memberof serviceVarcoImplementation
+   */
   async getPoliciesByIdVarco(idVarco: number): Promise<ePolicy[] | null> {
     const redisClient = await databaseCache.getInstance();
 

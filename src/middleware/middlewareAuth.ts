@@ -6,8 +6,27 @@ import { retMiddleware } from '../utils/retMiddleware';
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @export
+ * @class middlewareAuth
+ */
 export class middlewareAuth {
+  /**
+   * Creates an instance of middlewareAuth.
+   * @memberof middlewareAuth
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareAuth
+   */
   public static verifyToken = (
     req: Request,
     _res: Response,

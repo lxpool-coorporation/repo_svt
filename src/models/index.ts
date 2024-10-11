@@ -48,7 +48,6 @@ Object.keys(dbOrm).forEach((modelName) => {
   // Verifica se il modello ha un metodo "associate" prima di chiamarlo
   if (typeof model.associate === 'function') {
     model.associate(dbOrm); // Passa tutti i modelli per gestire le relazioni
-    //console.log("associo: " + model)
   }
 });
 

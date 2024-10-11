@@ -6,9 +6,19 @@ import logger from '../utils/logger-winston';
 import { ePolicy } from '../entity/svt/ePolicy';
 import { eVarco } from '../entity/svt/eVarco';
 
-// classe che gestisce la logica di business dell'Tratta
+/**
+ *classe che gestisce la logica di business dell'Tratta
+ *
+ * @class serviceTrattaImplementation
+ */
 class serviceTrattaImplementation {
-  // Recupera un Tratta per ID
+  /**
+   *Recupera un Tratta per ID
+   *
+   * @param {number} id
+   * @return {*}  {(Promise<eTratta | null>)}
+   * @memberof serviceTrattaImplementation
+   */
   async getTrattaById(id: number): Promise<eTratta | null> {
     try {
       const redisClient = await databaseCache.getInstance();
@@ -39,7 +49,13 @@ class serviceTrattaImplementation {
     }
   }
 
-  // Recupera tutti gli Tratta
+  /**
+   *Recupera tutti gli Tratta
+   *
+   * @param {object} [options]
+   * @return {*}  {Promise<eTratta[]>}
+   * @memberof serviceTrattaImplementation
+   */
   async getAllTratte(options?: object): Promise<eTratta[]> {
     const redisClient = await databaseCache.getInstance();
 
@@ -63,7 +79,18 @@ class serviceTrattaImplementation {
     //return await repositoryTratta.getAll();
   }
 
-  // Crea un nuovo Tratta
+  /**
+   *Crea un nuovo Tratta
+   *
+   * @param {string} cod
+   * @param {string} descrizione
+   * @param {number} id_varco_ingresso
+   * @param {number} id_varco_uscita
+   * @param {number} distanza
+   * @param {enumStato} stato
+   * @return {*}  {(Promise<eTratta | null>)}
+   * @memberof serviceTrattaImplementation
+   */
   async createTratta(
     cod: string,
     descrizione: string,
@@ -90,7 +117,19 @@ class serviceTrattaImplementation {
     return savedTratta;
   }
 
-  // Aggiorna un Tratta esistente
+  /**
+   *Aggiorna un Tratta esistente
+   *
+   * @param {number} id
+   * @param {string} cod
+   * @param {string} descrizione
+   * @param {number} id_varco_ingresso
+   * @param {number} id_varco_uscita
+   * @param {number} distanza
+   * @param {enumStato} stato
+   * @return {*}  {Promise<void>}
+   * @memberof serviceTrattaImplementation
+   */
   async updateTratta(
     id: number,
     cod: string,
@@ -118,7 +157,13 @@ class serviceTrattaImplementation {
     await redisClient.del('Tratta_tutti');
   }
 
-  // Elimina un Tratta
+  /**
+   *Elimina un Tratta
+   *
+   * @param {number} id
+   * @return {*}  {Promise<void>}
+   * @memberof serviceTrattaImplementation
+   */
   async deleteTratta(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
@@ -138,7 +183,13 @@ class serviceTrattaImplementation {
     await redisClient.del('Tratta_tutti');
   }
 
-  // Ottieni Varchi di un Tratta
+  /**
+   *Ottieni Varchi di un Tratta
+   *
+   * @param {number} idTratta
+   * @return {*}  {(Promise<eVarco[] | null>)}
+   * @memberof serviceTrattaImplementation
+   */
   async getVarchiByIdTratta(idTratta: number): Promise<eVarco[] | null> {
     const redisClient = await databaseCache.getInstance();
 
@@ -165,7 +216,13 @@ class serviceTrattaImplementation {
     return varchi;
   }
 
-  // Ottieni Varchi di un Tratta
+  /**
+   *Ottieni Varchi di un Tratta
+   *
+   * @param {number} idTratta
+   * @return {*}  {(Promise<ePolicy[] | null>)}
+   * @memberof serviceTrattaImplementation
+   */
   async getPoliciesByIdTratta(idTratta: number): Promise<ePolicy[] | null> {
     const redisClient = await databaseCache.getInstance();
 

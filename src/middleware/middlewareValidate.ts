@@ -17,8 +17,27 @@ import { parseISO } from 'date-fns'; // Opzionale, per gestire meglio la data
 
 dotenv.config();
 
+/**
+ *
+ *
+ * @export
+ * @class middlewareValidate
+ */
 export class middlewareValidate {
+  /**
+   * Creates an instance of middlewareValidate.
+   * @memberof middlewareValidate
+   */
   private constructor() {}
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateTarga = (
     campo: string,
     optional: boolean,
@@ -35,6 +54,15 @@ export class middlewareValidate {
       );
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateStato = (
     campo: string,
     optional: boolean,
@@ -48,6 +76,15 @@ export class middlewareValidate {
     });
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateStatoTransito = (
     campo: string,
     optional: boolean,
@@ -61,6 +98,15 @@ export class middlewareValidate {
     });
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateMeteo = (
     campo: string,
     optional: boolean,
@@ -74,6 +120,15 @@ export class middlewareValidate {
     });
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateTipoVeicolo = (
     campo: string,
     optional: boolean,
@@ -87,6 +142,15 @@ export class middlewareValidate {
     });
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateString = (
     campo: string,
     optional: boolean,
@@ -98,6 +162,15 @@ export class middlewareValidate {
       .withMessage(`${campo} non può essere vuoto.`);
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateLatitudine = (
     campo: string,
     optional: boolean,
@@ -108,6 +181,15 @@ export class middlewareValidate {
       .withMessage('La latitudine deve essere compresa tra -90 e 90');
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateLongitudine = (
     campo: string,
     optional: boolean,
@@ -118,6 +200,15 @@ export class middlewareValidate {
       .withMessage('La latitudine deve essere compresa tra -180 e 180');
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {Request} req
+   * @param {Response} _res
+   * @param {NextFunction} next
+   * @memberof middlewareValidate
+   */
   public static handleValidationErrors = (
     req: Request,
     _res: Response,
@@ -137,6 +228,15 @@ export class middlewareValidate {
     }
     ret.returnNext(next);
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateNumber = (
     campo: string,
     optional: boolean,
@@ -153,6 +253,14 @@ export class middlewareValidate {
       });
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @memberof middlewareValidate
+   */
   public static validateImageFromReq = (
     campo: string,
     optional: boolean,
@@ -165,6 +273,15 @@ export class middlewareValidate {
     });
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateDateISO8601 = (
     campo: string,
     optional: boolean,
@@ -188,6 +305,15 @@ export class middlewareValidate {
       });
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateDate = (
     campo: string,
     optional: boolean,
@@ -200,6 +326,15 @@ export class middlewareValidate {
       .withMessage('La data deve essere nel futuro');
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateVeicoloTipo = (
     campo: string,
     optional: boolean,
@@ -213,6 +348,15 @@ export class middlewareValidate {
     });
     return optional ? ret.optional() : ret;
   };
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
   public static validateFormatoOutput = (
     campo: string,
     optional: boolean,

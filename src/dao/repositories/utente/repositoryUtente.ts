@@ -40,7 +40,7 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   }
   async saveUtenteProfili(t: eUtente, ps: eProfilo[]): Promise<eUtente | null> {
     let result: eUtente | null = null;
-    
+
     const transaction: Transaction = await db.transaction();
 
     try {
@@ -60,7 +60,7 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
       }
     } catch (err) {
       await transaction.rollback();
-      throw new Error(`error: ${err}`);     
+      throw new Error(`error: ${err}`);
     }
 
     return result;

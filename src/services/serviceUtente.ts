@@ -10,9 +10,19 @@ import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 import { enumProfiloTipo } from '../entity/enum/enumProfiloTipo';
 import { eVeicolo } from '../entity/svt/eVeicolo';
 
-// classe che gestisce la logica di business dell'utente
+/**
+ *classe che gestisce la logica di business dell'utente
+ *
+ * @class serviceUtenteImplementation
+ */
 class serviceUtenteImplementation {
-  // Recupera un utente per ID
+  /**
+   *Recupera un utente per ID
+   *
+   * @param {number} id
+   * @return {*}  {(Promise<eUtente | null>)}
+   * @memberof serviceUtenteImplementation
+   */
   async getUtenteById(id: number): Promise<eUtente | null> {
     try {
       const redisClient = await databaseCache.getInstance();
@@ -43,13 +53,26 @@ class serviceUtenteImplementation {
     }
   }
 
+  /**
+   *
+   *
+   * @param {string} identificativo
+   * @return {*}  {(Promise<eUtente | null>)}
+   * @memberof serviceUtenteImplementation
+   */
   async getUtenteByIdentificativo(
     identificativo: string,
   ): Promise<eUtente | null> {
     return await repositoryUtente.getByIdentificativo(identificativo);
   }
 
-  // Recupera tutti gli utenti
+  /**
+   *Recupera tutti gli utenti
+   *
+   * @param {object} [options]
+   * @return {*}  {Promise<eUtente[]>}
+   * @memberof serviceUtenteImplementation
+   */
   async getAllUtenti(options?: object): Promise<eUtente[]> {
     const redisClient = await databaseCache.getInstance();
 
@@ -73,7 +96,15 @@ class serviceUtenteImplementation {
     //return await repositoryUtente.getAll();
   }
 
-  // Crea un nuovo utente
+  /**
+   *Crea un nuovo utente
+   *
+   * @param {string} codice_fiscale
+   * @param {eProfilo[]} profili
+   * @param {enumStato} stato
+   * @return {*}  {(Promise<eUtente | null>)}
+   * @memberof serviceUtenteImplementation
+   */
   async createUtente(
     codice_fiscale: string,
     profili: eProfilo[],
@@ -92,7 +123,14 @@ class serviceUtenteImplementation {
     return savedUtente;
   }
 
-  // Crea un nuovo utente
+  /**
+   *Crea un nuovo utente
+   *
+   * @param {eUtente} t
+   * @param {eVeicolo[]} veicoli
+   * @return {*}  {Promise<Boolean>}
+   * @memberof serviceUtenteImplementation
+   */
   async createAssociazioneUtenteVeicoli(
     t: eUtente,
     veicoli: eVeicolo[],
@@ -104,7 +142,15 @@ class serviceUtenteImplementation {
     return result;
   }
 
-  // Aggiorna un utente esistente
+  /**
+   *Aggiorna un utente esistente
+   *
+   * @param {number} id
+   * @param {string} codice_fiscale
+   * @param {enumStato} stato
+   * @return {*}  {Promise<void>}
+   * @memberof serviceUtenteImplementation
+   */
   async updateUtente(
     id: number,
     codice_fiscale: string,
@@ -120,7 +166,13 @@ class serviceUtenteImplementation {
     await redisClient.del('utenti_tutti');
   }
 
-  // Elimina un utente
+  /**
+   *Elimina un utente
+   *
+   * @param {number} id
+   * @return {*}  {Promise<void>}
+   * @memberof serviceUtenteImplementation
+   */
   async deleteUtente(id: number): Promise<void> {
     const redisClient = await databaseCache.getInstance();
 
@@ -132,7 +184,13 @@ class serviceUtenteImplementation {
     await redisClient.del('utenti_tutti');
   }
 
-  // Ottieni profili di un utente
+  /**
+   *Ottieni profili di un utente
+   *
+   * @param {number} idUtente
+   * @return {*}  {(Promise<eProfilo[] | null>)}
+   * @memberof serviceUtenteImplementation
+   */
   async getProfiliByIdUtente(idUtente: number): Promise<eProfilo[] | null> {
     const redisClient = await databaseCache.getInstance();
 
@@ -159,7 +217,13 @@ class serviceUtenteImplementation {
     return profili;
   }
 
-  // Ottieni permessi di un utente
+  /**
+   *Ottieni permessi di un utente
+   *
+   * @param {number} id
+   * @return {*}  {(Promise<ePermesso[] | null>)}
+   * @memberof serviceUtenteImplementation
+   */
   async getPermessiByIdUtente(id: number): Promise<ePermesso[] | null> {
     const redisClient = await databaseCache.getInstance();
 
@@ -168,7 +232,6 @@ class serviceUtenteImplementation {
     // Controlla se i profili sono in cache
     const jsonData = await redisClient.get(cacheKey);
     if (jsonData) {
-      console.log('CACHE! PERMESSI');
       const dataArray = JSON.parse(jsonData); // dataArray è un array di oggetti plain
       const cacheObjectArray = dataArray.map((data: any) =>
         ePermesso.fromJSON(data),
@@ -187,6 +250,15 @@ class serviceUtenteImplementation {
     return permessi;
   }
 
+  /**
+   *
+   *
+   * @param {number} id
+   * @param {enumPermessoCategoria} categoriaPermesso
+   * @param {enumPermessoTipo} tipoPermesso
+   * @return {*}  {Promise<boolean>}
+   * @memberof serviceUtenteImplementation
+   */
   async hasPermessoByIdUtente(
     id: number,
     categoriaPermesso: enumPermessoCategoria,
@@ -196,7 +268,6 @@ class serviceUtenteImplementation {
     const permessi = await this.getPermessiByIdUtente(id);
 
     if (!permessi) {
-      console.log('NON HO TROVATO PERMESSI');
       return false;
     }
 
@@ -211,12 +282,27 @@ class serviceUtenteImplementation {
     return hasPermesso;
   }
 
+  /**
+   *
+   *
+   * @param {enumProfiloTipo} enumProfilo
+   * @return {*}  {(Promise<eProfilo[] | null>)}
+   * @memberof serviceUtenteImplementation
+   */
   async getAllProfiliByEnum(
     enumProfilo: enumProfiloTipo,
   ): Promise<eProfilo[] | null> {
     return await repositoryUtente.getAllProfiliByEnum(enumProfilo);
   }
 
+  /**
+   *
+   *
+   * @param {number} idUtente
+   * @param {number} idVeicolo
+   * @return {*}  {Promise<void>}
+   * @memberof serviceUtenteImplementation
+   */
   async deleteAssociazioneUtenteVeicolo(
     idUtente: number,
     idVeicolo: number,
