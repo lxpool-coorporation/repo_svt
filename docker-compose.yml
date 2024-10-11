@@ -37,6 +37,7 @@ services:
       - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
       - IMAGE_PATH=${IMAGE_PATH}
       - IMAGE_TYPE=${IMAGE_TYPE}
+      - IMAGE_TYPE=${IMAGE_FILE}
     depends_on:
       - svt-db
       - svt-redis_cache
