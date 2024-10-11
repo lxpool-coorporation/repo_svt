@@ -305,8 +305,6 @@ export class daoMultaSpeedControlImplementation
         },
       );
 
-      console.log(rawMulte);
-
       const objMulte: eMultaSpeedControl[] | null = rawMulte.map((multa) => {
         return eMultaSpeedControl.fromJSON(multa);
       });
