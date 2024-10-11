@@ -2,16 +2,26 @@
 class SequelizeMeta {
   + name: VARCHAR(255)
 }
+class svt_bollettino {
+  + id: INT
+  + id_multa: INT
+  + uuid: VARCHAR(255)
+  + importo: INT
+  + path_bollettino: VARCHAR(255)
+  + stato: ENUM('richiesto','emesso','pagato')
+  + createdAt: DATETIME
+  + updatedAt: DATETIME
+}
 class svt_multa {
   + id: INT
   + id_transito: INT
   + id_policy: INT
   + tipo_policy: ENUM('speed control')
+  + id_veicolo: INT
   + id_automobilista: INT
   + is_notturno: TINYINT(1)
   + is_recidivo: TINYINT(1)
-  + path_bollettino: VARCHAR(255)
-  + stato: ENUM('in attesa','elaborata')
+  + stato: ENUM('indefinito','in attesa','elaborato')
   + createdAt: DATETIME
   + updatedAt: DATETIME
 }
@@ -55,7 +65,7 @@ class svt_plc_sanction_speed_control {
 class svt_plc_speed_control {
   + id_policy: INT
   + meteo: ENUM('sereno','pioggia')
-  + veicolo: ENUM('automobile','motoveicoli','camion')
+  + veicolo: ENUM('automobile','motoveicoli','camion','indefinito')
   + speed_limit: INT
   + createdAt: DATETIME
   + updatedAt: DATETIME
@@ -69,7 +79,7 @@ class svt_transito {
   + meteo: ENUM('sereno','pioggia')
   + id_veicolo: INT
   + path_immagine: VARCHAR(255)
-  + stato: ENUM('attivo','disattivo')
+  + stato: ENUM('indefinito','in attesa','elaborato','in attesa di ocr','illeggibile')
   + createdAt: DATETIME
   + updatedAt: DATETIME
 }
@@ -108,9 +118,9 @@ class svt_varco_policy {
 }
 class svt_veicolo {
   + id: INT
-  + tipo: ENUM('automobile','motoveicoli','camion')
+  + tipo: ENUM('automobile','motoveicoli','camion','indefinito')
   + targa: VARCHAR(255)
-  + stato: ENUM('attivo','disattivo')
+  + stato: ENUM('in_attesa','acquisito')
   + createdAt: DATETIME
   + updatedAt: DATETIME
 }
@@ -128,6 +138,7 @@ class utn_prf_profilo {
   + id: INT
   + cod: VARCHAR(255)
   + descrizione: VARCHAR(255)
+  + enum_profilo: ENUM('varco','operatore','automobilista')
   + stato: ENUM('attivo','disattivo')
   + createdAt: DATETIME
   + updatedAt: DATETIME
@@ -157,8 +168,10 @@ class utn_utente_veicolo {
   + createdAt: DATETIME
   + updatedAt: DATETIME
 }
+svt_bollettino --> svt_multa : FK id_multa to id
 svt_multa --> svt_transito : FK id_transito to id
 svt_multa --> svt_plc_policy : FK id_policy to id
+svt_multa --> svt_veicolo : FK id_veicolo to id
 svt_multa --> utn_utente : FK id_automobilista to id
 svt_multa_speed_control --> svt_multa : FK id_multa to id
 svt_plc_sanction_speed_control --> svt_plc_sanction : FK id_policy_sanction to id

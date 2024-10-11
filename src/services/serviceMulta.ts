@@ -631,7 +631,7 @@ class serviceMultaSpeedControlImplementation {
       let result:string|null = null;
 
       try{
-        console.log("sono qui -----------------")
+        console.log("ID UTENTE:::::::: " + idUtente)
         const objProfili:eProfilo[]|null = await serviceUtente.getProfiliByIdUtente(idUtente);
         if(objProfili){
           let isOperatore:Boolean = false;
@@ -644,7 +644,7 @@ class serviceMultaSpeedControlImplementation {
 
           let arrayMulte:eMultaSpeedControl[]|null = null;
           if(isOperatore){
-            arrayMulte = await repositoryMulta.getAllMulteSpeedControlToOperatore(dataInizio, dataFine, arrayTarghe, idUtente);
+            arrayMulte = await repositoryMulta.getAllMulteSpeedControlToOperatore(dataInizio, dataFine, arrayTarghe);
           }else{
             arrayMulte = await repositoryMulta.getAllMulteSpeedControlToAutomobilista(dataInizio, dataFine, arrayTarghe, idUtente);
           }
@@ -714,11 +714,11 @@ class serviceMultaSpeedControlImplementation {
               
 
             }
-
             switch(formato){
               case enumExportFormato.JSON:
                 result = JSON.stringify(arrayVistaMulte);
-            }
+                break;
+              }
           }
         }
 

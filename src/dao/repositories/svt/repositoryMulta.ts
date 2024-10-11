@@ -224,9 +224,8 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     getAllMulteSpeedControlToOperatore(
       dataInizio: Date,
       dataFine: Date,
-      arrayTarghe: string[],
-      idUtente: number): Promise<eMultaSpeedControl[]|null>{
-        return daoMultaSpeedControl.getAllMulteSpeedControlToOperatore(dataInizio,dataFine,arrayTarghe,idUtente);
+      arrayTarghe: string[]): Promise<eMultaSpeedControl[]|null>{
+        return daoMultaSpeedControl.getAllMulteSpeedControlToOperatore(dataInizio,dataFine,arrayTarghe);
       }
 
     getAllMulteSpeedControlToAutomobilista(

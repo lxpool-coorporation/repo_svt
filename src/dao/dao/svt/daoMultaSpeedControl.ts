@@ -251,24 +251,24 @@ export class daoMultaSpeedControlImplementation
 
     try {
 
-
-      const targhe:string = arrayTarghe.join(', ');
-
       const rawMulte = await db.query(
         `SELECT t_mlt.*,t_mlt_sc.*
          FROM svt_multa t_mlt
          LEFT JOIN svt_multa_speed_control t_mlt_sc ON (t_mlt.id=t_mlt_sc.id_multa)
          LEFT JOIN svt_veicolo vc ON (t_mlt.id_veicolo = vc.id)
          LEFT JOIN svt_transito trn ON (t_mlt.id_transito=trn.id)
-         WHERE t_mlt.id_automobilista=:id_utente AND vc.targa IN (:targhe) 
-         AND trn.data_transito>=:dataInizio AND trn.data_transito<=:dataFine;`,
+         WHERE t_mlt.id_automobilista=:id_utente AND 
+         vc.targa IN (:targhe) AND (trn.data_transito >= :dataInizio AND trn.data_transito <= :dataFine);`,
         {
-          replacements: { targhe: arrayTarghe, dataInizio: dataInizio, dataFine: dataFine, id_utente: idUtente },
+          replacements: { 
+            targhe: arrayTarghe, 
+            dataInizio: dataInizio, 
+            dataFine: dataFine, 
+            id_utente: idUtente 
+          },
           type: QueryTypes.SELECT,
         },
       );
-
-
 
       const objMulte:eMultaSpeedControl[]|null = rawMulte.map((multa) => {
           return eMultaSpeedControl.fromJSON(multa);
@@ -285,30 +285,29 @@ export class daoMultaSpeedControlImplementation
     dataInizio: Date,
     dataFine: Date,
     arrayTarghe: string[],
-    idUtente: number,
   ): Promise<eMultaSpeedControl[] | null> {
     let result = null;
 
     try {
 
-
-      const targhe:string = arrayTarghe.join(', ');
-
       const rawMulte = await db.query(
-        `SELECT t_mlt.*,t_mlt_sc.*
-         FROM svt_multa t_mlt
-         LEFT JOIN svt_multa_speed_control t_mlt_sc ON (t_mlt.id=t_mlt_sc.id_multa)
-         LEFT JOIN svt_veicolo vc ON (t_mlt.id_veicolo = vc.id)
-         LEFT JOIN svt_transito trn ON (t_mlt.id_transito=trn.id)
-         WHERE vc.targa IN (:targhe) 
-         AND trn.data_transito>=:dataInizio AND trn.data_transito<=:dataFine;`,
+        `SELECT t_mlt.*,t_mlt_sc.* 
+         FROM svt_multa t_mlt 
+         LEFT JOIN svt_multa_speed_control t_mlt_sc ON (t_mlt.id=t_mlt_sc.id_multa) 
+         LEFT JOIN svt_veicolo vc ON (t_mlt.id_veicolo = vc.id) 
+         LEFT JOIN svt_transito trn ON (t_mlt.id_transito=trn.id) 
+         WHERE vc.targa IN (:targhe) AND (trn.data_transito >= :dataInizio AND trn.data_transito <= :dataFine);`,
         {
-          replacements: { targhe: arrayTarghe, dataInizio: dataInizio, dataFine: dataFine},
+          replacements: {
+            targhe: arrayTarghe, 
+            dataInizio: dataInizio, // Format to 'YYYY-MM-DD HH:mm:ss'
+            dataFine: dataFine
+          },
           type: QueryTypes.SELECT,
         },
       );
 
-
+      console.log(rawMulte);
 
       const objMulte:eMultaSpeedControl[]|null = rawMulte.map((multa) => {
           return eMultaSpeedControl.fromJSON(multa);

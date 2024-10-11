@@ -69,6 +69,12 @@ export default {
         createdAt: new Date(),
         updatedAt: new Date()
       },
+      {
+        id_profilo: 2,
+        id_permesso: 9,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
     ], {});
   },
 
