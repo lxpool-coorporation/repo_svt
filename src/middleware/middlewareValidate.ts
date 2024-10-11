@@ -157,7 +157,7 @@ export class middlewareValidate {
     optional: boolean,
   ): ValidationChain => {
     let ret: ValidationChain = check(campo).custom((_value, { req }) => {
-      if (!req.file) {
+      if (!req.files || !req.files[campo]) {
         throw new Error('Il file è obbligatorio');
       }
       return true;

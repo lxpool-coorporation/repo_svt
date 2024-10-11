@@ -177,7 +177,7 @@ export class middlewareTransito {
       middlewareValidate.validateStatoTransito('stato', optional),
       middlewareValidate.validateNumber('speed', true),
       middlewareValidate.validateMeteo('meteo', optional),
-      //middlewareValidate.validateImageFromReq('immagine', optional),
+      middlewareValidate.validateImageFromReq('immagine', optional),
       middlewareValidate.validateDateISO8601('data_transito', optional),
       middlewareValidate.validateTarga('targa', optionalTarga),
       middlewareValidate.validateVeicoloTipo('veicolo_tipo', optional),
