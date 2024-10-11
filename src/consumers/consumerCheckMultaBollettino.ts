@@ -11,7 +11,7 @@ async function startTaskCheckMultaBollettinoConsumer(): Promise<void> {
     );
     const channel: Channel = await connection.createChannel();
 
-    const queue: string = enumMessengerCoda.queueBollettino;
+    const queue: string = enumMessengerCoda.queueCheckMultaBollettino;
 
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });
@@ -25,7 +25,7 @@ async function startTaskCheckMultaBollettinoConsumer(): Promise<void> {
         if (msg) {
           const content: string = msg.content.toString();
           console.log(
-            enumMessengerCoda.queueBollettino + `: Ricevuto: ${content}`,
+            enumMessengerCoda.queueCheckMultaBollettino + `: Ricevuto: ${content}`,
           );
           const parsedContent =
             typeof content === 'string' ? JSON.parse(content) : content;

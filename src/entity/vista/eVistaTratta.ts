@@ -1,79 +1,33 @@
-import { eVistaVarco } from './eVistaVarco';
+import { enumStato } from '../enum/enumStato';
+import { eVarco } from '../svt/eVarco';
+import { eVistaTransito } from './eVistaTransito';
 
 class eVistaTratta {
   //id numerico, tratta, descrizione, id_stato
   private id: number;
   private cod: string;
   private descrizione: string;
-  private varco_ingresso: eVistaVarco;
-  private varco_uscita: eVistaVarco;
+  private transito_ingresso: eVistaTransito;
+  private transito_uscita: eVistaTransito;
   private distanza: number;
+  private stato: enumStato;
 
   constructor(
     id: number,
     cod: string,
     descrizione: string,
-    varco_ingresso: eVistaVarco,
-    varco_uscita: eVistaVarco,
+    transito_ingresso: eVistaTransito,
+    transito_uscita: eVistaTransito,
     distanza: number,
+    stato: enumStato,
   ) {
     this.id = id;
     this.cod = cod;
     this.descrizione = descrizione;
-    this.varco_ingresso = varco_ingresso;
-    this.varco_uscita = varco_uscita;
+    this.transito_ingresso = transito_ingresso;
+    this.transito_uscita = transito_uscita;
     this.distanza = distanza;
-  }
-
-  static fromJSON(data: any): eVistaTratta {
-    return new eVistaTratta(
-      data.id,
-      data.cod,
-      data.descrizione,
-      data.varco_ingresso,
-      data.varco_uscita,
-      data.distanza,
-    );
-  }
-
-  // Metodi Getters
-  get_id(): number {
-    return this.id;
-  }
-  get_cod(): string {
-    return this.cod;
-  }
-  get_descrizione(): string {
-    return this.descrizione;
-  }
-  get_varco_ingresso(): eVistaVarco {
-    return this.varco_ingresso;
-  }
-  get_varco_uscita(): eVistaVarco {
-    return this.varco_uscita;
-  }
-  get_distanza(): number {
-    return this.distanza;
-  }
-
-  // Metodi Setters
-  set_id(id: number): void {
-    this.id = id;
-  }
-  set_cod(cod: string): void {
-    this.cod = cod;
-  }
-  set_descrizione(descrizione: string): void {
-    this.descrizione = descrizione;
-  }
-  set_varco_ingresso(varco_ingresso: eVistaVarco): void {
-    this.varco_ingresso = varco_ingresso;
-  }
-  set_varco_uscita(varco_uscita: eVistaVarco): void {
-    this.varco_uscita = varco_uscita;
-  }
-  set_distanza(distanza: number): void {
-    this.distanza = distanza;
+    this.stato = stato;
   }
 }
 

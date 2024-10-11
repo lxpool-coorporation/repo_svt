@@ -10,6 +10,7 @@ import { StringisNumeric } from '../utils/utils';
 import { eVeicolo } from '../entity/svt/eVeicolo';
 import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
 import { enumVeicoloTipo } from '../entity/enum/enumVeicoloTipo';
+import { eUtente } from '../entity/utente/eUtente';
 
 dotenv.config();
 
@@ -275,6 +276,15 @@ export class controllerVeicolo {
     try {
       const veicoloUtente = req.body as iEVeicoloUtente | null;
       if (!!veicoloUtente) {
+
+        const objUtente:eUtente|null = await serviceVeicolo.checkAddAutomobilistaTarga(veicoloUtente.targa, veicoloUtente.identificativo);
+        if (!!objUtente) {
+          ret.setResponse(200, objUtente);
+        } else {
+          ret.setResponse(400, {
+            message: 'errore inserimento associazione veicolo - utente',
+          });
+        }
         /*
         const veicoloUtenteRes: eVeicolo | null =
           await serviceVeicolo.createVeicolo(

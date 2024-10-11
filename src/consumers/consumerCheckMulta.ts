@@ -41,8 +41,8 @@ async function startTaskCheckMultaConsumer(): Promise<void> {
           const objMulta:eMulta | null = await serviceMulta.verificaMulta(objTransito);
           if(objMulta){
             console.log(`MULTA GENERATA: ${objMulta.get_id()}`);
-            const statoMulta:enumMultaStato = await serviceMulta.getMultaStato(objMulta);
-            await serviceMulta.updateFieldsMulta(objMulta, {stato: statoMulta});
+            //const statoMulta:enumMultaStato = await serviceMulta.getMultaStato(objMulta);
+            await serviceMulta.refreshMultaStato(objMulta);
             
           }
 

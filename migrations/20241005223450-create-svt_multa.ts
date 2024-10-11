@@ -40,7 +40,7 @@ export default {
       },
       id_automobilista: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'utn_utente',
           key: 'id',

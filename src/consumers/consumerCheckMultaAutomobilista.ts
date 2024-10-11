@@ -1,6 +1,7 @@
 import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
 import { eMulta } from '../entity/svt/eMulta';
+import { serviceMulta } from '../services/serviceMulta';
 
 async function startTaskCheckMultaAutomobilistaConsumer(): Promise<void> {
   try {
@@ -34,6 +35,9 @@ async function startTaskCheckMultaAutomobilistaConsumer(): Promise<void> {
           if (objMulta) {
             console.log(objMulta);
           }
+
+          
+          
 
           // Imposta le intestazioni per il download del PDF
           //res.setHeader('Content-Type', 'application/pdf');

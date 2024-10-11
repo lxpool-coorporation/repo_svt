@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import { eBollettino } from '../entity/svt/eBollettino';
 import amqp, { Channel, Connection, Message } from 'amqplib';
@@ -11,6 +12,11 @@ import { eTransito } from '../entity/svt/eTransito';
 import { serviceTransito } from '../services/serviceTransito';
 import { serviceVeicolo } from '../services/serviceVeicolo';
 import { eVeicolo } from '../entity/svt/eVeicolo';
+import { enumBollettinoStato } from '../entity/enum/enumBollettinoStato';
+
+dotenv.config();
+const IMAGE_PATH = process.env.IMAGE_PATH || '.img';
+const IMAGE_FILE = process.env.IMAGE_FILE || '.pdf';
 
 async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
   try {
@@ -20,7 +26,7 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
     );
     const channel: Channel = await connection.createChannel();
 
-    const queue: string = enumMessengerCoda.queueBollettino;
+    const queue: string = enumMessengerCoda.queueMultaBollettino;
 
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });
@@ -34,7 +40,7 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
         if (msg) {
           const content: string = msg.content.toString();
           console.log(
-            enumMessengerCoda.queueBollettino + `: Ricevuto: ${content}`,
+            enumMessengerCoda.queueMultaBollettino + `: Ricevuto: ${content}`,
           );
           const parsedContent =
             typeof content === 'string' ? JSON.parse(content) : content;
@@ -100,12 +106,12 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
                 align: 'center',
               });
 
-              // Aggiungere l'immagine della targa (esempio: path a un'immagine)
               const targaImagePath = path.join(
-                __dirname,
-                'immagini',
-                'targa.jpg',
+                '/',
+                IMAGE_PATH,
+                transito.get_path_immagine() || '',
               );
+
               if (fs.existsSync(targaImagePath)) {
                 doc.text(`\nImmagine della targa:`, 50, 320, { align: 'left' }); // Posiziona il testo esplicitamente
                 doc.image(targaImagePath, 50, 350, {
@@ -115,11 +121,12 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
                 });
               }
 
-              // Definisci il percorso di salvataggio del PDF
+              const fileNamePDF:string = `bollettino_${objBollettino.get_id_multa()}.pdf`;
+
               const pdfPath = path.join(
-                __dirname,
-                'bollettini',
-                `bollettino_${objBollettino.get_id_multa()}.pdf`,
+                '/',
+                IMAGE_FILE,
+                fileNamePDF,
               );
 
               // Crea la directory 'bollettini' se non esiste
@@ -136,6 +143,9 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
 
               writeStream.on('finish', () => {
                 console.log(`PDF salvato correttamente su: ${pdfPath}`);
+
+                serviceMulta.updateFieldsBollettino(objBollettino, {path_bollettino: fileNamePDF, stato: enumBollettinoStato.emesso});
+
               });
 
               writeStream.on('error', (err) => {

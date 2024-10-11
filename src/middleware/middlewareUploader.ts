@@ -43,7 +43,7 @@ export class middlewareUploader {
         if (mimetype && extname) {
           return cb(null, true);
         } else {
-          cb(new Error('Solo immagini sono permesse!'));
+          cb(new Error('Solo immagini sono permesse!:' + IMAGE_TYPE));
         }
       },
     });

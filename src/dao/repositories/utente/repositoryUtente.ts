@@ -40,12 +40,13 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   }
   async saveUtenteProfili(t: eUtente, ps: eProfilo[]): Promise<eUtente | null> {
     let result: eUtente | null = null;
+    
     const transaction: Transaction = await db.transaction();
 
     try {
       const options = { transaction };
 
-      const utenteNew = await this.daoUtente.save(t, options);
+      const utenteNew = await daoUtente.save(t, options);
       if (utenteNew) {
         const result_sub: Boolean = await daoUtente.saveUtentiProfili(
           utenteNew,
@@ -53,13 +54,13 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
           options,
         );
         if (result_sub) {
-          await transaction.commit;
+          await transaction.commit();
           result = utenteNew;
         }
       }
     } catch (err) {
-      throw new Error(`error: ${err}`);
       await transaction.rollback();
+      throw new Error(`error: ${err}`);     
     }
 
     return result;
@@ -80,12 +81,12 @@ class repositoryUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
         options,
       );
       if (result_sub) {
-        await transaction.commit;
+        await transaction.commit();
         result = true;
       }
     } catch (err) {
-      throw new Error(`error: ${err}`);
       await transaction.rollback();
+      throw new Error(`error: ${err}`);
     }
 
     return result;

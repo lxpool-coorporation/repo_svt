@@ -226,8 +226,8 @@ export class daoTransitoImplementation
         FROM svt_transito t_usc
         JOIN svt_tratta tr ON (tr.id_varco_uscita = t_usc.id_varco)
         JOIN svt_transito t_ing ON (t_ing.id_varco = tr.id_varco_ingresso)
-        WHERE t_usc.id = :idTransitoUscita
-        ORDER BY t_ing.data_transito ASC
+        WHERE t_usc.id = :idTransitoUscita AND t_usc.data_transito>t_ing.data_transito
+        ORDER BY t_ing.data_transito DESC
         LIMIT 1;`,
         {
           replacements: { idTransitoUscita: idTransitoUscita },

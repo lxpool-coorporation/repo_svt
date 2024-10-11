@@ -240,6 +240,87 @@ export class daoMultaSpeedControlImplementation
     // Verifica se c'è un risultato e ritorna il valore
     return results[0];
   }
+
+  async getAllMulteSpeedControlToAutomobilista(
+    dataInizio: Date,
+    dataFine: Date,
+    arrayTarghe: string[],
+    idUtente: number,
+  ): Promise<eMultaSpeedControl[] | null> {
+    let result = null;
+
+    try {
+
+
+      const targhe:string = arrayTarghe.join(', ');
+
+      const rawMulte = await db.query(
+        `SELECT t_mlt.*,t_mlt_sc.*
+         FROM svt_multa t_mlt
+         LEFT JOIN svt_multa_speed_control t_mlt_sc ON (t_mlt.id=t_mlt_sc.id_multa)
+         LEFT JOIN svt_veicolo vc ON (t_mlt.id_veicolo = vc.id)
+         LEFT JOIN svt_transito trn ON (t_mlt.id_transito=trn.id)
+         WHERE t_mlt.id_automobilista=:id_utente AND vc.targa IN (:targhe) 
+         AND trn.data_transito>=:dataInizio AND trn.data_transito<=:dataFine;`,
+        {
+          replacements: { targhe: arrayTarghe, dataInizio: dataInizio, dataFine: dataFine, id_utente: idUtente },
+          type: QueryTypes.SELECT,
+        },
+      );
+
+
+
+      const objMulte:eMultaSpeedControl[]|null = rawMulte.map((multa) => {
+          return eMultaSpeedControl.fromJSON(multa);
+      });
+      
+      result = objMulte;
+    } catch (error) {
+      throw new Error('getAllMulteToAutomobilista error: ' + error);
+    }
+    return result;
+  }
+
+  async getAllMulteSpeedControlToOperatore(
+    dataInizio: Date,
+    dataFine: Date,
+    arrayTarghe: string[],
+    idUtente: number,
+  ): Promise<eMultaSpeedControl[] | null> {
+    let result = null;
+
+    try {
+
+
+      const targhe:string = arrayTarghe.join(', ');
+
+      const rawMulte = await db.query(
+        `SELECT t_mlt.*,t_mlt_sc.*
+         FROM svt_multa t_mlt
+         LEFT JOIN svt_multa_speed_control t_mlt_sc ON (t_mlt.id=t_mlt_sc.id_multa)
+         LEFT JOIN svt_veicolo vc ON (t_mlt.id_veicolo = vc.id)
+         LEFT JOIN svt_transito trn ON (t_mlt.id_transito=trn.id)
+         WHERE vc.targa IN (:targhe) 
+         AND trn.data_transito>=:dataInizio AND trn.data_transito<=:dataFine;`,
+        {
+          replacements: { targhe: arrayTarghe, dataInizio: dataInizio, dataFine: dataFine},
+          type: QueryTypes.SELECT,
+        },
+      );
+
+
+
+      const objMulte:eMultaSpeedControl[]|null = rawMulte.map((multa) => {
+          return eMultaSpeedControl.fromJSON(multa);
+      });
+      
+      result = objMulte;
+    } catch (error) {
+      throw new Error('getAllMulteToOperatore error: ' + error);
+    }
+    return result;
+  }
+
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

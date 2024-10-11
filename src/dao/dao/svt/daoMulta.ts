@@ -1,11 +1,15 @@
 import { DaoInterfaceGeneric } from '../../interfaces/generic/daoInterfaceGeneric';
 import { eMulta } from '../../../entity/svt/eMulta';
-import { Transaction } from 'sequelize';
+import { QueryTypes, Transaction } from 'sequelize';
 
 import dbOrm from '../../../models'; // Importa tutti i modelli e l'istanza Sequelize
 import { ormMulta } from '../../../models/svt/ormMulta';
 import { enumPolicyTipo } from '../../../entity/enum/enumPolicyTipo';
 import { enumMultaStato } from '../../../entity/enum/enumMultaStato';
+import database from '../../../utils/database';
+
+
+const db = database.getInstance();
 
 // Implementazione del DAO per l'entità `Multa`
 export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
@@ -208,6 +212,35 @@ export class daoMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     }
     await ormObj.destroy({ transaction: options?.transaction });
   }
+
+  async getAllMultePendingByTarga(
+      targa: string,
+    ): Promise<eMulta[] | null> {
+      let result = null;
+
+      try {
+        const rawMulte = await db.query(
+          `SELECT t_mlt.*
+           FROM svt_multa t_mlt
+           LEFT JOIN svt_veicolo vc ON (t_mlt.id_veicolo = vc.id)
+           WHERE t_mlt.id_automobilista is NULL AND vc.targa=:targa;`,
+          {
+            replacements: { targa: targa },
+            type: QueryTypes.SELECT,
+          },
+        );
+
+        const objMulte:eMulta[]|null = rawMulte.map((multa) => {
+            return eMulta.fromJSON(multa);
+        });
+        
+        result = objMulte;
+      } catch (error) {
+        throw new Error('getAllMultePendingByTarga error: ' + error);
+      }
+      return result;
+    }
+
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

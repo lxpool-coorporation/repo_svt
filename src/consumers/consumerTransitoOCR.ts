@@ -60,8 +60,10 @@ async function startTaskTransitoOCRConsumer(): Promise<void> {
               } else {
                   
                   const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
-                  if (targaRegex.test(targa) === false) {
+                  if (targaRegex.test(targa)) {
                     
+                    console.log('targa verified: ' + targa);
+
                     let idVeicolo:number|null = null;
 
                     let objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloByTarga(targa);
@@ -74,9 +76,12 @@ async function startTaskTransitoOCRConsumer(): Promise<void> {
                       }
                     }
                     if(idVeicolo){
+                      objTransito.set_id_veicolo(idVeicolo);
                       await serviceTransito.updateFieldsTransito(objTransito, {id_veicolo: idVeicolo, stato: enumTransitoStato.elaborato });
                     }
 
+                  }else{
+                    console.log('NOT targa verified: ' + targa);
                   }
                   
               }

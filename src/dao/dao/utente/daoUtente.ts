@@ -193,7 +193,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   ): Promise<Boolean> {
     let result = false;
     try {
-      profili.forEach(async (prf) => {
+      for (const prf of profili) {
         await dbOrm.ormUtenteProfilo.create(
           {
             id_utente: utente.get_id(),
@@ -202,7 +202,8 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
           },
           { transaction: options?.transaction },
         );
-      });
+      }
+  
 
       result = true;
 
@@ -225,7 +226,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
   ): Promise<Boolean> {
     let result = false;
     try {
-      veicoli.forEach(async (prf) => {
+      for (const prf of veicoli) {
         await dbOrm.ormUtenteVeicolo.create(
           {
             id_utente: utente.get_id(),
@@ -234,7 +235,7 @@ export class daoUtenteImplementation implements DaoInterfaceGeneric<eUtente> {
           },
           { transaction: options?.transaction },
         );
-      });
+      };
 
       result = true;
 

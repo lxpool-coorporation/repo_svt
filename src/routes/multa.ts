@@ -15,4 +15,11 @@ routerMulta.get(
   controllerMulta.getAll,
 );
 
+routerMulta.get(
+  '/download/:id',
+  middlewareAuth.verifyToken,
+  middlewareMulta.checkPermissionRead,
+  controllerMulta.download,
+);
+
 export default routerMulta;

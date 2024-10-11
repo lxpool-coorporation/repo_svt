@@ -18,6 +18,18 @@ import { enumBollettinoStato } from '../entity/enum/enumBollettinoStato';
 import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import { v4 as uuidv4 } from 'uuid';
 import messenger from '../utils/messenger';
+import { serviceUtente } from './serviceUtente';
+import { eProfilo } from '../entity/utente/eProfilo';
+import { serviceVarco } from './serviceVarco';
+import { serviceTransito } from './serviceTransito';
+import { eVarco } from '../entity/svt/eVarco';
+import { eVistaTratta } from '../entity/vista/eVistaTratta';
+import { serviceVeicolo } from './serviceVeicolo';
+import { eVeicolo } from '../entity/svt/eVeicolo';
+import { eVistaMulta } from '../entity/vista/eVistaMulta';
+import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
+import { eVistaTransito } from '../entity/vista/eVistaTransito';
+import { enumExportFormato } from '../entity/enum/enumExportFormato';
 
 // classe che gestisce la logica di business dell'MultaSpeedControl
 class serviceMultaSpeedControlImplementation {
@@ -49,7 +61,7 @@ class serviceMultaSpeedControlImplementation {
 
       return MultaSpeedControl;
     } catch (err) {
-      logger.error('serviceSvt - err:', err);
+      logger.error('serviceMulta - err:', err);
       return null;
     }
   }
@@ -177,7 +189,8 @@ class serviceMultaSpeedControlImplementation {
     try {
       const redisClient = await databaseCache.getInstance();
 
-      await repositoryMulta.updateFields(objMulta, fieldsToUpdate);
+      await repositoryMulta.updateFieldsMulta(objMulta, fieldsToUpdate);
+      await this.refreshMultaStato(objMulta);
 
       // Invalida la cache dell'Multa aggiornato e la cache generale
       await redisClient.del(`Multa_${objMulta.get_id()}`);
@@ -189,6 +202,8 @@ class serviceMultaSpeedControlImplementation {
 
   // Funzione per calcolare la differenza di tempo in ore
   calcolaDifferenzaOre(transitoIn: Date, transitoOut: Date): number {
+    console.log(transitoIn)
+    console.log(transitoOut)
     const diffInMillis = transitoOut.getTime() - transitoIn.getTime(); // Differenza in millisecondi
     const diffInHours = diffInMillis / (1000 * 60 * 60); // Converti in ore
     return diffInHours;
@@ -271,6 +286,9 @@ class serviceMultaSpeedControlImplementation {
 
         console.log("speed_real: " + speed_real);
 
+        console.log(`id transito ing: ${transitoIngresso.get_id()}`)
+        console.log(`id transito usc: ${transitoUscita.get_id()}`)
+
         const tolleranza = this.calcolaTolleranza(speed_real); // Calcola la tolleranza
 
         const speed = speed_real - tolleranza; // Sottrai la tolleranza dalla velocità media
@@ -345,7 +363,7 @@ class serviceMultaSpeedControlImplementation {
 
             if(objMulta){
               const statoMulta:enumMultaStato = this.getMultaStato(objMulta);
-
+              result=objMulta
             }
 
             console.log(
@@ -377,6 +395,10 @@ class serviceMultaSpeedControlImplementation {
         idAutomobilista,
       );
     return result;
+  }
+
+  getAllMultePendingByTarga(targa: string): Promise<eMulta[]|null> {
+    return repositoryMulta.getAllMultePendingByTarga(targa);
   }
 
   // METODI BOLLETTINO
@@ -455,7 +477,7 @@ class serviceMultaSpeedControlImplementation {
 
           // Invia un messaggio alla coda 'tasks_queue'
           await rabbitMQ.sendToQueue(
-            enumMessengerCoda.queueBollettino,
+            enumMessengerCoda.queueMultaBollettino,
             JSON.stringify(result),
           );
         }
@@ -481,6 +503,14 @@ class serviceMultaSpeedControlImplementation {
             return null;
           }
         },
+        () => {
+          // "non processabile" se manca id_veicolo e path_immagine è null
+          if (multa.get_id_automobilista()) {
+            return enumMultaStato.elaborato;
+          } else {
+            return null;
+          }
+        },
       ];
 
       // Trova la prima regola che soddisfa la condizione
@@ -497,16 +527,16 @@ class serviceMultaSpeedControlImplementation {
       //multa.set_stato(nuovoStato);
       //}
     } catch (err) {
-      logger.error('serviceSvt - err:', err);
+      logger.error('serviceMulta - err:', err);
     }
 
     return result;
   };
 
-  async refreshMulta(objMulta: eMulta): Promise<void> {
+  async refreshMultaStato(objMulta: eMulta): Promise<void> {
     try {
       const statoUpdated: enumMultaStato = this.getMultaStato(objMulta);
-
+      await repositoryMulta.updateFieldsMulta(objMulta, {stato: statoUpdated});
       switch (statoUpdated) {
         case enumMultaStato.in_attesa:
           if (!objMulta.get_id_automobilista()) {
@@ -518,30 +548,178 @@ class serviceMultaSpeedControlImplementation {
               enumMessengerCoda.queueCheckMultaAutomobilista,
               JSON.stringify(objMulta),
             );
-          }
-          case enumMultaStato.elaborato:
-            if (objMulta.get_id_automobilista()) {
+          }else{
 
-              const objBollettino:eBollettino|null = await this.getBollettinoByIdMulta(objMulta.get_id());
-              if(!(objBollettino)){
+            const objBollettino:eBollettino|null = await this.getBollettinoByIdMulta(objMulta.get_id());
+            if(!(objBollettino)){
 
-                const rabbitMQ = messenger.getInstance();
-                // Connessione a RabbitMQ
-                await rabbitMQ.connect();
-                // Invia un messaggio alla coda 'tasks_queue'
-                await rabbitMQ.sendToQueue(
-                  enumMessengerCoda.queueCheckMultaBollettino,
-                  JSON.stringify(objMulta),
-                );
-
-              }
+              const rabbitMQ = messenger.getInstance();
+              // Connessione a RabbitMQ
+              await rabbitMQ.connect();
+              // Invia un messaggio alla coda 'tasks_queue'
+              await rabbitMQ.sendToQueue(
+                enumMessengerCoda.queueCheckMultaBollettino,
+                JSON.stringify(objMulta),
+              );
 
             }
+
+          }
+        case enumMultaStato.elaborato:
+          if (objMulta.get_id_automobilista()) {
+
+            const objBollettino:eBollettino|null = await this.getBollettinoByIdMulta(objMulta.get_id());
+            if(!(objBollettino)){
+
+              const rabbitMQ = messenger.getInstance();
+              // Connessione a RabbitMQ
+              await rabbitMQ.connect();
+              // Invia un messaggio alla coda 'tasks_queue'
+              await rabbitMQ.sendToQueue(
+                enumMessengerCoda.queueCheckMultaBollettino,
+                JSON.stringify(objMulta),
+              );
+
+            }
+
+          }
       }
     } catch (err) {
       throw new Error(`refreshMultaStato: ${err}`);
     }
   }
+
+  async updateFieldsBollettino(
+    objBollettino: eBollettino,
+    fieldsToUpdate: Partial<{
+      id_multa: number | null,
+      uuid: string | null,
+      importo: number | null,
+      path_bollettino: string | null,
+      stato: enumBollettinoStato | null,
+    }>,
+  ): Promise<void> {
+    try {
+      const redisClient = await databaseCache.getInstance();
+
+      await repositoryMulta.updateFieldsBollettino(objBollettino, fieldsToUpdate);
+
+      // Invalida la cache dell'Bollettino aggiornato e la cache generale
+      await redisClient.del(`Bollettino_${objBollettino.get_id()}`);
+      await redisClient.del('Bollettino_tutti');
+    } catch (err) {
+      throw new Error(`serviceMulta - updateFields: ${err}`);
+    }
+  }
+
+  async getAllMulteExport(
+    formato: enumExportFormato,
+    dataInizio: Date,
+    dataFine: Date,
+    arrayTarghe: string[],
+    idUtente: number): Promise<string|null>{
+      
+      let result:string|null = null;
+
+      try{
+        console.log("sono qui -----------------")
+        const objProfili:eProfilo[]|null = await serviceUtente.getProfiliByIdUtente(idUtente);
+        if(objProfili){
+          let isOperatore:Boolean = false;
+          const indexOperatore = objProfili.findIndex((obj) => {
+            return obj.get_id() === 1;
+          });
+          if(indexOperatore>-1){
+            isOperatore = true;
+          }
+
+          let arrayMulte:eMultaSpeedControl[]|null = null;
+          if(isOperatore){
+            arrayMulte = await repositoryMulta.getAllMulteSpeedControlToOperatore(dataInizio, dataFine, arrayTarghe, idUtente);
+          }else{
+            arrayMulte = await repositoryMulta.getAllMulteSpeedControlToAutomobilista(dataInizio, dataFine, arrayTarghe, idUtente);
+          }
+
+          if(arrayMulte && arrayMulte.length>0){
+
+
+            const arrayVistaMulte: eVistaMulta[] = []; // Inizializza l'array vuoto
+
+            //(tratta: varco in, varco out, velocità media, delta rispetto al limite, condizioni ambientali)
+            for(const objMulta of arrayMulte){
+
+              const idTransitoUscita:number|null = objMulta.get_id_transito();
+              if(idTransitoUscita){
+                const objTransitoUscita:eTransito|null = await serviceTransito.getTransitoById(idTransitoUscita);
+                if(!(objTransitoUscita)){
+                    throw new Error(`transito null: `);
+                }
+
+                const objTransitoIngresso: eTransito | null =
+                await repositoryTransito.getTransitoIngressoByTransitoUscita(
+                    objTransitoUscita.get_id(),
+                  );
+                if (!objTransitoIngresso) {
+                    throw new Error(`transito ingresso null: `);
+                }
+                
+                const idVeicolo:number|null = objMulta.get_id_veicolo();
+                if(!idVeicolo){
+                  throw new Error(`Id veicolo null: `);
+                }
+                const objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloById(idVeicolo)
+                if(!objVeicolo){
+                  throw new Error(`veicolo null: `);
+                }
+
+                const objTratta: eTratta | null =
+                await repositoryTratta.getTrattaByIdVarcoUscita(
+                  objTransitoUscita.get_id_varco(),
+                );
+                if(!(objTratta)){
+                  throw new Error(`tratta null: `);
+                }
+
+                const objVarcoIngresso:eVarco|null = await serviceVarco.getVarcoById(objTratta.get_id_varco_ingresso());
+                if(!objVarcoIngresso){
+                  throw new Error(`varco ingresso null: `);
+                }
+                const objVarcoUscita:eVarco|null = await serviceVarco.getVarcoById(objTratta.get_id_varco_uscita());
+                if(!objVarcoUscita){
+                  throw new Error(`varco uscita null: `);
+                }
+                const objMeteo:enumMeteoTipo|null = objTransitoUscita.get_meteo();
+                if(!objMeteo){
+                  throw new Error(`meteo null: `);
+                }
+
+                const vistaTransitoIngresso:eVistaTransito = new eVistaTransito(objTransitoIngresso.get_id(),objTransitoIngresso.get_data_transito(),objTransitoIngresso.get_speed(),objTransitoIngresso.get_speed_real(),objVarcoIngresso,objTransitoIngresso.get_meteo(),objVeicolo,objTransitoIngresso.get_path_immagine(),objTransitoIngresso.get_stato());
+                const vistaTransitoUscita:eVistaTransito = new eVistaTransito(objTransitoIngresso.get_id(),objTransitoIngresso.get_data_transito(),objTransitoIngresso.get_speed(),objTransitoIngresso.get_speed_real(),objVarcoIngresso,objTransitoIngresso.get_meteo(),objVeicolo,objTransitoIngresso.get_path_immagine(),objTransitoIngresso.get_stato());
+                const vistaTratta:eVistaTratta = new eVistaTratta(objTratta.get_id(),objTratta.get_cod(), objTratta.get_descrizione(),
+                vistaTransitoIngresso, vistaTransitoUscita, objTratta.get_distanza(),objTratta.get_stato());
+                const vistaMulta:eVistaMulta = new eVistaMulta(objMulta.get_id(), vistaTratta, objVeicolo, objMeteo, objMulta.get_speed(), objMulta.get_speed_delta());
+                
+                arrayVistaMulte.push(vistaMulta);
+                
+              }
+              
+
+            }
+
+            switch(formato){
+              case enumExportFormato.JSON:
+                result = JSON.stringify(arrayVistaMulte);
+            }
+          }
+        }
+
+      }catch(err){
+        throw new Error(`errore in getAllMulteExport ${err}`);
+      }
+
+      return result;
+    }
+
 }
 
 export const serviceMulta = new serviceMultaSpeedControlImplementation();

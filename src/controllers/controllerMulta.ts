@@ -6,9 +6,15 @@ import { enumPermessoCategoria } from '../entity/enum/enumPermessoCategoria';
 import { Request, Response, NextFunction } from 'express';
 import { retMiddleware } from '../utils/retMiddleware';
 import { eMulta } from '../entity/svt/eMulta';
-//import { serviceMulta } from '../services/serviceMulta';
+import { isString } from '../utils/utils';
+import { serviceMulta } from '../services/serviceMulta';
+import { eBollettino } from '../entity/svt/eBollettino';
+import fs from 'fs';
+import path from 'path';
+import { enumExportFormato } from '@/entity/enum/enumExportFormato';
 
 dotenv.config();
+const IMAGE_FILE = process.env.IMAGE_FILE || '.pdf';
 
 export class controllerMulta {
   private constructor() {}
@@ -46,12 +52,20 @@ export class controllerMulta {
       // Se il parametro 'stato' esiste, splitto per ottenere l'array
       const format: string | undefined = req.query.format as string;
 
-      let varchi: eMulta[] = [];
+      let multeResult:string|null = null;
       if (arrayTarghe.length > 0 || arrayTarghe.length > 0) {
+        
         console.log(arrayTarghe);
         console.log(dataInizioString);
         console.log(dataFineString);
         console.log(format);
+        console.log(req.userId);
+
+
+        const formatoEnum = format as enumExportFormato;
+        multeResult = await serviceMulta.getAllMulteExport(formatoEnum,dataInizioString,dataFineString,arrayTarghe,req.userId);
+
+
         /*
          */
       } else {
@@ -59,8 +73,8 @@ export class controllerMulta {
           message: 'errore caricamento multe, nessuna targa da cercare',
         });
       }
-      if (!!varchi) {
-        ret.setResponse(200, varchi);
+      if (!!multeResult) {
+        ret.setResponse(200, multeResult);
       } else {
         ret.setResponse(404, { message: 'errore caricamento multe' });
       }
@@ -69,5 +83,54 @@ export class controllerMulta {
       ret.setResponse(500, { message: 'errore caricamento multe' });
     }
     ret.returnResponseJson(res, next);
+  };
+
+  public static download = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    let ret: retMiddleware = new retMiddleware();
+    let transferComplete: boolean = false;
+    try {
+      if (isString(req.params.id)) {
+        const bollettino: eBollettino | null =
+          await serviceMulta.getBollettinoById(parseInt(req.params.id));
+        if (!!bollettino) {
+          // Percorso assoluto del file da scaricare
+          const filePath = path.join(
+            '/',
+            IMAGE_FILE,
+            bollettino.get_path_bollettino() || '',
+          );
+          console.log(filePath);
+          // Verifica se il file esiste
+          if (fs.existsSync(filePath)) {
+            // Invia il file al client
+            transferComplete = true;
+            res.sendFile(filePath, (err) => {
+              if (err) {
+                transferComplete = false;
+                ret.setResponse(500, {
+                  message: 'Errore durante il download del file.',
+                });
+              }
+            });
+          } else {
+            ret.setResponse(404, { message: 'File non trovato.' });
+          }
+        } else {
+          ret.setResponse(404, { message: 'bollettino non presente' });
+        }
+      } else {
+        ret.setResponse(400, { message: 'chiave non presente' });
+      }
+    } catch (error: any) {
+      logger.error('controllerBollettino.download :' + error?.message);
+      ret.setResponse(500, { message: 'errore caricamento bollettino' });
+    }
+    if (transferComplete === false) {
+      ret.returnResponseJson(res, next);
+    }
   };
 }

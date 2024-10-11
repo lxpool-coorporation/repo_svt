@@ -18,6 +18,9 @@ import { stereoRectifyUncalibrated } from 'opencv4nodejs';
 import startTaskGenerazioneBollettinoConsumer from './consumers/consumerGenerazioneBollettino';
 import startTaskCheckMultaAutomobilistaConsumer from './consumers/consumerCheckMultaAutomobilista';
 import startTaskCheckMultaBollettinoConsumer from './consumers/consumerCheckMultaBollettino';
+import startTaskTransitoOCRConsumer from './consumers/consumerTransitoOCR';
+import { serviceMulta } from './services/serviceMulta';
+import { enumExportFormato } from './entity/enum/enumExportFormato';
 dotenv.config();
 logger.info('app started');
 
@@ -76,6 +79,7 @@ app
     startTaskCheckMultaAutomobilistaConsumer();
     startTaskCheckMultaBollettinoConsumer();
     startTaskGenerazioneBollettinoConsumer();
+    startTaskTransitoOCRConsumer();
     logger.info('Server in esecuzione su http://localhost:' + String(PORT));
   })
   .on('error', (err: Error) => {
@@ -106,8 +110,16 @@ async function _readUser2() {
   // CHECK MULTA
   //const objMulta = await serviceMulta.getMultaSpeedControlById(1);
   //console.log(objMulta)
-  /*
 
+  //const dataInizio = new Date(2022, 0, 1, 10, 0, 0);
+  //const dataFine = new Date(2024, 11, 1, 10, 0, 0);
+  //const arrayTarghe:string[] = ['DEK896AE','DF334HW','ARM10ST'];
+  //await serviceMulta.getAllMulteExport(enumExportFormato.JSON, dataInizio,dataFine,arrayTarghe,11);
+
+
+
+  /*
+  
   const objTransito = await serviceTransito.getTransitoById(2);
   if (objTransito) {
     const multa = await serviceMulta.verificaSanzione(objTransito);

@@ -15,6 +15,7 @@ import {
 import { eBollettino } from '../../../entity/svt/eBollettino';
 import { enumPolicyTipo } from '../../../entity/enum/enumPolicyTipo';
 import { enumMultaStato } from '../../../entity/enum/enumMultaStato';
+import { enumBollettinoStato } from '../../../entity/enum/enumBollettinoStato';
 
 const db = database.getInstance();
 
@@ -157,6 +158,10 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     return result.length > 0;
   }
 
+  getAllMultePendingByTarga(targa: string): Promise<eMulta[]|null> {
+    return daoMulta.getAllMultePendingByTarga(targa);
+  }
+
   // METODI BOLLETTINO
 
   getBollettinoById(id: number): Promise<eBollettino | null> {
@@ -182,7 +187,7 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
     return daoMultaSpeedControl.getImportoMulta(idMulta);
   }
 
-  updateFields(
+  updateFieldsMulta(
     t: eMulta,
     fieldsToUpdate: Partial<{
       id_transito: number | null,
@@ -198,6 +203,36 @@ class repositoryMultaImplementation implements DaoInterfaceGeneric<eMulta> {
   ): Promise<void> {
     return this.daoMulta.updateFields(t, fieldsToUpdate, options);
   }
+
+  updateFieldsBollettino(
+      t: eBollettino,
+      fieldsToUpdate: Partial<{
+        id_multa: number | null,
+        uuid: string | null,
+        importo: number | null,
+        path_bollettino: string | null,
+        stato: enumBollettinoStato | null,
+      }>,
+      options?: object,
+    ): Promise<void> {
+      return this.daoBollettino.updateFields(t, fieldsToUpdate, options);
+    }
+
+    getAllMulteSpeedControlToOperatore(
+      dataInizio: Date,
+      dataFine: Date,
+      arrayTarghe: string[],
+      idUtente: number): Promise<eMultaSpeedControl[]|null>{
+        return daoMultaSpeedControl.getAllMulteSpeedControlToOperatore(dataInizio,dataFine,arrayTarghe,idUtente);
+      }
+
+    getAllMulteSpeedControlToAutomobilista(
+      dataInizio: Date,
+      dataFine: Date,
+      arrayTarghe: string[],
+      idUtente: number): Promise<eMultaSpeedControl[]|null>{
+        return daoMultaSpeedControl.getAllMulteSpeedControlToAutomobilista(dataInizio,dataFine,arrayTarghe,idUtente);
+      }
 
 }
 

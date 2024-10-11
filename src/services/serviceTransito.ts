@@ -104,7 +104,7 @@ class serviceTransitoImplementation {
       );
       const savedTransito = await repositoryTransito.save(nuovoTransito);
       if (savedTransito) {
-        this.refreshTransito(savedTransito);
+        await this.refreshTransito(savedTransito);
       }
 
       result = savedTransito;
@@ -186,7 +186,7 @@ class serviceTransitoImplementation {
 
       const savedTransito = await repositoryTransito.save(nuovoTransito);
       if (savedTransito) {
-        this.refreshTransito(savedTransito);
+        await this.refreshTransito(savedTransito);
       }
 
       result = savedTransito;
@@ -273,7 +273,7 @@ class serviceTransitoImplementation {
 
     await repositoryTransito.update(Transito);
 
-    this.refreshTransito(Transito);
+    await this.refreshTransito(Transito);
 
     // Invalida la cache dell'Transito aggiornato e la cache generale
     await redisClient.del(`Transito_${id}`);
@@ -308,6 +308,8 @@ class serviceTransitoImplementation {
     );
     await repositoryTransito.update(Transito);
 
+    await this.refreshTransito(Transito);
+
     // Invalida la cache dell'Transito aggiornato e la cache generale
     await redisClient.del(`Transito_${id}`);
     await redisClient.del('Transiti_tutti');
@@ -320,16 +322,17 @@ class serviceTransitoImplementation {
       speed: number;
       speed_real: number;
       id_varco: number;
-      meteo: string;
+      meteo: enumMeteoTipo;
       id_veicolo: number;
       path_immagine: string;
-      stato: string;
+      stato: enumTransitoStato;
     }>,
   ): Promise<void> {
     try {
       const redisClient = await databaseCache.getInstance();
 
       await repositoryTransito.updateFields(objTransito, fieldsToUpdate);
+      await this.refreshTransito(objTransito);
 
       // Invalida la cache dell'Transito aggiornato e la cache generale
       await redisClient.del(`Transito_${objTransito.get_id()}`);
@@ -360,7 +363,7 @@ class serviceTransitoImplementation {
       const rules: Array<() => enumTransitoStato | null> = [
         () => {
           // "non processabile" se manca id_veicolo e path_immagine è null
-          if (!transito.get_id_veicolo() && !transito.get_path_immagine()) {
+          if (!transito.get_id_veicolo() && !transito.get_meteo()) {
             return enumTransitoStato.in_attesa;
           } else {
             return null;
@@ -370,6 +373,14 @@ class serviceTransitoImplementation {
           // "acquisito" se entrambi id_veicolo e meteo sono valorizzati
           if (transito.get_id_veicolo() && transito.get_meteo()) {
             return enumTransitoStato.elaborato;
+          } else {
+            return null;
+          }
+        },
+        () => {
+          // "acquisito" se entrambi id_veicolo e meteo sono valorizzati
+          if (!transito.get_id_veicolo() && transito.get_path_immagine()) {
+            return enumTransitoStato.in_attesa_di_ocr;
           } else {
             return null;
           }
@@ -401,9 +412,11 @@ class serviceTransitoImplementation {
       const statoUpdated: enumTransitoStato =
         this.getTransitoStato(objTransito);
 
+      console.log("AAAAAAAAAAAAAAAAA" + statoUpdated + " - " + objTransito.get_stato());
+
       if(statoUpdated!==objTransito.get_stato()){
         objTransito.set_stato(statoUpdated);
-        await this.updateFieldsTransito(objTransito, {stato: statoUpdated});
+        await repositoryTransito.updateFields(objTransito, {stato: statoUpdated});
       }
 
       console.log("STATO REFRESH: " + statoUpdated);
@@ -421,6 +434,7 @@ class serviceTransitoImplementation {
               JSON.stringify(objTransito),
             );
           }
+        case enumTransitoStato.in_attesa_di_ocr:
           if (objTransito.get_path_immagine() && !(objTransito.get_id_veicolo())) {
             console.log("ENTRO IN STATO ELABORATO: not veicolo")
             const rabbitMQ = messenger.getInstance();
@@ -431,23 +445,6 @@ class serviceTransitoImplementation {
               enumMessengerCoda.queueTransitoOCR,
               JSON.stringify(objTransito),
             );
-          }
-          const idVeicolo:number | null = objTransito.get_id_veicolo();
-          if (idVeicolo && objTransito.get_meteo()) {
-            console.log("ENTRO IN STATO ELABORATO: meteo ee veicolo")
-            const objVeicolo:eVeicolo|null = await serviceVeicolo.getVeicoloById(idVeicolo);
-            if(objVeicolo){
-              if(objVeicolo.get_stato()==enumVeicoloStato.acquisito){
-                const rabbitMQ = messenger.getInstance();
-                // Connessione a RabbitMQ
-                await rabbitMQ.connect();
-                // Invia un messaggio alla coda 'tasks_queue'
-                await rabbitMQ.sendToQueue(
-                  enumMessengerCoda.queueCheckMulta,
-                  JSON.stringify(objTransito),
-                );
-              }
-            }
           }
         case enumTransitoStato.elaborato:
           console.log("ENTRO IN STATO ELABORATO")
