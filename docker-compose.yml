@@ -1,10 +1,9 @@
 services:
   app:
     build: .
-    command: ["/wait-for-it.sh", "svt-db:3306", "--", "npm", "run", "dev"]
+    command: ["/wait-for-it.sh", "svt-db:3306", "--", "npm", "run", "migrate-and-seed", "--", "npm", "run", "start"]
     volumes:
       - .:/app
-      - /app/node_modules
       - ./.keys/:/app/.keys/
     ports:
       - "3000:3000"
