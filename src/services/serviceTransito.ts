@@ -379,7 +379,15 @@ class serviceTransitoImplementation {
         },
         () => {
           // "acquisito" se entrambi id_veicolo e meteo sono valorizzati
-          if (!transito.get_id_veicolo() && transito.get_path_immagine()) {
+          if (!transito.get_id_veicolo() && transito.get_path_immagine() && transito.get_stato()==enumTransitoStato.illeggibile) {
+            return enumTransitoStato.illeggibile;
+          } else {
+            return null;
+          }
+        },
+        () => {
+          // "acquisito" se entrambi id_veicolo e meteo sono valorizzati
+          if (!transito.get_id_veicolo() && transito.get_path_immagine() && transito.get_stato()!==enumTransitoStato.illeggibile) {
             return enumTransitoStato.in_attesa_di_ocr;
           } else {
             return null;
@@ -412,8 +420,6 @@ class serviceTransitoImplementation {
       const statoUpdated: enumTransitoStato =
         this.getTransitoStato(objTransito);
 
-      console.log("AAAAAAAAAAAAAAAAA" + statoUpdated + " - " + objTransito.get_stato());
-
       if(statoUpdated!==objTransito.get_stato()){
         objTransito.set_stato(statoUpdated);
         await repositoryTransito.updateFields(objTransito, {stato: statoUpdated});
@@ -434,6 +440,7 @@ class serviceTransitoImplementation {
               JSON.stringify(objTransito),
             );
           }
+          break;
         case enumTransitoStato.in_attesa_di_ocr:
           if (objTransito.get_path_immagine() && !(objTransito.get_id_veicolo())) {
             console.log("ENTRO IN STATO ELABORATO: not veicolo")
@@ -446,6 +453,7 @@ class serviceTransitoImplementation {
               JSON.stringify(objTransito),
             );
           }
+          break;
         case enumTransitoStato.elaborato:
           console.log("ENTRO IN STATO ELABORATO")
           const rabbitMQ = messenger.getInstance();
@@ -456,6 +464,11 @@ class serviceTransitoImplementation {
             enumMessengerCoda.queueCheckMulta,
             JSON.stringify(objTransito),
           );
+          break;
+
+        default:
+          console.log("Nessuno stato corrispondente trovato.");
+          break;
       }
     } catch (err) {
       throw new Error(`refreshTransitoStato: ${err}`);

@@ -351,6 +351,7 @@ class serviceVeicoloImplementation {
                 JSON.stringify(objVeicolo),
               );
             }
+            break;
 
         case enumVeicoloStato.acquisito:
           if (objVeicolo.get_tipo()!==enumVeicoloTipo.indefinito) {
@@ -366,6 +367,11 @@ class serviceVeicoloImplementation {
 
             }
           }
+          break;
+          
+        default:
+          console.log("Nessuno stato corrispondente trovato.");
+          break;
       }
     } catch (err) {
       throw new Error(`refreshVeicoloStato: ${err}`);

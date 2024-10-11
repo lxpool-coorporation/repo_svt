@@ -568,6 +568,7 @@ class serviceMultaSpeedControlImplementation {
             }
 
           }
+          break;
         case enumMultaStato.elaborato:
           if (objMulta.get_id_automobilista()) {
 
@@ -586,6 +587,11 @@ class serviceMultaSpeedControlImplementation {
             }
 
           }
+          break;
+
+        default:
+          console.log("Nessuno stato corrispondente trovato.");
+          break;
       }
     } catch (err) {
       throw new Error(`refreshMultaStato: ${err}`);

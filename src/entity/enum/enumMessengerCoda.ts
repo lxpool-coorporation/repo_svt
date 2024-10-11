@@ -1,5 +1,4 @@
 export enum enumMessengerCoda {
-  queueTransito = 'queueTransito',
   queueTransitoMeteo = 'queueTransitoMeteo',
   queueTransitoOCR = 'queueTransitoOCR',
   queueCheckMulta = 'queueCheckMulta',

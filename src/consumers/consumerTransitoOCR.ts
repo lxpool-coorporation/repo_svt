@@ -55,8 +55,8 @@ async function startTaskTransitoOCRConsumer(): Promise<void> {
             const filePath = path.join(IMAGE_PATH, objTransito.get_path_immagine() || '');
               const targa = await controllerOcr.detectAndRecognizePlate(filePath);
               if (targa === '') {
-                  objTransito.set_stato(enumTransitoStato.indefinito);
-                  await serviceTransito.updateFieldsTransito(objTransito, {stato: enumTransitoStato.indefinito })
+                  objTransito.set_stato(enumTransitoStato.illeggibile);
+                  await serviceTransito.updateFieldsTransito(objTransito, {stato: enumTransitoStato.illeggibile })
               } else {
                   
                   const targaRegex = /^(?=.*[A-Z])(?=.*[0-9])[A-Z0-9]+$/;
