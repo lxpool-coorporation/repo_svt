@@ -338,7 +338,7 @@ export class controllerTransito {
                 idTransito,
                 transito?.get_data_transito(),
                 transito?.get_id_varco(),
-                transito?.get_stato(),
+                enumTransitoStato.in_attesa,
                 transito?.get_speed(),
                 transito?.get_speed_real(),
                 transito?.get_meteo(),

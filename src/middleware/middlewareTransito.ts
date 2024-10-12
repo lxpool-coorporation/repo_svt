@@ -199,6 +199,9 @@ export class middlewareTransito {
     let ret: retMiddleware = new retMiddleware();
     // per il metodo patch i controlli devono essere effettuati solo se il campo esiste
     let optional: boolean = req.method.toLowerCase() === 'patch';
+    let optionalImmagine: boolean =
+      req.method.toLowerCase() === 'put' ||
+      req.method.toLowerCase() === 'patch';
     let optionalTarga: boolean = optional;
 
     // verifico se l'utente ha ruolo varco, in questo caso imposto la data con l'ora del server e rendo opzionale la targa prima dei controlli
@@ -232,7 +235,7 @@ export class middlewareTransito {
       middlewareValidate.validateStatoTransito('stato', optional),
       middlewareValidate.validateNumber('speed', true),
       middlewareValidate.validateMeteo('meteo', optional),
-      middlewareValidate.validateImageFromReq('immagine', optional),
+      middlewareValidate.validateImageFromReq('immagine', optionalImmagine),
       middlewareValidate.validateDateISO8601('data_transito', optional),
       middlewareValidate.validateTarga('targa', optionalTarga),
       middlewareValidate.validateVeicoloTipo('veicolo_tipo', optional),

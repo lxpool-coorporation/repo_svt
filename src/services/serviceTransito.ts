@@ -99,6 +99,10 @@ class serviceTransitoImplementation {
     //return await repositoryTransito.getAll();
   }
 
+  async getAllTransitiByTarga(targa: string): Promise<eTransito[] | null> {
+    return await repositoryTransito.getAllTransitiByTarga(targa);
+  }
+
   /**
    *Crea un nuovo Transito
    *
@@ -140,7 +144,7 @@ class serviceTransitoImplementation {
       );
       const savedTransito = await repositoryTransito.save(nuovoTransito);
       if (savedTransito) {
-        await this.refreshTransito(savedTransito);
+        await this.refreshTransitoStato(savedTransito);
       }
 
       result = savedTransito;
@@ -240,7 +244,7 @@ class serviceTransitoImplementation {
 
       const savedTransito = await repositoryTransito.save(nuovoTransito);
       if (savedTransito) {
-        await this.refreshTransito(savedTransito);
+        await this.refreshTransitoStato(savedTransito);
       }
 
       result = savedTransito;
@@ -350,7 +354,7 @@ class serviceTransitoImplementation {
 
     await repositoryTransito.update(Transito);
 
-    await this.refreshTransito(Transito);
+    await this.refreshTransitoStato(Transito);
 
     // Invalida la cache dell'Transito aggiornato e la cache generale
     await redisClient.del(`Transito_${id}`);
@@ -399,7 +403,7 @@ class serviceTransitoImplementation {
     );
     await repositoryTransito.update(Transito);
 
-    await this.refreshTransito(Transito);
+    await this.refreshTransitoStato(Transito);
 
     // Invalida la cache dell'Transito aggiornato e la cache generale
     await redisClient.del(`Transito_${id}`);
@@ -440,7 +444,7 @@ class serviceTransitoImplementation {
       const redisClient = await databaseCache.getInstance();
 
       await repositoryTransito.updateFields(objTransito, fieldsToUpdate);
-      await this.refreshTransito(objTransito);
+      await this.refreshTransitoStato(objTransito);
 
       // Invalida la cache dell'Transito aggiornato e la cache generale
       await redisClient.del(`Transito_${objTransito.get_id()}`);
@@ -549,7 +553,7 @@ class serviceTransitoImplementation {
    * @return {*}  {Promise<void>}
    * @memberof serviceTransitoImplementation
    */
-  async refreshTransito(objTransito: eTransito): Promise<void> {
+  async refreshTransitoStato(objTransito: eTransito): Promise<void> {
     try {
       const statoUpdated: enumTransitoStato =
         this.getTransitoStato(objTransito);

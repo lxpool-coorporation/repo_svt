@@ -17,7 +17,7 @@ export default {
       },
       {
         id_utente: 2,
-        id_profilo: 1,
+        id_profilo: 2,
         createdAt: new Date(),
         updatedAt: new Date()
       },

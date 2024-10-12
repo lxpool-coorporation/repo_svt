@@ -14,6 +14,7 @@ import { enumTransitoStato } from '../entity/enum/enumTransitoStato';
 import { enumMeteoTipo } from '../entity/enum/enumMeteoTipo';
 import { enumExportFormato } from '../entity/enum/enumExportFormato';
 import { parseISO } from 'date-fns'; // Opzionale, per gestire meglio la data
+import { enumVeicoloStato } from '../entity/enum/enumVeicoloStato';
 
 dotenv.config();
 
@@ -70,6 +71,29 @@ export class middlewareValidate {
   ): ValidationChain => {
     let ret: ValidationChain = callback(campo).custom((value: any) => {
       if (!Object.values(enumStato).includes(value)) {
+        throw new Error('Stato non valido');
+      }
+      return true;
+    });
+    return optional ? ret.optional() : ret;
+  };
+
+  /**
+   *
+   *
+   * @static
+   * @param {string} campo
+   * @param {boolean} optional
+   * @param {Function} [callback=body]
+   * @memberof middlewareValidate
+   */
+  public static validateStatoVeicolo = (
+    campo: string,
+    optional: boolean,
+    callback: Function = body,
+  ): ValidationChain => {
+    let ret: ValidationChain = callback(campo).custom((value: any) => {
+      if (!Object.values(enumVeicoloStato).includes(value)) {
         throw new Error('Stato non valido');
       }
       return true;

@@ -5,7 +5,7 @@ class eVeicolo {
   //id numerico, tipo, targa, stato
   private id: number;
   private tipo: enumVeicoloTipo;
-  private targa: string;
+  private targa!: string;
   private stato: enumVeicoloStato;
 
   constructor(
@@ -16,7 +16,7 @@ class eVeicolo {
   ) {
     this.id = id;
     this.tipo = tipo;
-    this.targa = targa;
+    this.set_targa(targa);
     this.stato = stato;
   }
 
@@ -53,7 +53,7 @@ class eVeicolo {
     this.tipo = tipo;
   }
   set_targa(targa: string): void {
-    this.targa = targa;
+    this.targa = targa.toUpperCase();
   }
   set_stato(stato: enumVeicoloStato): void {
     this.stato = stato;

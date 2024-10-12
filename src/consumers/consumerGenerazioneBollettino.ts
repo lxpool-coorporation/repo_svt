@@ -26,7 +26,7 @@ async function startTaskGenerazioneBollettinoConsumer(): Promise<void> {
     );
     const channel: Channel = await connection.createChannel();
 
-    const queue: string = enumMessengerCoda.queueMultaBollettino;
+    const queue: string = enumMessengerCoda.queueGeneraBollettino;
 
     // Assicura che la coda esista
     await channel.assertQueue(queue, { durable: true });

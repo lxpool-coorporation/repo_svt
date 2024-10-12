@@ -3,6 +3,8 @@ import logger from '../utils/logger-winston';
 import { Request, Response, NextFunction } from 'express';
 import { controllerAuth, JwtPayload } from '../controllers/controllerAuth';
 import { retMiddleware } from '../utils/retMiddleware';
+import { serviceUtente } from '../services/serviceUtente';
+import { eUtente } from '../entity/utente/eUtente';
 
 dotenv.config();
 
@@ -27,11 +29,11 @@ export class middlewareAuth {
    * @param {NextFunction} next
    * @memberof middlewareAuth
    */
-  public static verifyToken = (
+  public static verifyToken = async (
     req: Request,
     _res: Response,
     next: NextFunction,
-  ): void => {
+  ): Promise<void> => {
     let ret: retMiddleware = new retMiddleware();
     try {
       const authHeader = req.headers.authorization;
@@ -42,7 +44,15 @@ export class middlewareAuth {
           const token = arrayToken[1]; // Estraiamo il token dall'header
           const decoded = controllerAuth.verifyToken(token) as JwtPayload;
           if (!!decoded) {
-            req.userId = decoded.id_utente;
+            const objUtente: eUtente | null =
+              await serviceUtente.getUtenteByIdentificativo(
+                decoded.identificativo,
+              );
+            if (!!objUtente) {
+              req.userId = objUtente.get_id();
+            } else {
+              ret.setResponse(401, { message: 'utente non esiste' });
+            }
           } else {
             ret.setResponse(401, { message: 'Token non valido' });
           }

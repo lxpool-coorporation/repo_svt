@@ -43,7 +43,7 @@ const options: SignOptions = {
  * @interface JwtPayload
  */
 export interface JwtPayload {
-  id_utente: number; // Aggiungiamo altre proprietà se hai più dati nel payload
+  identificativo: string; // Aggiungiamo altre proprietà se hai più dati nel payload
 }
 
 /**
@@ -65,16 +65,20 @@ export class controllerAuth {
    * @param {number} userId
    * @memberof controllerAuth
    */
-  public static generateToken = (userId: number): string => {
+  public static generateToken = (identificativo: string): string => {
     let ret: string = '';
     try {
-      if (!!userId && userId !== undefined) {
+      if (
+        !!identificativo &&
+        identificativo !== undefined &&
+        identificativo.trim() != ''
+      ) {
         const private_key = JWT_SECRET_PRIVATE; // Usiamo la chiave corretta in base all'ambiente
-        const payload = { id_utente: userId };
+        const payload: JwtPayload = { identificativo: identificativo };
         ret = jwt.sign(payload, private_key, options);
         logger.info(
-          'controllerAuth.generateToken : token generato per id [' +
-            String(userId) +
+          'controllerAuth.generateToken : token generato per identificativo [' +
+            identificativo +
             ']',
         );
       }
@@ -124,7 +128,9 @@ export class controllerAuth {
           await repositoryUtente.getByIdentificativo(identificativo);
         // Eseguiamo qui la validazione dell'utente
         if (!!user) {
-          const token: string = controllerAuth.generateToken(user.get_id()); // Passa l'ID utente
+          const token: string = controllerAuth.generateToken(
+            user.get_identificativo(),
+          ); // Passa l'ID utente
           if (!!token && token.trim() !== '') {
             ret.setResponse(200, { token });
           } else {

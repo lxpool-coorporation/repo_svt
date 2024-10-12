@@ -36,7 +36,7 @@ services:
       - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
       - IMAGE_PATH=${IMAGE_PATH}
       - IMAGE_TYPE=${IMAGE_TYPE}
-      - IMAGE_TYPE=${IMAGE_FILE}
+      - IMAGE_FILE=${IMAGE_FILE}
     networks:
       - app_network
      # Optionally, add restart policy

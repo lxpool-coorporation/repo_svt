@@ -12,6 +12,8 @@ import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import messenger from '../utils/messenger';
 import { serviceMulta } from './serviceMulta';
 import { eMulta } from '../entity/svt/eMulta';
+import { eTransito } from '../entity/svt/eTransito';
+import { serviceTransito } from './serviceTransito';
 
 /**
  *classe che gestisce la logica di business dell'Veicolo
@@ -289,6 +291,9 @@ class serviceVeicoloImplementation {
         } else {
         }
         if (!automobilista) {
+          logger.warn(
+            `automobilista non trovato per  checkaddusertarga: ${targa} - ${cf}`,
+          );
           throw new Error(`automobilista non creato/trovato`);
         }
 
@@ -304,7 +309,19 @@ class serviceVeicoloImplementation {
         if (!automobilista) {
           throw new Error(`automobilista from targa non trovato`);
         }
-        if (automobilista.get_identificativo() !== cf) {
+        if (automobilista.get_identificativo() !== cf.toUpperCase()) {
+          automobilista = await serviceUtente.getUtenteByIdentificativo(cf);
+          if (!automobilista) {
+            automobilista = await serviceUtente.createUtente(
+              cf,
+              profiliAutomobilista,
+              enumStato.attivo,
+            );
+          }
+          if (!automobilista) {
+            throw new Error(`automobilista non creato/trovato`);
+          }
+
           // TO DO -> delete vecchia associazione
           await serviceUtente.deleteAssociazioneUtenteVeicolo(
             automobilista.get_id(),
@@ -419,6 +436,16 @@ class serviceVeicoloImplementation {
 
         case enumVeicoloStato.acquisito:
           if (objVeicolo.get_tipo() !== enumVeicoloTipo.indefinito) {
+            const objTransiti: eTransito[] | null =
+              await serviceTransito.getAllTransitiByTarga(
+                objVeicolo.get_targa(),
+              );
+            if (objTransiti) {
+              objTransiti.forEach(async (transito: eTransito) => {
+                await serviceTransito.refreshTransitoStato(transito);
+              });
+            }
+
             const objMulte: eMulta[] | null =
               await serviceMulta.getAllMultePendingByTarga(
                 objVeicolo.get_targa(),

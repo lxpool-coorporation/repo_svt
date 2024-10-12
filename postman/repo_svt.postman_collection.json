@@ -1,61 +1,11 @@
 {
 	"info": {
-		"_postman_id": "4a4265f8-02ef-43cb-9a56-db9ed1e3c0ce",
+		"_postman_id": "5a38c9cf-82c0-4f5b-91d5-bcb32b8ecd17",
 		"name": "repo_svt",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "38812634"
 	},
 	"item": [
-		{
-			"name": "login",
-			"item": [
-				{
-					"name": "login",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Response time is less than 2000ms\", function () {",
-									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"identificativo\" : \"{{USER_VARCO}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{LOGIN_API}}",
-							"protocol": "{{PROTOCOL}}",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"{{LOGIN_API}}"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
 		{
 			"name": "varco",
 			"item": [
@@ -156,7 +106,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VARCO_API}}/9",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VARCO_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -164,7 +114,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{VARCO_API}}",
-								"9"
+								"1"
 							]
 						}
 					},
@@ -212,7 +162,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VARCO_API}}/9",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VARCO_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -220,7 +170,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{VARCO_API}}",
-								"9"
+								"1"
 							]
 						}
 					},
@@ -306,7 +256,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VARCO_API}}/9",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VARCO_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -314,7 +264,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{VARCO_API}}",
-								"9"
+								"1"
 							]
 						}
 					},
@@ -406,7 +356,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tipo\": \"automobile\",\n    \"targa\": \"PO786YY\",\n    \"stato\": \"attivo\"\n}",
+							"raw": "{\n    \"tipo\": \"automobile\",\n    \"targa\": \"PO786YY\",\n    \"stato\": \"acquisito\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -461,7 +411,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"identificativo\": \"AUTOMOBILISTA_1\",\n    \"targa\": \"PO786YY\"\n}",
+							"raw": "{\n    \"identificativo\": \"AUTOMOBILISTA_M\",\n    \"targa\": \"PP987UY\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -517,7 +467,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"tipo\": \"camion\",\n    \"targa\": \"TR568OW\",\n    \"stato\": \"attivo\"\n}",
+							"raw": "{\n    \"tipo\": \"camion\",\n    \"targa\": \"TR568OW\",\n    \"stato\": \"in_attesa\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -525,7 +475,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VEICOLO_API}}/8",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VEICOLO_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -533,7 +483,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{VEICOLO_API}}",
-								"8"
+								"1"
 							]
 						}
 					},
@@ -573,7 +523,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"targa\": \"LS776TE\"\n}",
+							"raw": "{\n    \"tipo\": \"automobile\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -581,7 +531,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VEICOLO_API}}/7",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VEICOLO_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -589,7 +539,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{VEICOLO_API}}",
-								"7"
+								"1"
 							]
 						}
 					},
@@ -675,7 +625,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VEICOLO_API}}/10",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VEICOLO_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -683,7 +633,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{VEICOLO_API}}",
-								"10"
+								"1"
 							]
 						}
 					},
@@ -722,14 +672,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VARCO_API}}/",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{VEICOLO_API}}/",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
 							],
 							"port": "{{PORT}}",
 							"path": [
-								"{{VARCO_API}}",
+								"{{VEICOLO_API}}",
 								""
 							]
 						}
@@ -931,7 +881,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRATTA_API}}/6",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRATTA_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -939,7 +889,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{TRATTA_API}}",
-								"6"
+								"1"
 							]
 						}
 					},
@@ -987,7 +937,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRATTA_API}}/6",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRATTA_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -995,7 +945,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{TRATTA_API}}",
-								"6"
+								"1"
 							]
 						}
 					},
@@ -1034,7 +984,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRATTA_API}}/5",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRATTA_API}}/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -1042,7 +992,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{TRATTA_API}}",
-								"5"
+								"1"
 							]
 						}
 					},
@@ -1142,7 +1092,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRANSITO_API}}/download/57",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRANSITO_API}}/download/1",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -1151,7 +1101,7 @@
 							"path": [
 								"{{TRANSITO_API}}",
 								"download",
-								"57"
+								"1"
 							]
 						}
 					},
@@ -1255,13 +1205,13 @@
 							"formdata": [
 								{
 									"key": "metadata",
-									"value": "{\n    \"data_transito\": \"2024-10-06T19:09:00\",\n    \"id_varco\": 1,\n    \"speed\" : 50,\n    \"meteo\": \"sereno\",\n    \"targa\" : \"FF999EE\",\n    \"veicolo_tipo\": \"automobile\"\n}",
+									"value": "{\n    \"data_transito\": \"2024-04-06T17:20:00\",\n    \"id_varco\": 2,\n    \"targa\": \"PP987UY\", \n    \"speed\" : 50,\n    \"meteo\": \"sereno\",\n    \"veicolo_tipo\": \"automobile\"\n}",
 									"type": "text"
 								},
 								{
 									"key": "immagine",
 									"type": "file",
-									"src": "/home/ovidio/node/app/targhe_repo/4.jpg"
+									"src": "/home/l.cirillo/personale/univpm/programmazione_avanzata/project/repo_svt/documentazione/esempi_targhe/3.jpg"
 								}
 							]
 						},
@@ -1315,14 +1265,14 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "metadata",
-									"value": "{\n  \"stato\": \"illegibile\"\n}",
-									"type": "text"
+									"key": "immagine",
+									"type": "file",
+									"src": "/home/l.cirillo/personale/univpm/programmazione_avanzata/project/repo_svt/documentazione/esempi_targhe/2.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRANSITO_API}}/3",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRANSITO_API}}/8",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -1330,7 +1280,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{TRANSITO_API}}",
-								"3"
+								"8"
 							]
 						}
 					},
@@ -1356,7 +1306,7 @@
 							"formdata": [
 								{
 									"key": "metadata",
-									"value": "{\n     \"data_transito\": \"2024-10-06T17:09:00.000Z\",\n    \"id_varco\": 1,\n    \"meteo\": \"sereno\",\n    \"targa\" : \"CC999DD\",\n    \"stato\": \"dubbia\"\n}",
+									"value": "{\n     \"data_transito\": \"2024-10-06T17:09:00.000Z\",\n    \"id_varco\": 1,\n    \"meteo\": \"sereno\",\n    \"targa\" : \"CC999DD\",\n    \"stato\": \"in attesa\"\n}",
 									"type": "text"
 								}
 							]
@@ -1409,7 +1359,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRANSITO_API}}/6",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{TRANSITO_API}}/3",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -1417,7 +1367,7 @@
 							"port": "{{PORT}}",
 							"path": [
 								"{{TRANSITO_API}}",
-								"6"
+								"3"
 							]
 						}
 					},
@@ -1466,7 +1416,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{MULTA_API}}?id_varco=&stato=illegibile",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{MULTA_API}}?data_inizio=2024-01-01&data_fine=2024-10-12&format=json&targa=DS456RE",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -1477,12 +1427,20 @@
 							],
 							"query": [
 								{
-									"key": "id_varco",
-									"value": ""
+									"key": "data_inizio",
+									"value": "2024-01-01"
 								},
 								{
-									"key": "stato",
-									"value": "illegibile"
+									"key": "data_fine",
+									"value": "2024-10-12"
+								},
+								{
+									"key": "format",
+									"value": "json"
+								},
+								{
+									"key": "targa",
+									"value": "DS456RE"
 								}
 							]
 						}
@@ -1531,7 +1489,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{MULTA_API}}/download/6",
+							"raw": "{{PROTOCOL}}://{{HOST}}:{{PORT}}/{{MULTA_API}}/download/8b4c6e63-bc97-4a31-92ed-0fb394115b3f",
 							"protocol": "{{PROTOCOL}}",
 							"host": [
 								"{{HOST}}"
@@ -1540,7 +1498,7 @@
 							"path": [
 								"{{MULTA_API}}",
 								"download",
-								"6"
+								"8b4c6e63-bc97-4a31-92ed-0fb394115b3f"
 							]
 						}
 					},

@@ -1,5 +1,9 @@
+import { serviceMulta } from '../services/serviceMulta';
 import { enumMessengerCoda } from '../entity/enum/enumMessengerCoda';
 import amqp, { Channel, Connection, Message } from 'amqplib';
+import { eMulta } from '../entity/svt/eMulta';
+import { eBollettino } from '../entity/svt/eBollettino';
+import logger from '../utils/logger-winston';
 
 async function startTaskCheckMultaBollettinoConsumer(): Promise<void> {
   try {
@@ -19,6 +23,28 @@ async function startTaskCheckMultaBollettinoConsumer(): Promise<void> {
       queue,
       async (msg: Message | null) => {
         if (msg) {
+          const content: string = msg.content.toString();
+          const parsedContent =
+            typeof content === 'string' ? JSON.parse(content) : content;
+
+          const objMulta: eMulta | null = eMulta.fromJSON(parsedContent);
+
+          if (objMulta) {
+            const obj: eBollettino | null =
+              await serviceMulta.getBollettinoByIdMulta(objMulta.get_id());
+            if (!obj) {
+              const objBollettino: eBollettino | null =
+                await serviceMulta.richiediBollettino(objMulta.get_id());
+              if (!objBollettino) {
+                logger.warn(`richiesta bollettino non generata correttamente`);
+              } else {
+                logger.info(
+                  `richiesta bollettino generata correttamente con id ${objBollettino.get_id()}`,
+                );
+              }
+            }
+          }
+
           channel.ack(msg);
         }
       },

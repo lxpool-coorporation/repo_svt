@@ -78,6 +78,10 @@ class repositoryTransitoImplementation
   ): Promise<eTransito | null> {
     return daoTransito.getTransitoIngressoByTransitoUscita(idTransitoUscita);
   }
+
+  getAllTransitiByTarga(targa: string): Promise<eTransito[] | null> {
+    return daoTransito.getAllTransitiByTarga(targa);
+  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

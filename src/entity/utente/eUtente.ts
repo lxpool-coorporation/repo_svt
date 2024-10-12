@@ -3,12 +3,12 @@ import { enumStato } from '../enum/enumStato';
 class eUtente {
   //id numerico, profilo, identificativo, id_stato
   private id: number;
-  private identificativo: string;
+  private identificativo!: string;
   private stato: enumStato;
 
   constructor(id: number, identificativo: string, stato: enumStato) {
     this.id = id;
-    this.identificativo = identificativo;
+    this.set_identificativo(identificativo);
     this.stato = stato;
   }
 
@@ -32,7 +32,7 @@ class eUtente {
     this.id = id;
   }
   set_identificativo(identificativo: string): void {
-    this.identificativo = identificativo;
+    this.identificativo = identificativo.toUpperCase();
   }
   set_stato(stato: enumStato): void {
     this.stato = stato;

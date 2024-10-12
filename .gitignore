@@ -148,4 +148,5 @@ _documentazione/
 .pdf
 repository
 Dockerfile_dev
+package_wocv.json
 

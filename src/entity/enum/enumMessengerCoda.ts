@@ -4,7 +4,6 @@ export enum enumMessengerCoda {
   queueCheckMulta = 'queueCheckMulta',
   queueCheckMultaAutomobilista = 'queueCheckMultaAutomobilista',
   queueCheckMultaBollettino = 'queueCheckMultaBollettino',
-  queueCheckGenerazioneBollettino = 'queueCheckGenerazioneBollettino',
-  queueMultaBollettino = 'queueMultaBollettino',
+  queueGeneraBollettino = 'queueGeneraBollettino',
   queueTransitoVeicoloTipo = 'queueTransitoVeicoloTipo',
 }

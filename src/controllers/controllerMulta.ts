@@ -90,8 +90,12 @@ export class controllerMulta {
             arrayTarghe,
             userId,
           );
+          if (multeResult) {
+            multeResult = multeResult.replace(/\\"/g, '"');
+            multeResult = JSON.parse(multeResult);
+            //multeResult = JSON.stringify(multeResult, null, 4);
+          }
         }
-
         /*
          */
       } else {
@@ -132,26 +136,38 @@ export class controllerMulta {
         const bollettino: eBollettino | null =
           await serviceMulta.getBollettinoByUUID(req.params.id);
         if (!!bollettino) {
-          // Percorso assoluto del file da scaricare
-          const filePath = path.join(
-            '/',
-            IMAGE_FILE,
-            bollettino.get_path_bollettino() || '',
-          );
-          // Verifica se il file esiste
-          if (fs.existsSync(filePath)) {
-            // Invia il file al client
-            transferComplete = true;
-            res.sendFile(filePath, (err) => {
-              if (err) {
-                transferComplete = false;
-                ret.setResponse(500, {
-                  message: 'Errore durante il download del file.',
+          const idUtente: number | undefined = req.userId;
+          if (idUtente) {
+            const isAuth: Boolean =
+              await serviceMulta.checkAutorizzazioneUtenteBollettino(
+                bollettino,
+                idUtente,
+              );
+            if (isAuth) {
+              // Percorso assoluto del file da scaricare
+              const filePath = path.join(
+                '/',
+                IMAGE_FILE,
+                bollettino.get_path_bollettino() || '',
+              );
+              // Verifica se il file esiste
+              if (fs.existsSync(filePath)) {
+                // Invia il file al client
+                transferComplete = true;
+                res.sendFile(filePath, (err) => {
+                  if (err) {
+                    transferComplete = false;
+                    ret.setResponse(500, {
+                      message: 'Errore durante il download del file.',
+                    });
+                  }
                 });
+              } else {
+                ret.setResponse(404, { message: 'File non trovato.' });
               }
-            });
-          } else {
-            ret.setResponse(404, { message: 'File non trovato.' });
+            } else {
+              ret.setResponse(404, { message: 'utente non autorizzato' });
+            }
           }
         } else {
           ret.setResponse(404, { message: 'bollettino non presente' });

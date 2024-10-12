@@ -262,7 +262,7 @@ class serviceMultaSpeedControlImplementation {
 
       // Invalida la cache dell'Multa aggiornato e la cache generale
       await redisClient.del(`Multa_${objMulta.get_id()}`);
-      await redisClient.del('Transiti_tutti');
+      await redisClient.del('Multa_tutte');
     } catch (err) {
       throw new Error(`serviceMulta - updateFields: ${err}`);
     }
@@ -350,6 +350,9 @@ class serviceMultaSpeedControlImplementation {
             transitoUscita.get_id_varco(),
           );
         if (!tratta) {
+          logger.warn(
+            `tratta nulla per transito uscita: ${transitoUscita.get_data_transito()}`,
+          );
           return null;
         }
 
@@ -358,6 +361,9 @@ class serviceMultaSpeedControlImplementation {
             transitoUscita.get_id(),
           );
         if (!transitoIngresso) {
+          logger.warn(
+            `transito ingresso nullo per transito uscita: ${transitoUscita.get_data_transito()}`,
+          );
           return null;
         }
 
@@ -384,6 +390,9 @@ class serviceMultaSpeedControlImplementation {
             id_veicolo,
           );
         if (!policies) {
+          logger.warn(
+            `non sono state trovate polocy per il transito in uscita: ${transitoUscita.get_data_transito()}`,
+          );
           return null;
         }
 
@@ -427,10 +436,60 @@ class serviceMultaSpeedControlImplementation {
             if (objMulta) {
               result = objMulta;
             }
+          } else {
+            logger.info(`speed: ${speed} < ${policy.get_speed_limit()}`);
+          }
+        }
+      } else {
+        logger.warn(
+          `impossibile procedere a controllo multa per transito: ${transitoUscita.get_data_transito()} check meteo o id_veicolo`,
+        );
+      }
+    } catch (_error) {}
+
+    return result;
+  }
+
+  async checkAutorizzazioneUtenteBollettino(
+    objBollettino: eBollettino,
+    idUtente: number,
+  ): Promise<Boolean> {
+    let result: Boolean = false;
+
+    try {
+      if (objBollettino) {
+        const objUtente: eUtente | null =
+          await serviceUtente.getUtenteById(idUtente);
+        if (objUtente) {
+          const objMulta: eMulta | null = await this.getMultaSpeedControlById(
+            objBollettino.get_id_multa(),
+          );
+          if (objMulta) {
+            if (objUtente.get_id() == objMulta.get_id_automobilista()) {
+              result = true;
+            } else {
+              const objProfili: eProfilo[] | null =
+                await serviceUtente.getProfiliByIdUtente(idUtente);
+              if (objProfili) {
+                let isOperatore: Boolean = false;
+                const indexOperatore = objProfili.findIndex((obj) => {
+                  return obj.get_id() === 1;
+                });
+                if (indexOperatore > -1) {
+                  isOperatore = true;
+                }
+
+                if (isOperatore) {
+                  result = true;
+                }
+              }
+            }
           }
         }
       }
-    } catch (_error) {}
+    } catch (_error) {
+      throw new Error('errore in check autorizzazioni bollettino:' + _error);
+    }
 
     return result;
   }
@@ -524,16 +583,6 @@ class serviceMultaSpeedControlImplementation {
    * @memberof serviceMultaSpeedControlImplementation
    */
   async saveBollettino(t: eBollettino): Promise<eBollettino | null> {
-    try {
-      const objMulta: eMulta | null = await this.getMultaSpeedControlById(
-        t.get_id_multa(),
-      );
-      if (objMulta) {
-      }
-    } catch (error) {
-      throw new Error('errore: in save Bollettino:' + error);
-    }
-
     return repositoryMulta.saveBellettino(t);
   }
   /**
@@ -575,40 +624,46 @@ class serviceMultaSpeedControlImplementation {
           `errore in richiesta bollettino: multa con id ${idMulta}`,
         );
       } else {
-        const uuidPagamento: string = uuidv4(); // Genera UUID univoco per il pagamento
-        const importo: number | null = await repositoryMulta.getImportoMulta(
-          multa.get_id(),
-        );
-        if (!importo) {
-          throw new Error(
-            `errore in richiesta bollettino: importo non calcolato per multa: ${multa.get_id()}`,
+        const obj: eBollettino | null =
+          await this.getBollettinoByIdMulta(idMulta);
+        if (!obj) {
+          const uuidPagamento: string = uuidv4(); // Genera UUID univoco per il pagamento
+          const importo: number | null = await repositoryMulta.getImportoMulta(
+            multa.get_id(),
           );
-        }
+          if (!importo) {
+            throw new Error(
+              `errore in richiesta bollettino: importo non calcolato per multa: ${multa.get_id()}`,
+            );
+          }
 
-        const bollettino = new eBollettino(
-          0,
-          multa.get_id(),
-          uuidPagamento,
-          importo,
-          null,
-          enumBollettinoStato.richiesto,
-        );
-        result = await this.saveBollettino(bollettino);
-        if (!result) {
-          throw new Error(
-            `errore in richiesta bollettino: errore in generazione per multa: ${multa.get_id()}`,
+          const bollettino = new eBollettino(
+            0,
+            multa.get_id(),
+            uuidPagamento,
+            importo,
+            null,
+            enumBollettinoStato.richiesto,
           );
+          result = await this.saveBollettino(bollettino);
+          if (!result) {
+            throw new Error(
+              `errore in richiesta bollettino: errore in generazione per multa: ${multa.get_id()}`,
+            );
+          } else {
+            const rabbitMQ = messenger.getInstance();
+
+            // Connessione a RabbitMQ
+            await rabbitMQ.connect();
+
+            // Invia un messaggio alla coda 'tasks_queue'
+            await rabbitMQ.sendToQueue(
+              enumMessengerCoda.queueGeneraBollettino,
+              JSON.stringify(result),
+            );
+          }
         } else {
-          const rabbitMQ = messenger.getInstance();
-
-          // Connessione a RabbitMQ
-          await rabbitMQ.connect();
-
-          // Invia un messaggio alla coda 'tasks_queue'
-          await rabbitMQ.sendToQueue(
-            enumMessengerCoda.queueMultaBollettino,
-            JSON.stringify(result),
-          );
+          logger.warn(`bollettino gia presente per id multa: ${idMulta}`);
         }
       }
     } catch (err) {
@@ -692,19 +747,6 @@ class serviceMultaSpeedControlImplementation {
               enumMessengerCoda.queueCheckMultaAutomobilista,
               JSON.stringify(objMulta),
             );
-          } else {
-            const objBollettino: eBollettino | null =
-              await this.getBollettinoByIdMulta(objMulta.get_id());
-            if (!objBollettino) {
-              const rabbitMQ = messenger.getInstance();
-              // Connessione a RabbitMQ
-              await rabbitMQ.connect();
-              // Invia un messaggio alla coda 'tasks_queue'
-              await rabbitMQ.sendToQueue(
-                enumMessengerCoda.queueCheckMultaBollettino,
-                JSON.stringify(objMulta),
-              );
-            }
           }
           break;
         case enumMultaStato.elaborato:

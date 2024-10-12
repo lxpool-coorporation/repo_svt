@@ -58,6 +58,11 @@ jobs:
         MYSQL_USER: ${{ secrets.MYSQL_USER }}
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+        RABBITMQ_URL: ${{ secrets.RABBITMQ_URL }}
+        SPEED_TOLLERANCE: ${{ secrets.SPEED_TOLLERANCE }}
+        IMAGE_PATH: ${{ secrets.IMAGE_PATH }}
+        IMAGE_TYPE: ${{ secrets.IMAGE_TYPE }}
+        IMAGE_FILE: ${{ secrets.IMAGE_FILE }}
       run: docker-compose up -d app svt-db svt-redis_cache  # Avvia solo i servizi
 
     - name: Run Migrations

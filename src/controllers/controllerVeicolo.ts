@@ -230,7 +230,7 @@ export class controllerVeicolo {
             idVeicolo,
             veicoloReq?.tipo,
             veicoloReq?.targa,
-            veicoloReq?.stato,
+            enumVeicoloStato.in_attesa,
           );
           const veicolo: eVeicolo | null =
             await serviceVeicolo.getVeicoloById(idVeicolo);

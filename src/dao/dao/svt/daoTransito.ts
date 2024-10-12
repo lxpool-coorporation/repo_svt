@@ -243,6 +243,32 @@ export class daoTransitoImplementation
     }
     return result;
   }
+
+  async getAllTransitiByTarga(targa: string): Promise<eTransito[] | null> {
+    let result = null;
+
+    try {
+      const rawMulte = await db.query(
+        `SELECT t_trs.*
+           FROM svt_transito t_trs
+           LEFT JOIN svt_veicolo vc ON (t_trs.id_veicolo = vc.id)
+           WHERE vc.targa=:targa;`,
+        {
+          replacements: { targa: targa },
+          type: QueryTypes.SELECT,
+        },
+      );
+
+      const objTransiti: eTransito[] | null = rawMulte.map((transito) => {
+        return eTransito.fromJSON(transito);
+      });
+
+      result = objTransiti;
+    } catch (error) {
+      throw new Error('getAllTransitiByTarga error: ' + error);
+    }
+    return result;
+  }
 }
 
 // Esporta il DAO per l'uso nei servizi o nei controller

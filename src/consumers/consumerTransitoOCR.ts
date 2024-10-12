@@ -83,6 +83,11 @@ async function startTaskTransitoOCRConsumer(): Promise<void> {
                     stato: enumTransitoStato.elaborato,
                   });
                 }
+              } else {
+                objTransito.set_stato(enumTransitoStato.illeggibile);
+                await serviceTransito.updateFieldsTransito(objTransito, {
+                  stato: enumTransitoStato.illeggibile,
+                });
               }
             }
           } catch (error: any) {

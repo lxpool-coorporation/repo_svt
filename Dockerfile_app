@@ -93,6 +93,9 @@ RUN mkdir -p /usr/app && chown -R node:node /usr/app
 # Crea la directory logs e imposta i permessi
 RUN mkdir -p logs && chown -R node:node logs
 
+# Imposta i permessi a
+RUN mkdir -p repository && chown -R node:node repository
+
 # Definisce l'utente non root per migliorare la sicurezza
 USER node
 

@@ -113,7 +113,7 @@ export class middlewareVeicolo {
     // Aggiungi le varie validazioni
     const validations = [
       middlewareValidate.validateTipoVeicolo('tipo', optional),
-      middlewareValidate.validateStato('stato', optional),
+      middlewareValidate.validateStatoVeicolo('stato', optional),
       middlewareValidate.validateTarga('targa', optional),
     ];
 
