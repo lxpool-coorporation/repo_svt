@@ -173,7 +173,7 @@ Gli Enums sono stati creati come elementi stabili del progetto per rappresentare
 
 ### Schema del Database
 
-- [DB Schema]
+- [DB Schema](documentazione/UML/diagram.png)
 
 ### Diagramma dei Casi d'Uso
 
@@ -184,7 +184,7 @@ Gli Enums sono stati creati come elementi stabili del progetto per rappresentare
 1. **Gestione Varchi (CRUD)**
    - [Creare, leggere, aggiornare ed eliminare varchi](documentazione/UML/Diagrammi_Sequenza/008_generic_CRUD.png)
 2. **Gestione Tratte (CRUD)**
-   - (Creare, leggere, aggiornare ed eliminare tratte](documentazione/UML/Diagrammi_Sequenza/008_generic_CRUD.png)
+   - [Creare, leggere, aggiornare ed eliminare tratte](documentazione/UML/Diagrammi_Sequenza/008_generic_CRUD.png)
 3. **Gestione Veicoli (CRUD)**
    - [Inserire, leggere, aggiornare ed eliminare veicoli](documentazione/UML/Diagrammi_Sequenza/008_generic_CRUD.png)
 4. **Inserimento Transiti**
@@ -283,7 +283,36 @@ IMAGE_TYPE='/jpeg|jpg|png/'
 
 
 ```
-  
+### Generazione delle Chiavi (JWT)
+Per garantire la sicurezza nell'autenticazione tramite JWT (JSON Web Token), è necessario generare una coppia di chiavi asimmetriche (chiave privata e chiave pubblica). Queste chiavi saranno utilizzate per firmare e verificare i token JWT.
+Passaggi per la generazione delle chiavi:
+Generare la coppia di chiavi RSA: Utilizza il seguente comando per creare una chiave privata e una chiave pubblica RSA (2048 bit):
+```bash
+openssl genpkey -algorithm RSA -out jwtRS256.key -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in jwtRS256.key -out jwtRS256.key.pub
+jwtRS256.key: Chiave privata che sarà utilizzata per firmare i token JWT.
+jwtRS256.key.pub: Chiave pubblica che sarà utilizzata per verificare i token JWT.
+Configurare le chiavi nell'ambiente: Inserisci i percorsi delle chiavi generate all'interno delle variabili d'ambiente, in modo che il tuo backend possa accedervi.
+```
+Variabile d'ambiente per la chiave privata:
+```bash
+JWT_PRIVATE_KEY=./path/to/jwtRS256.key
+```
+
+Variabile d'ambiente per la chiave pubblica:
+```
+JWT_PUBLIC_KEY=./path/to/jwtRS256.key.pub
+```
+
+Utilizzo delle chiavi:
+- JWT_PRIVATE_KEY: La chiave privata viene utilizzata dal server per firmare i token JWT. È fondamentale mantenere questa chiave sicura e non esporla mai pubblicamente.
+- JWT_PUBLIC_KEY: La chiave pubblica viene utilizzata dal server o dai client per verificare l'autenticità dei token JWT firmati. Può essere distribuita in modo sicuro.
+
+Esempio di configurazione in .env:
+```bash
+JWT_PRIVATE_KEY=./.keys/jwtRS256.key
+JWT_PUBLIC_KEY=./.keys/jwtRS256.key.pub
+```
 Avvio con Docker Compose
 Lo stack è composto da tre diversi componenti docker-compose che vanno avviati nel seguente ordine:
 
@@ -296,8 +325,7 @@ Lo stack è composto da tre diversi componenti docker-compose che vanno avviati 
    - **docker-compose_app.yml**
      - necessario per avviare l'app principale
      - comando: docker compose -f docker-compose_app.yml up --build
-
-
+       
 L'applicazione sarà disponibile su http://localhost:3000.
 
 
