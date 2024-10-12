@@ -1,0 +1,48 @@
+services:
+  svt-db:
+    image: mysql:8.0
+    container_name: svt-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app_network
+  
+  svt-redis_cache:
+    image: "redis:latest"
+    container_name: svt-redis_cache
+    ports:
+      - "6379:6379"  # Porta di Redis
+    expose:
+      # Opens port 3306 on the container
+      - '6379'
+    networks:
+      - app_network
+
+  svt-rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"   # Porta per il protocollo AMQP
+      - "15672:15672" # Porta per la RabbitMQ Management UI
+    expose:
+      # Opens port 3306 on the container
+      - '15672'
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:  

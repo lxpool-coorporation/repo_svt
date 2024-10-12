@@ -157,14 +157,17 @@ Il sistema permette di configurare **permessi di lettura o scrittura** sui vari 
 Gli Enums sono stati creati come elementi stabili del progetto per rappresentare valori costanti e predefiniti:
 
 - **enumBollettinoStato**: richiesto, emesso, pagato
+- **enumExportFormato**: json
 - **enumMeteoTipo**: sereno, pioggia.
-- **enumMultaStato**: in_attesa, elaborata.
+- **enumMultaStato**: indefinito, in_attesa, elaborata.
 - **enumPermessoCategoria**: varco, transito, tratta, veicolo, multa, bollettino.
 - **enumPermessoTipo**: lettura, scrittura.
 - **enumPolicyTipo**: speed_control.
+- **enumProfiloTipo**: operatore, automobilista, varco.
 - **enumStato**: attivo, disattivo.
 - **enumTransitoStato**: in_attesa, acquisito, elaborato.
-- **enumVeicoloTipo**: autoveicoli, motoveicoli, camion.
+- **enumVeicoloStato**: in_attesa, acquisito.
+- **enumVeicoloTipo**: automobile, motoveicoli, camion, indefinito.
 
 ## Documentazione
 
@@ -174,28 +177,28 @@ Gli Enums sono stati creati come elementi stabili del progetto per rappresentare
 
 ### Diagramma dei Casi d'Uso
 
-- [Diagramma dei Casi d'Uso]
+- [Diagramma dei Casi d'Uso](documentazione/UML/UML_UC_useCases.png)
 
 ### Diagrammi delle Sequenze
 
 1. **Gestione Varchi (CRUD)**
-   - Creare, leggere, aggiornare ed eliminare varchi.
+   - [Creare, leggere, aggiornare ed eliminare varchi](documentazione/UML/Diagrammi_Sequenza/008_generic_CRUD.png)
 2. **Gestione Tratte (CRUD)**
-   - Creare, leggere, aggiornare ed eliminare tratte.
+   - (Creare, leggere, aggiornare ed eliminare tratte](documentazione/UML/Diagrammi_Sequenza/008_generic_CRUD.png)
 3. **Gestione Veicoli (CRUD)**
-   - Inserire, leggere, aggiornare ed eliminare veicoli.
+   - [Inserire, leggere, aggiornare ed eliminare veicoli](documentazione/UML/Diagrammi_Sequenza/008_generic_CRUD.png)
 4. **Inserimento Transiti**
-   - Inserire transiti manualmente o tramite immagine (OCR).
+   - [Inserire transiti manualmente o tramite immagine (OCR)](documentazione/UML/Diagrammi_Sequenza/001_inserimento_transito.png)
 5. **Gestione Transiti (CRUD)**
-   - Leggere, aggiornare ed eliminare transiti.
+   - [Leggere, aggiornare ed eliminare transiti](documentazione/UML/Diagrammi_Sequenza/005_aggiornamento_transito_illeggibile.png)
 6. **Visualizzazione Transiti Illeggibili**
-   - Ottenere la lista dei transiti illeggibili e gestire le correzioni.
+   - [Ottenere la lista dei transiti illeggibili e gestire le correzioni](documentazione/UML/Diagrammi_Sequenza/004_visualizzazione_transiti_illeggibili.png)
 7. **Generazione Automatica di Multe**
-   - Il sistema genera automaticamente multe per superamento della velocità media.
+   - [Il sistema genera automaticamente multe per superamento della velocità media](documentazione/UML/Diagrammi_Sequenza/003_generazione_automatica_multa.png)
 8. **Ricerca Multe**
-   - Ottenere le multe associate a una o più targhe.
+   - [Ottenere le multe associate a una o più targhe](documentazione/UML/Diagrammi_Sequenza/006_ricerca_multe.png)
 9. **Scaricamento Bollettino di Pagamento**
-   - Scaricare il PDF del bollettino con QR-code per il pagamento.
+   - [Scaricare il PDF del bollettino con QR-code per il pagamento](documentazione/UML/Diagrammi_Sequenza/007_download_bollettino.png)
 
 ## Test del Progetto
 
@@ -209,7 +212,8 @@ Gli Enums sono stati creati come elementi stabili del progetto per rappresentare
 ### Importare la Collection
   - Aprire Postman.
   - Cliccare su Import.
-  - Selezionare il file TutorAutostradale.postman_collection.json presente nella cartella postman.
+  - Selezionare il file [repo_svt_env.postman_environment.json](postman/repo_svt_env.postman_environment.json) per caricare le variabili preset.
+  - Selezionare il file [repo_svt_env.postman_collection.json](postman/repo_svt_env.postman_collection.json) per caricare la collezione.
 
 ### Eseguire i Test
   - Assicurarsi che l'applicazione sia in esecuzione.
@@ -223,7 +227,7 @@ Gli Enums sono stati creati come elementi stabili del progetto per rappresentare
 newman run postman/svt-app.postman_collection.json
 ```
 ## Immagini di Esempio
-Nella cartella images sono presenti immagini di esempio per testare l'inserimento di transiti tramite OCR. Queste immagini contengono targhe simulate per consentire la verifica del riconoscimento tramite Tesseract OCR.
+Nella cartella **"documentazione/esempi_target/"** sono presenti immagini di esempio per testare l'inserimento di transiti tramite OCR. Queste immagini contengono targhe simulate per consentire la verifica del riconoscimento tramite Tesseract OCR.
 
 ## Avvio del Progetto
 
@@ -279,123 +283,21 @@ IMAGE_TYPE='/jpeg|jpg|png/'
 
 
 ```
-
-Il progetto include un file docker-compose.yml che configura l'applicazione e i servizi associati (MySQL, Redis, RabbitMQ). 
-
-```bash
-services:
-  app:
-    build: .
-    command: ["/wait-for-it.sh", "svt-db:3306", "--", "node", "dist/index.js"]
-    volumes:
-      - ./dist:/usr/src/app/dist/
-      - ./.keys/:/app/.keys/
-    ports:
-      - "3000:3000"
-    environment:
-      - APP_ENV=${APP_ENV}
-      - NODE_ENV=${NODE_ENV}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
-      - DB_NAME=${DB_NAME}
-      - LOG_DIRECTORY=${LOG_DIRECTORY}
-      - LOG_LEVEL=${LOG_LEVEL}
-      - LOG_OUTPUT_MODE=${LOG_OUTPUT_MODE}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_CACHE_TIMEOUT=${REDIS_CACHE_TIMEOUT}
-      - SERVER_PORT=${SERVER_PORT}
-      - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
-      - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
-      - JWT_TOKEN_EXPIRED=${JWT_TOKEN_EXPIRED}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - RABBITMQ_URL=${RABBITMQ_URL}
-      - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
-      - IMAGE_PATH=${IMAGE_PATH}
-      - IMAGE_TYPE=${IMAGE_TYPE}
-      - IMAGE_TYPE=${IMAGE_FILE}
-    depends_on:
-      - svt-db
-      - svt-redis_cache
-      - svt-rabbitmq
-    networks:
-      - app_network
-
-  svt-db:
-    image: mysql:8.0
-    container_name: svt-db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - app_network
-
-  svt-redis_cache:
-    image: "redis:latest"
-    container_name: svt-redis_cache
-    ports:
-      - "6379:6379"
-    networks:
-      - app_network
-
-  svt-rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    networks:
-      - app_network
-
-networks:
-  app_network:
-    driver: bridge
-
-volumes:
-  db_data:
-```
   
 Avvio con Docker Compose
-Avviare i servizi:
-```bash
-docker-compose up -d
-```
-Verificare lo stato dei container:
-```bash
-docker-compose ps
-```
-Accedere al container dell'applicazione:
-```bash
-docker-compose exec app sh
-```
-Preparazione della base dati:
-```bash
-npx sequelize db:migrate
-npx sequelize db:seed:all
-```
+Lo stack è composto da tre diversi componenti docker-compose che vanno avviati nel seguente ordine:
 
-Avvio Manuale (senza Docker)
-```bash
-Installare le dipendenze:
-npm install
-```
-Avviare i servizi di MySQL, Redis e RabbitMQ manualmente.
+   - **docker-compose_env.yml**
+     - necessario per avviare i conteiner di servizio mysql/redis/rabbitmq
+     - comando: docker compose -f docker-compose_env.yml up --build
+   - **docker-compose_dbi.yml**  
+     - necessario per effettuare le migrazioni e i seed (da avviare solo per startup dell'applicativo)
+     - comando: docker compose -f docker-compose_dbi.yml up --build
+   - **docker-compose_app.yml**
+     - necessario per avviare l'app principale
+     - comando: docker compose -f docker-compose_app.yml up --build
 
-Avviare l'applicazione:
-```bash
-npm run start
-```
+
 L'applicazione sarà disponibile su http://localhost:3000.
 
 

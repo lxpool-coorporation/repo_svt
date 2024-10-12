@@ -1,5 +1,5 @@
 import { Op, QueryInterface } from 'sequelize';
-import {enumVeicoloStato} from '../../entity/enum/enumVeicoloStato';
+import {enumVeicoloStato} from '../src/entity/enum/enumVeicoloStato';
 
 export default {
   up: async (queryInterface: QueryInterface) => {

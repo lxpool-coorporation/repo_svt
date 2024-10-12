@@ -1,0 +1,26 @@
+# Stage 1: Build
+FROM node:20-buster AS build
+
+# Crea una directory di lavoro
+WORKDIR /app
+
+# Installa curl e mysql-client se necessario
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends bash curl default-mysql-client && \
+    rm -rf /var/lib/apt/lists/*
+
+# Installa ts-node e nodemon globalmente
+RUN npm install -g ts-node nodemon typescript
+
+# Copia il package.json e installa le dipendenze di Node.js
+COPY ./migrations /app/migrations
+COPY ./seeders /app/seeders
+COPY ./src /app/src/
+COPY ./package.dbi.json /app/package.json
+COPY *.config.mjs *.config.cjs *.config.js *.setup.mjs *.setup.cjs *.setup.js tsconfig.json ./
+
+# Installa tutte le dipendenze, inclusi i dev dependencies
+RUN npm install 
+
+# Compila il progetto TypeScript
+#RUN npm run build --verbose

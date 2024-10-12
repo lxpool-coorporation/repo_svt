@@ -1,7 +1,6 @@
 import { QueryInterface, DataTypes } from 'sequelize';
-import { ormPolicy } from '../../models/svt/ormPolicy';
-import {enumMeteoTipo} from '../../entity/enum/enumMeteoTipo';
-import {enumVeicoloTipo} from '../../entity/enum/enumVeicoloTipo';
+import {enumMeteoTipo} from '../src/entity/enum/enumMeteoTipo';
+import {enumVeicoloTipo} from '../src/entity/enum/enumVeicoloTipo';
 
 export default {
   up: async (queryInterface: QueryInterface) => {

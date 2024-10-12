@@ -1,21 +1,17 @@
 services:
-  app:
+  svt-app:
     build: 
-      dockerfile: .docker/Dockerfile_dev
-      context: ../
-    command: ["sh", "-c", "npm run dev"]
-    network_mode: "host"
+      context: .
+      dockerfile: Dockerfile_app
     volumes:
-      - ../src:/app/src/
-      - ../.keys/:/app/.keys/
-      - ../.env:/app/.env
-      - ../.img:${IMAGE_PATH}
+      - ./.keys/:/app/.keys/
     ports:
       - "3000:3000"
     expose:
       # Opens port 3306 on the container
       - "3000"
     environment:
+      - APP_ENV=${APP_ENV}
       - NODE_ENV=${NODE_ENV}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
@@ -26,7 +22,7 @@ services:
       - LOG_LEVEL=${LOG_LEVEL}
       - LOG_OUTPUT_MODE=${LOG_OUTPUT_MODE}
       - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}  
+      - REDIS_PORT=${REDIS_PORT}
       - REDIS_CACHE_TIMEOUT=${REDIS_CACHE_TIMEOUT}
       - SERVER_PORT=${SERVER_PORT}
       - JWT_PRIVATE_KEY=${JWT_PRIVATE_KEY}
@@ -36,7 +32,19 @@ services:
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - RABBITMQ_URL=${RABBITMQ_URL}
       - SPEED_TOLLERANCE=${SPEED_TOLLERANCE}
       - IMAGE_PATH=${IMAGE_PATH}
       - IMAGE_TYPE=${IMAGE_TYPE}
-      - RABBITMQ_URL=${RABBITMQ_URL}
+      - IMAGE_TYPE=${IMAGE_FILE}
+    networks:
+      - app_network
+     # Optionally, add restart policy
+    #restart: unless-stopped
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:  
