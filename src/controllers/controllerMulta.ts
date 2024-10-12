@@ -10,7 +10,7 @@ import { serviceMulta } from '../services/serviceMulta';
 import { eBollettino } from '../entity/svt/eBollettino';
 import fs from 'fs';
 import path from 'path';
-import { enumExportFormato } from '@/entity/enum/enumExportFormato';
+import { enumExportFormato } from '../entity/enum/enumExportFormato';
 
 dotenv.config();
 const IMAGE_FILE = process.env.IMAGE_FILE || '.pdf';

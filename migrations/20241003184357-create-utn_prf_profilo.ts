@@ -1,7 +1,7 @@
 
 import { QueryInterface, DataTypes } from 'sequelize';
-import {enumStato} from '../src/entity/enum/enumStato';
-import {enumProfiloTipo} from '../src/entity/enum/enumProfiloTipo';
+import {enumStato} from '../../entity/enum/enumStato';
+import {enumProfiloTipo} from '../../entity/enum/enumProfiloTipo';
 
 
 export default {

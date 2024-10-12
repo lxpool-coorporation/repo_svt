@@ -41,19 +41,6 @@ RUN npm install
 # Compila il progetto TypeScript
 RUN npm run build
 
-# Esegui i test (opzionale, rimuovi se preferisci eseguire i test separatamente)
-#RUN npm test <-- eseguiti dalla pipeline ci.yml
-
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh && chown -R node:node /wait-for-it.sh
-#RUN chmod +x /wait-for-it.sh
-
-# Crea la directory logs e imposta i permessi
-RUN mkdir -p logs && chown -R node:node logs
-
-# Definisce l'utente non root per migliorare la sicurezza
-USER node
-
 # Stage 2: Production
 FROM node:20-buster
 
@@ -77,6 +64,9 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends bash curl default-mysql-client && \
     rm -rf /var/lib/apt/lists/*
 
+# Installa ts-node e nodemon globalmente
+RUN npm install -g ts-node typescript
+
 # Copia i file compilati dalla fase di build
 COPY --from=build /app/dist ./dist
 
@@ -93,6 +83,12 @@ RUN npm install --only=production
 
 COPY wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh && chown -R node:node /wait-for-it.sh
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh && chown -R node:node /entrypoint.sh
+# Crea la directory e assegna i permessi all'utente node
+RUN mkdir -p /usr/app && chown -R node:node /usr/app
+#ENTRYPOINT ["/entrypoint.sh"]
 
 # Crea la directory logs e imposta i permessi
 RUN mkdir -p logs && chown -R node:node logs

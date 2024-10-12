@@ -1,5 +1,5 @@
 import { QueryInterface, DataTypes } from 'sequelize';
-import { ormPolicySanction } from '../src/models/svt/ormPolicySanction';
+import { ormPolicySanction } from '../../models/svt/ormPolicySanction';
 
 export default {
   up: async (queryInterface: QueryInterface) => {

@@ -10,7 +10,7 @@ import {
   daoProfiloImplementation,
 } from '../../../dao/dao/utente/daoProfilo';
 import database from '../../../utils/database';
-import { enumProfiloTipo } from '@/entity/enum/enumProfiloTipo';
+import { enumProfiloTipo } from '../../../entity/enum/enumProfiloTipo';
 import { repositoryProfilo } from './repositoryProfilo';
 
 const db = database.getInstance();

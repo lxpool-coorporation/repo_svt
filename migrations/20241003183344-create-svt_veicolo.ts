@@ -1,6 +1,6 @@
 import { QueryInterface, DataTypes } from 'sequelize';
-import {enumVeicoloStato} from '../src/entity/enum/enumVeicoloStato';
-import {enumVeicoloTipo} from '../src/entity/enum/enumVeicoloTipo';
+import {enumVeicoloStato} from '../../entity/enum/enumVeicoloStato';
+import {enumVeicoloTipo} from '../../entity/enum/enumVeicoloTipo';
 
 
 
